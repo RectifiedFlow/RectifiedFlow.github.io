@@ -3,12 +3,12 @@
 # -----------------------------------------------------------------------------
 
 title: blank # the website title (if blank, full name will be used instead)
-first_name: You
-middle_name: R.
-last_name: Name
-email: you@example.com
+first_name: RectifiedFlow
+middle_name:
+last_name:
+email: lqiang@cs.utexas.edu
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+  Everything should be made as simple as possible, but not simpler.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
@@ -134,8 +134,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: al-folio # blog_name will be displayed in your blog page
-blog_description: a simple whitespace theme for academics
+blog_name: RFBlog # blog_name will be displayed in your blog page
+blog_description: Blogs on Generative AI, with a focus on flow and diffusion models.
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
 
@@ -245,6 +245,13 @@ exclude:
   - package.json
   - package-lock.json
   - _pages/about_einstein.md
+  - _pages/cv.md
+  - _pages/teaching.md
+  - _pages/publications.md
+  - _pages/projects.md
+  - _pages/repositories.md
+  - _pages/dropdown.md
+  - _pages/news.md
   - purgecss.config.js
   - README.md
   - readme_preview/
