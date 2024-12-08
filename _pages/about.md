@@ -2,18 +2,17 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>The University of Texas at Austin</a>.
+subtitle: <a href='https://www.cs.utexas.edu/~lqiang/'>The Statistical Learning and AI Lab at UT Austin</a>.
 
 profile:
   align: right
   image: logo.png
   image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>Let us flow together!</p>
+  more_info:
 
 news: false # includes a list of news items
-selected_papers: true # includes a list of papers marked as "selected={true}"
+selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
 ---
 
-RectifiedFlow is a repository keeping track of blog posts related to flow and diffusion models.
+The rectified flow algorithm is a major method for image and video generation nowadays, and has deep connections to diffusion models. Here, we provide a series of blog posts on flow and diffusion models, which are closely related to the codebase at <a href='https://github.com/lqiang67/rectified-flow'>RectifiedFlow GitHub Repository</a>.
