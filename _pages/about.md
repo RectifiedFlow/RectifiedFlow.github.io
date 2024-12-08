@@ -15,4 +15,4 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
 ---
 
-The rectified flow algorithm is a major method for image and video generation nowadays, and has deep connections to diffusion models. Here, we provide a series of blog posts on flow and diffusion models, which are closely related to the codebase at <a href='https://github.com/lqiang67/rectified-flow'>RectifiedFlow GitHub Repository</a>.
+The rectified flow algorithm is a major method for image and video generation nowadays, and has deep connections to diffusion models. Here, we provide a series of blog posts on flow and diffusion models, which are closely related to the codebase at [RectifiedFlow GitHub Repository](https://github.com/lqiang67/rectified-flow).

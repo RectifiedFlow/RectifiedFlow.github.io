@@ -134,8 +134,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: RFBlog # blog_name will be displayed in your blog page
-blog_description: Blogs on Generative AI, with a focus on flow and diffusion models.
+blog_name: Blog # blog_name will be displayed in your blog page
+blog_description: Blog posts on flow and diffusion models.
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
 
