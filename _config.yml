@@ -134,8 +134,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: Blog # blog_name will be displayed in your blog page
-blog_description: Blog posts on flow and diffusion models.
+blog_name: RectifiedFlow Blogs # blog_name will be displayed in your blog page
+blog_description: Tutorials and Blogs on Flow and Diffusion Models
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
 
@@ -209,7 +209,7 @@ announcements:
 latest_posts:
   enabled: true
   scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
-  limit: 2 # leave blank to include all the blog posts
+  limit: 5 # leave blank to include all the blog posts
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

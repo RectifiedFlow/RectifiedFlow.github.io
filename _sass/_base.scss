@@ -56,6 +56,10 @@ table.table a {
   }
 }
 
+.title-case {
+  text-transform: capitalize;
+}
+
 blockquote {
   background: var(--global-bg-color);
   border-left: 5px solid var(--global-theme-color);
