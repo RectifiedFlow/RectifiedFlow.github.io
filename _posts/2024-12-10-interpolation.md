@@ -39,6 +39,10 @@ toc:
     subsections:
       - name: "Straight, Spherical and DDIM interpolation"
       - name: "Pointwise Transformability Between Affine Interpolations"
+  - name: "Rectified Flow Converter"
+    subsections:
+      - name: "Equivariance of Rectified Flow"
+      - name: "Converting Pretrained RF Velocity"
 ---
 
 In this blog post, we will first demonstrate that all *affine interpolations* are point-wise transformable. We will then explain how transformations between these interpolations can be performed. Building upon this, we will show that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. The key insight is that the transformations applied to the interpolation are **exactly the same** as those applied to the rectified flow.
@@ -57,7 +61,7 @@ $$
 X_t = \alpha_t \cdot X_0 + \beta_t \cdot X_1, \tag{1}
 $$
 
-where $\alpha_t$ and $\beta_t$ are time-dependent functions satisfying:
+where $$\alpha_t$$ and $$\beta_t$$ are time-dependent functions satisfying:
 
 $$
 \alpha_0 = \beta_1 = 0 \quad \text{and} \quad \alpha_1 = \beta_0 = 1. \tag{2}
@@ -65,7 +69,7 @@ $$
 
 This form of interpolation is referred to as **affine interpolation**. In practice, it is desirable for $$\alpha_t$$ to be monotonically increasing and $$\beta_t$$ to be monotonically decreasing over the interval $$[0,1]$$.
 
-The collection $$\{X_t\} = \{X_t : t \in [0,1]\}$$ defines an **interpolation process**, which smoothly transitions the distribution from $X_0$ at $t=0$ to $X_1$ at $t=1$.
+The collection $$\{X_t\} = \{X_t : t \in [0,1]\}$$ defines an **interpolation process**, which smoothly transitions the distribution from $$X_0$$ at $$t=0$$ to $$X_1$$ at $$t=1$$.
 
 While this process effectively creates a "bridge" between $$X_0$$ and $$X_1$$, it has a notable limitation: it is not "simulatable" using only the source data. To generate $$X_t$$ for some $$t \in (0,1)$$, one needs direct access to both $$X_0$$ and $$X_1$$, making it impossible to produce new target samples without having the target distribution already in hand.
 
@@ -252,3 +256,98 @@ The figure below demonstrates the conversion between the `straight` and `spheric
           height="630px" 
           width="100%"></iframe>
 </div>
+
+
+## Rectified Flow Converter
+
+### Equivariance of Rectified Flow
+
+Interestingly, the very same transformation applied to the interpolation process $$\{X_t\}$$ can also be applied to the corresponding rectified flows. This observation leads us to the following theorem:
+
+> **Theorem: Equivariance of Rectified Flow**
+> 
+> Suppose two processes $$\{X_t\}$$ and $$\{X'_t\}$$ are related pointwise by
+> $$
+> X'_t = \phi_t(X_{\tau_t}),
+> $$
+> 
+> where $$\phi : (t, x) \mapsto \phi_t(x)$$ and $$\tau : t \mapsto \tau_t$$ are differentiable, invertible mappings. If their corresponding rectified flows are denoted by $$\{Z_t\}$$ and $$\{Z'_t\}$$, then they satisfy the analogous relationship
+> 
+> $$
+> Z'_t = \phi_t(Z_{\tau_t}),
+> $$
+>
+> provided that this relationship holds at initialization (i.e., $$Z'_0 = \phi_0(Z_0)$$).
+
+**Implications**
+
+This result demonstrates that the rectified flows associated with pointwise transformable interpolations are essentially **equivalent**, differing only by the same pointwise transformation. Moreover, if $$X_t = \mathcal{I}_t(X_0, X_1)$$ and $$X'_t = \mathcal{I}'_t(X_0, X_1)$$ are constructed from the same initial coupling $$(X_0, X_1)$$, they induce identical rectified couplings: $$(Z'_0, Z'_1) = (Z_0, Z_1)$$.
+
+In short, if we define $$\{X'_t\} = \texttt{Transform}(\{X_t\})$$ as above, then the rectification operation $$\texttt{Rectify}(\cdot)$$ is **equivariant** under such transformations. Formally:
+
+$$
+\texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
+$$
+
+For a more detailed derivation, please refer to Chapter 3 of the flow book.
+
+
+### Converting Pretrained RF Velocity
+
+Now, let’s take a pretrained straight rectified flow and transform it into a curved trajectory. The idea is to leverage our existing velocity predictions from the straight path and re-apply them to a new, curved interpolation. Here’s the general approach:
+
+1. **Mapping to the New Trajectory**:  
+   First, we find the corresponding position on the straight trajectory $$\{Z_t\}$$ for any given point $$Z'_t$$ on the curved trajectory $$\{Z'_t\}$$. This ensures we can reuse the pre-trained velocity field, which is defined along the straight path.
+
+2. **Velocity Predictions**:  
+   With the mapping established, we can now use the trained velocity model on $$\{Z_t\}$$ to obtain predictions $$\hat{X}_0$$ and $$\hat{X}_1$$. These predictions are crucial for ensuring that our curved interpolation still respects the underlying distributions.
+
+3. **Updating the Trajectory**:  
+   Finally, we advance the state along the curved trajectory using the updated interpolation $$\mathcal{I}(\hat{X}_0, \hat{X}_1)$$. This step integrates our predictions and ensures the resulting flow truly follows the curved path we’ve chosen.
+
+By following these steps, we effectively "re-route" a rectified flow—originally trained on a straight interpolation—onto a different curve, all without needing to retrain the underlying model.
+
+<div class="l-page">
+  <iframe src="{{ '/assets/plotly/interp_1rf_straight_to_spherical.html' | relative_url }}" 
+          frameborder="0" 
+          scrolling="no" 
+          height="630px" 
+          width="100%"></iframe>
+</div>
+
+**Trajectory Considerations**
+
+Looking at the figure above, we see that as the number of sampling steps increases, the trajectories for $$Z_1$$ and $$Z_1'$$ converge to the same points, and the mean squared error between them decreases, thereby validating the theorem.
+
+However, even though different paths can lead to the same rectified endpoints $$Z_1$$, the intermediate trajectories $$\{Z_t\}$$ they follow are not the same. In practice, we must discretize these trajectories when running simulations, making perfect solutions unattainable. For this reason, choosing straighter trajectories is generally preferable: the straighter the path, the lower the discretization errors, and the more faithful the results.
+
+
+### Train Two Rectified Flows: Equivalent Rectified Couplings
+
+When two pointwise transformable interpolation processes are derived from the same coupling $$(X_0, X_1)$$, they will produce the same rectified coupling. In other words, no matter what interpolation you choose—provided it starts and ends at the same distributions—the rectified flow will align their endpoints.
+
+> **Theorem. Equivalence of Rectified Couplings** 
+> 
+> Suppose we have two interpolation processes, $$\{X_t\}$$ and $$\{X'_t\}$$, that share the same initial and final conditions:
+> 
+> $$
+> (X_0, X_1) = (X'_0, X'_1),
+> $$
+> 
+> and suppose that their time transformation $$\tau$$ satisfies $$\tau(0) = 0$$ and $$\tau(1) = 1$$. Under these conditions, their corresponding rectified flows yield the same coupling:
+> 
+> $$
+> (Z_0, Z_1) = (Z'_0, Z'_1).
+> $$
+
+To illustrate this result, let’s consider a simple 2D example and verify the theorem in action.
+
+<div class="l-page">
+  <iframe src="{{ '/assets/plotly/interp_straight_spherical_rf.html' | relative_url }}" 
+          frameborder="0" 
+          scrolling="no" 
+          height="630px" 
+          width="100%"></iframe>
+</div>
+
+This figure shows that when we independently train two rectified flows using the same data coupling $$(X_0, X_1)$$ but employ different interpolation schemes, the resulting couplings $$(Z_0,Z_1)$$ and $$(Z_0',Z_1')$$ are the same. Check the notebook for more details.
