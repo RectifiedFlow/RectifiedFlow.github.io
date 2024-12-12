@@ -6,7 +6,7 @@ title: blank # the website title (if blank, full name will be used instead)
 first_name: RectifiedFlow
 middle_name:
 last_name:
-email: lqiang@cs.utexas.edu
+email: rectifiedflow@googlegroups.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Everything should be made as simple as possible, but not simpler.
 footer_text: >
@@ -41,7 +41,7 @@ repo_trophies:
 # will use title and url fields
 # Take a look to https://github.com/jekyll/jekyll-feed for more customization
 
-rss_icon: true
+rss_icon: false
 
 # -----------------------------------------------------------------------------
 # Layout
@@ -81,7 +81,7 @@ flickr_id: # your flickr id
 github_username: # your GitHub user name
 gitlab_username: # your GitLab user name
 ieee_id: # your ieeexplore.ieee.org/author/id
-inspirehep_id: 1010907 # Inspire HEP author ID
+inspirehep_id: # Inspire HEP author ID
 instagram_id: # your instagram id
 kaggle_id: # your kaggle id
 keybase_username: # your keybase user name
@@ -96,7 +96,7 @@ pinterest_id: # your pinterest id
 publons_id: # your ID on Publons
 quora_username: # your Quora username
 research_gate_profile: # your profile on ResearchGate
-scholar_userid: qc6CJjYAAAAJ # your Google Scholar ID
+scholar_userid: XEx1fZkAAAAJ # your Google Scholar ID
 scopus_id: # your profile on Scopus
 semanticscholar_id: # your Semantic Scholar ID
 spotify_id: # your spotify id
