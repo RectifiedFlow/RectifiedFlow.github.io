@@ -1,8 +1,8 @@
 ---
 layout: distill
-title: Interpolation
-description: Demonstration of affine interpolations and their equivalent rectified flow dynamics
-tags: turorial
+title: All Flows are One Flow
+description: Affine Interpolations Result in Equivalent Rectified Flows
+tags: tutorial
 giscus_comments: true
 date: 2024-12-10 10:00:00
 featured: true
