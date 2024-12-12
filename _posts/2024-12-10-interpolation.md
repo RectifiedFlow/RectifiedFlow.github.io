@@ -45,9 +45,9 @@ toc:
       - name: "Converting Pretrained RF Velocity"
 ---
 
-In this blog post, we will first demonstrate that all *affine interpolations* are point-wise transformable. We will then explain how transformations between these interpolations can be performed. Building upon this, we will show that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. The key insight is that the transformations applied to the interpolation are **exactly the same** as those applied to the rectified flow.
+In this blog post, we will first demonstrate that all _affine interpolations_ are point-wise transformable. We will then explain how transformations between these interpolations can be performed. Building upon this, we will show that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. The key insight is that the transformations applied to the interpolation are **exactly the same** as those applied to the rectified flow.
 
-Before diving deeper, let’s quickly review the core concepts of Rectified Flow. 
+Before diving deeper, let’s quickly review the core concepts of Rectified Flow.
 
 See this [notebook]() for implementation.
 
@@ -55,7 +55,7 @@ See this [notebook]() for implementation.
 
 ### Affine Interpolation
 
-Given observed samples $$X_0 \sim \pi_0$$ from a source distribution and $$X_1 \sim \pi_1$$ from a target distribution, we consider a class of *affine interpolations* $$X_t$$:
+Given observed samples $$X_0 \sim \pi_0$$ from a source distribution and $$X_1 \sim \pi_1$$ from a target distribution, we consider a class of _affine interpolations_ $$X_t$$:
 
 $$
 X_t = \alpha_t \cdot X_0 + \beta_t \cdot X_1, \tag{1}
@@ -102,7 +102,6 @@ This conditional average ensures that the model preserves the marginal distribut
 <div class="l-body">
   <img src="/assets/img/flow_in_out.png" alt="cross" style="max-width:100%;" />
 </div>
-
 
 We refer to the process $$\{Z_t\}$$ as the **rectified flow**, which is induced by the interpolation $$\{X_t\}$$. The rectified flow follows:
 
@@ -165,6 +164,7 @@ $$
 $$
 \alpha_t = \exp\left(- \frac{1}{4}a(1-t)^2 - \frac{1}{2}b(1-t)\right), \quad \beta_t = \sqrt{1 - \alpha_t^2}, \quad a=19.9, b=0.1 \tag{9}
 $$
+
 - This also yields a spherical trajectory, but with a non-uniform speed defined by $$\alpha_t$$.
 
 ### Pointwise Transformability Between Affine Interpolations
@@ -175,7 +175,7 @@ $$
 X_t = \alpha_t X_1 + \beta_t X_0 \quad \text{and} \quad X_{t}' = \alpha_{t}' X_1 + \beta_{t}' X_0,
 $$
 
-we show that one can be smoothly transformed into the other, and vice versa. 
+we show that one can be smoothly transformed into the other, and vice versa.
 
 **1. Matching Time**
 
@@ -216,7 +216,7 @@ $$
 is well-defined and independent of $$X_0$$ and $$X_1$$.
 
 > **Definition: Pointwise Transformability**
-> 
+>
 > We say that two interpolation processes $$ \{X_t\} $$ and $$ \{X_t'\} $$ are **pointwise transformable** if:
 >
 > $$
@@ -225,13 +225,12 @@ is well-defined and independent of $$X_0$$ and $$X_1$$.
 >
 > where $$ \tau: t \mapsto \tau_t $$ is a monotonic (hence invertible) time transformation, and $$ \phi: (t, x) \mapsto \phi_t(x) $$ is an invertible transformation.
 
-
 In the affine interpolations case:
 
 - The time transformation is $$\tau_t = t'$$.
 - The scaling transformation is $$\phi_t(X_t) = X_{\tau_t}/\omega_t$$.
 
-We can determine the time scaling function $$\tau_t$$ in two ways. For simple cases, $$\tau_t$$ can be computed analytically. For more complex scenarios, a numerical approach, such as a [simple binary search](), can be used to find $$\tau_t$$ efficiently. 
+We can determine the time scaling function $$\tau_t$$ in two ways. For simple cases, $$\tau_t$$ can be computed analytically. For more complex scenarios, a numerical approach, such as a [simple binary search](), can be used to find $$\tau_t$$ efficiently.
 
 <div class="l-page" style="display: flex;">
   <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
@@ -246,7 +245,6 @@ We can determine the time scaling function $$\tau_t$$ in two ways. For simple ca
           width="49%"></iframe>
 </div>
 
-
 The figure below demonstrates the conversion between the `straight` and `spherical` interpolations using a binary search method. Observe that once converted, the trajectory of the original `straight` interpolation matches perfectly with the newly derived `straight` curve, confirming that these interpolations are indeed pointwise transformable.
 
 <div class="l-page">
@@ -257,7 +255,6 @@ The figure below demonstrates the conversion between the `straight` and `spheric
           width="100%"></iframe>
 </div>
 
-
 ## Rectified Flow Converter
 
 ### Equivariance of Rectified Flow
@@ -265,14 +262,15 @@ The figure below demonstrates the conversion between the `straight` and `spheric
 Interestingly, the very same transformation applied to the interpolation process $$\{X_t\}$$ can also be applied to the corresponding rectified flows. This observation leads us to the following theorem:
 
 > **Theorem: Equivariance of Rectified Flow**
-> 
+>
 > Suppose two processes $$\{X_t\}$$ and $$\{X'_t\}$$ are related pointwise by
+>
 > $$
 > X'_t = \phi_t(X_{\tau_t}),
 > $$
-> 
+>
 > where $$\phi : (t, x) \mapsto \phi_t(x)$$ and $$\tau : t \mapsto \tau_t$$ are differentiable, invertible mappings. If their corresponding rectified flows are denoted by $$\{Z_t\}$$ and $$\{Z'_t\}$$, then they satisfy the analogous relationship
-> 
+>
 > $$
 > Z'_t = \phi_t(Z_{\tau_t}),
 > $$
@@ -290,7 +288,6 @@ $$
 $$
 
 For a more detailed derivation, please refer to Chapter 3 of the flow book.
-
 
 ### Converting Pretrained RF Velocity
 
@@ -321,21 +318,20 @@ Looking at the figure above, we see that as the number of sampling steps increas
 
 However, even though different paths can lead to the same rectified endpoints $$Z_1$$, the intermediate trajectories $$\{Z_t\}$$ they follow are not the same. In practice, we must discretize these trajectories when running simulations, making perfect solutions unattainable. For this reason, choosing straighter trajectories is generally preferable: the straighter the path, the lower the discretization errors, and the more faithful the results.
 
-
 ### Train Two Rectified Flows: Equivalent Rectified Couplings
 
 When two pointwise transformable interpolation processes are derived from the same coupling $$(X_0, X_1)$$, they will produce the same rectified coupling. In other words, no matter what interpolation you choose—provided it starts and ends at the same distributions—the rectified flow will align their endpoints.
 
-> **Theorem. Equivalence of Rectified Couplings** 
-> 
+> **Theorem. Equivalence of Rectified Couplings**
+>
 > Suppose we have two interpolation processes, $$\{X_t\}$$ and $$\{X'_t\}$$, that share the same initial and final conditions:
-> 
+>
 > $$
 > (X_0, X_1) = (X'_0, X'_1),
 > $$
-> 
+>
 > and suppose that their time transformation $$\tau$$ satisfies $$\tau(0) = 0$$ and $$\tau(1) = 1$$. Under these conditions, their corresponding rectified flows yield the same coupling:
-> 
+>
 > $$
 > (Z_0, Z_1) = (Z'_0, Z'_1).
 > $$
