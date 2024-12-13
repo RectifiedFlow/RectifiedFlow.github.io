@@ -330,7 +330,7 @@ scholar:
   locale: en
 
   source: /_bibliography/
-  bibliography: 2024-12-10-samplers.bib
+  bibliography: 2024-12-06-intro.bib
   bibliography_template: bib
   # Note: if you have latex math in your bibtex, the latex filter
   # preprocessing may conflict with MathJAX if the latter is enabled.
