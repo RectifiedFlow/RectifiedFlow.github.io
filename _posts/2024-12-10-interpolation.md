@@ -199,7 +199,7 @@ We now show that **all affine interpolations are pointwise transformable** by ap
 
 In practice, we determine the time scaling function $$\tau_t$$ in two ways. For simple cases, $$\tau_t$$ can be computed analytically. For more complex scenarios, a numerical approach, such as a [simple binary search](), can be used to find $$\tau_t$$ efficiently. Check the notebook for implementation.
 
-<div class="l-body" style="display: flex;">
+<div class="l-body-outset" style="display: flex;">
   <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
@@ -236,7 +236,7 @@ Substituting the notion of $$\tau$$ and $$\omega$$ into the theorem 1, we have:
 
 The figure below shows the conversion between the `straight` and `spherical` interpolations using a binary search method. Observe that once converted, the trajectory of the original `straight` interpolation matches perfectly with the newly derived `straight` curve, confirming that these interpolations are indeed pointwise transformable. See the flow book for explicit solution.
 
-<div class="l-body">
+<div class="l-body-outset">
   <iframe src="{{ '/assets/plotly/interp_affine_interp_conversion.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
@@ -248,7 +248,7 @@ The figure below shows the conversion between the `straight` and `spherical` int
 
 Now, let’s take a pretrained straight rectified flow and transform it into a curved trajectory. See the notebook for implementation details.
 
-<div class="l-body">
+<div class="l-body-outset">
   <iframe src="{{ '/assets/plotly/interp_1rf_straight_to_spherical.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
@@ -329,7 +329,7 @@ $$
 
 Given that the variable scaling factor $$\omega_t = (\sin(\frac{\pi}{2} t) + \cos(\frac{\pi}{2} t))^{-1}$$ is bounded in $$[1/\sqrt{2}, 1]$$, this reparameterization may not significantly impact performance. Overall, the choice of using straight or spherical interpolation might have limited impact in terms of training performance.
 
-<div class="l-body">
+<div class="l-body-outset">
   <iframe src="{{ '/assets/plotly/interp_straight_spherical_rf.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
