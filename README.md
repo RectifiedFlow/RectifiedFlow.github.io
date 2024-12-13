@@ -53,12 +53,11 @@ bundle exec jekyll serve
 ## 添加Blogs
 
 请在 `_posts` 下，copy-paste 此目录下任何blog post修改即可。举例，新添加的file叫做 `2024-12-24-newblogname.md` （注意这里需要按照YYYY-MM-DD-NAME.md)， 如果需要添加references, 可以在 `_bibliography` 和 `assets/bibliography`下面同时加入一个`2024-12-24-newblogname.bib`的file， 然后在里面可以使用正常copy-pasted的bibtext (e.g., from Google Scholar or Semantic Scholar). 然后使用`<d-cite key="Liu2022FlowSA"></d-cite>` 在正文Markdown即可。会自动生成底部reference list和一个hoverable的reference。注意同时需要在 `2024-12-24-newblogname.md`这个file的开头layout里添加
+
 ```yaml
 ---
 layout: distill
-...
 bibliography: 2024-12-06-intro.bib
-...
 ---
 ```
 
