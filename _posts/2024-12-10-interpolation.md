@@ -45,8 +45,6 @@ toc:
   - name: "Implications on Loss Functions"
     subsections:
       - name: "Straight vs Spherical: Same Train Time Weight"
-
-
 ---
 
 The choice of interpolation process can significantly affect inference performance and speed, and it may initially appear that such a decision must be made during the pre-training stage. In this blog, however, we show that it is possible to convert between different affine interpolation schemes at inference time, without retraining the model. The **transformations** applied to the interpolation are **exactly the same** as those applied to the rectified flow. For affine interpolation schemes, this can be achieved by simply rescaling the time $t$ and the input $$x$$. Building on this, we will demonstrate that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. Consequently, it suffices to adopt a simple form—such as the straight-line interpolation $$X_t = tX_1 + (1-t)X_0$$—while maintaining the flexibility to recover all affine interpolations through appropriate adjustments in time and parameterization.
@@ -107,7 +105,6 @@ $$
 >
 > where $$\tau: [0,1] \to [0,1]$$ and $$\phi: [0,1] \times \mathbb{R}^d \to \mathbb{R}^d$$ for $$t \in [0,1]$$ are differentiable maps, and $$\phi_t$$ is invertible for all $$t \in [0,1]$$.
 
-
 Building upon the notion of pointwise transformability, we have:
 
 > **Theorem 1:** Assume that $$\{X_t\}$$ and $$\{X'_t\}$$ are pointwise transformable. Let $$\{v_t\}$$ and $$\{v'_t\}$$ be their respective RF velocity fields, and let $\phi$ and $t$ be the corresponding interpolation transformation maps. Then we have
@@ -116,8 +113,7 @@ Building upon the notion of pointwise transformability, we have:
 > v'_t(x) = \partial_t \phi_t(\phi_t^{-1}(x)) + \nabla \phi_t(\phi_t^{-1}(x))^\top v_{\tau_t}(\phi_t^{-1}(x)) \dot{\tau}_t. \tag{1}
 > $$
 >
->
-> In addition, let $$\{z_t\}$$ be a trajectory of the rectified flow of $$\{X_t\}$$, satisfying $$\frac{\mathrm d}{\mathrm dt} z_t = v_t(z_t).$$ Then a curve $$\{z'_t\}$$ satisfies $$z'_t = \phi_t(z_{\tau_t})$$,  $$\forall t \in [0, 1]$$ if and only if it is the trajectory of the rectified flow of $$\{X'_t\}$$ initialized from $$z'_0 = \phi_0(z_{\tau_0})$$.
+> In addition, let $$\{z_t\}$$ be a trajectory of the rectified flow of $$\{X_t\}$$, satisfying $$\frac{\mathrm d}{\mathrm dt} z_t = v_t(z_t).$$ Then a curve $$\{z'_t\}$$ satisfies $$z'_t = \phi_t(z_{\tau_t})$$, $$\forall t \in [0, 1]$$ if and only if it is the trajectory of the rectified flow of $$\{X'_t\}$$ initialized from $$z'_0 = \phi_0(z_{\tau_0})$$.
 
 Furthermore, under the additional requirement that $$\tau(0)=0$$, let $$\frac{\mathrm d}{\mathrm dt}Z_t=v_t(Z_t)$$ be the rectified flow of $$\{X_t\}$$ (initialized with $$Z_0=X_0$$ by default). Then $$Z'_t=\phi_t(Z_{\tau_t})$$ is the rectified flow of $$\{X_t'\}$$ with the specific initialization
 
@@ -133,12 +129,11 @@ Assume the same conditions as Theorem 1, with the additional assumption that $$\
 
 **Equivalent Rectified Couplings**
 
-
-If $$\{X_t\}$$ and $$\{X'_t\}$$ are constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1),$$ and they satisfy the condition in Theorem 1 with $$\tau(0) = 0$$ and $$\tau(1) = 1$$, then their rectified flow yields the same coupling, that is, $$ (Z_0, Z_1) = (Z'_0, Z'_1).$$
+If $$\{X_t\}$$ and $$\{X'_t\}$$ are constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1),$$ and they satisfy the condition in Theorem 1 with $$\tau(0) = 0$$ and $$\tau(1) = 1$$, then their rectified flow yields the same coupling, that is, $$ (Z_0, Z_1) = (Z'\_0, Z'\_1).$$
 
 ## Equivalence of Affine Interpolations
 
-We now consider a specific class of interpolations called *affine interpolations*, defined as $$ X_t = \alpha_t X_1 + \beta_t X_0 $$ where $$\alpha_t$$ and $$\beta_t$$ satisfy the conditions $$\alpha_0 = \beta_1 = 0$$ and $$\alpha_1 = \beta_0 = 1$$, as well as $$\alpha_t$$ is monotonically increasing and $$\beta_t$$ monotonically decreasing.
+We now consider a specific class of interpolations called _affine interpolations_, defined as $$ X_t = \alpha_t X_1 + \beta_t X_0 $$ where $$\alpha_t$$ and $$\beta_t$$ satisfy the conditions $$\alpha_0 = \beta_1 = 0$$ and $$\alpha_1 = \beta_0 = 1$$, as well as $$\alpha_t$$ is monotonically increasing and $$\beta_t$$ monotonically decreasing.
 
 ### Straight, Spherical and DDIM interpolation
 
@@ -200,11 +195,11 @@ We now show that **all affine interpolations are pointwise transformable** by ap
 > \omega_0 = \omega_1 = 1, \quad \tau_0 = 0, \quad \tau_1 = 1.
 > $$
 >
-> There is one unique solution of $$(\tau_t, \omega_t)$$ in $$(2)$$ since $$\alpha'_t / \beta'_t \geq 0$$  and $$\alpha_t / \beta_t$$ is strictly increasing for $$t \in [0,1]$$.
+> There is one unique solution of $$(\tau_t, \omega_t)$$ in $$(2)$$ since $$\alpha'_t / \beta'_t \geq 0$$ and $$\alpha_t / \beta_t$$ is strictly increasing for $$t \in [0,1]$$.
 
-In practice, we determine the time scaling function $$\tau_t$$ in two ways. For simple cases, $$\tau_t$$ can be computed analytically. For more complex scenarios, a numerical approach, such as a [simple binary search](), can be used to find $$\tau_t$$ efficiently.  Check the notebook for implementation.
+In practice, we determine the time scaling function $$\tau_t$$ in two ways. For simple cases, $$\tau_t$$ can be computed analytically. For more complex scenarios, a numerical approach, such as a [simple binary search](), can be used to find $$\tau_t$$ efficiently. Check the notebook for implementation.
 
-<div class="l-page" style="display: flex;">
+<div class="l-body" style="display: flex;">
   <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
@@ -217,32 +212,31 @@ In practice, we determine the time scaling function $$\tau_t$$ in two ways. For 
           width="49%"></iframe>
 </div>
 
-
 Substituting the notion of $$\tau$$ and $$\omega$$ into the theorem 1, we have:
 
->**Theorem 2**: Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
+> **Theorem 2**: Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
 >
->1) Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
+> 1.  Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
 >
->$$
->Z'_t = \omega_t^{-1} Z_{\tau_t}, \quad \forall t \in [0, 1].
->$$
+> $$
+> Z'_t = \omega_t^{-1} Z_{\tau_t}, \quad \forall t \in [0, 1].
+> $$
 >
->2) Their rectified couplings are equivalent:
+> 2.  Their rectified couplings are equivalent:
 >
->$$
->(Z_0, Z_1) = (Z'_0, Z'_1).
->$$
+> $$
+> (Z_0, Z_1) = (Z'_0, Z'_1).
+> $$
 >
->3) Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
+> 3.  Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
 >
->$$
->v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
->$$
+> $$
+> v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
+> $$
 
 The figure below shows the conversion between the `straight` and `spherical` interpolations using a binary search method. Observe that once converted, the trajectory of the original `straight` interpolation matches perfectly with the newly derived `straight` curve, confirming that these interpolations are indeed pointwise transformable. See the flow book for explicit solution.
 
-<div class="l-page">
+<div class="l-body">
   <iframe src="{{ '/assets/plotly/interp_affine_interp_conversion.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
@@ -250,21 +244,17 @@ The figure below shows the conversion between the `straight` and `spherical` int
           width="100%"></iframe>
 </div>
 
-
-
 ### Converting Pretrained RF Velocity
 
-Now, let’s take a pretrained straight rectified flow and transform it into a curved trajectory.  See the notebook for implementation details.
+Now, let’s take a pretrained straight rectified flow and transform it into a curved trajectory. See the notebook for implementation details.
 
-<div class="l-page">
+<div class="l-body">
   <iframe src="{{ '/assets/plotly/interp_1rf_straight_to_spherical.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
           height="630px" 
           width="100%"></iframe>
 </div>
-
-
 
 **Trajectory Considerations**
 As the number of sampling steps increases, the trajectories for $$Z_1$$ and $$Z_1'$$ should converge to the same points, and the mean squared error between them should also decrease.
@@ -273,7 +263,7 @@ However, even though different paths theoretically lead to the same rectified en
 
 ## Implications on Loss Functions
 
-Assume that we have trained a model $$\hat{v}_t$$ for the RF velocity field $$v_t$$ under an affine interpolation. Using the formulas from the previous section, we can convert it to a model $$\hat{v}'_t$$ for $$v'_t$$ corresponding to a different interpolation scheme at the post-training stage. This raises the question of what properties the converted model $$\hat{v}'_t$$ may have compared to the models trained directly on the same interpolation, and whether it suffers from performance degradation due to the conversion. 
+Assume that we have trained a model $$\hat{v}_t$$ for the RF velocity field $$v_t$$ under an affine interpolation. Using the formulas from the previous section, we can convert it to a model $$\hat{v}'_t$$ for $$v'_t$$ corresponding to a different interpolation scheme at the post-training stage. This raises the question of what properties the converted model $$\hat{v}'_t$$ may have compared to the models trained directly on the same interpolation, and whether it suffers from performance degradation due to the conversion.
 
 We show here that using different affine interpolation schemes during training is equivalent to applying **different time-weighting** in the loss function, as well as an affine transform on the parametric model. Unless $$\omega_t$$ and $$\tau_t$$ are highly singular, the conversion does not necessarily degrade performance.
 
@@ -297,11 +287,11 @@ $$
 \mathcal L'(\theta) = \int_0^1 \mathbb{E} \left[ \eta'_t \left\| \dot{X}'_t - v'_t(X'_t; \theta) \right\|^2 \right] \mathrm dt \tag{5}
 $$
 
-When matching the loss $$(4)$$ and $$(5)$$,  we find that these two training schemes are identical, except for the following time-weighting and reparametrization relationship:
+When matching the loss $$(4)$$ and $$(5)$$, we find that these two training schemes are identical, except for the following time-weighting and reparametrization relationship:
 
 $$
 \eta'_t = \frac{\omega_t^2}{\dot{\tau}_t} \eta_{\tau_t},
-\quad 
+\quad
 v'_t(x; \theta) = \frac{\dot{\tau}_t}{\omega_t} v_{\tau_t}(\omega_t x; \theta) - \frac{\dot{\omega}_t}{\omega_t} x.
 $$
 
@@ -323,11 +313,11 @@ $$
 X'_t = \sin\left(\frac{\pi t}{2}\right) X_1 + \cos\left(\frac{\pi t}{2}\right) X_0,
 $$
 
- where
+where
 
 $$
-\eta'_t = \frac{2}{\pi} \eta_{\tau_t}, 
-\quad 
+\eta'_t = \frac{2}{\pi} \eta_{\tau_t},
+\quad
 \tau_t = \frac{\tan\left(\frac{\pi t}{2}\right)}{\tan\left(\frac{\pi t}{2}\right)+1}.
 $$
 
@@ -339,13 +329,12 @@ $$
 
 Given that the variable scaling factor $$\omega_t = (\sin(\frac{\pi}{2} t) + \cos(\frac{\pi}{2} t))^{-1}$$ is bounded in $$[1/\sqrt{2}, 1]$$, this reparameterization may not significantly impact performance. Overall, the choice of using straight or spherical interpolation might have limited impact in terms of training performance.
 
-<div class="l-page">
+<div class="l-body">
   <iframe src="{{ '/assets/plotly/interp_straight_spherical_rf.html' | relative_url }}" 
           frameborder="0" 
           scrolling="no" 
           height="630px" 
           width="100%"></iframe>
 </div>
-
 
 Here, we independentely trained 2 rectified flow with mlp. Note that the final couplings $$(Z_0,Z_1)$$ and $$(Z_0',Z_1')$$ are the same.

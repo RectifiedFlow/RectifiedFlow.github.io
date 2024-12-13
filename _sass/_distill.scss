@@ -2,6 +2,8 @@
  * Style overrides for distill blog posts.
  ******************************************************************************/
 
+@import url("https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic-ext,cyrillic,latin-ext");
+
 d-byline {
   border-top-color: var(--global-divider-color) !important;
 }
@@ -19,6 +21,7 @@ d-article d-byline a {
 }
 
 d-article {
+  font-family: "PT Serif", "Times New Roman", Times, serif;
   border-top-color: var(--global-divider-color) !important;
   p,
   h1,
