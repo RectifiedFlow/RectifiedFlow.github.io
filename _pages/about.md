@@ -5,7 +5,7 @@ permalink: /
 subtitle: <a href='https://www.cs.utexas.edu/~lqiang/'>The Statistical Learning and AI Lab at UT Austin</a>.
 
 profile:
-  align: top
+  align: right
   image: logo.png
   image_circular: false # crops the image to make it circular
   more_info:
