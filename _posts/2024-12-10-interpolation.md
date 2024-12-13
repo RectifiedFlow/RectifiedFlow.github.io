@@ -39,6 +39,7 @@ toc:
       - name: "Same Transform on Interpolations and Rectified Flows"
   - name: "Equivalence of Affine Interpolations"
     subsections:
+      - name: "General Interpolation Function"
       - name: "Straight, Spherical and DDIM interpolation"
       - name: "Pointwise Transformability Between Affine Interpolations"
       - name: "Converting Pretrained RF Velocity"
@@ -137,12 +138,32 @@ This result has two implications:
    (Z_0, Z_1) = (Z'_0, Z'_1).
    $$
 
-
 ## Equivalence of Affine Interpolations
 
-We now consider a specific class of interpolations called _affine interpolations_, defined as $$ X_t = \alpha_t X_1 + \beta_t X_0 $$ where $$\alpha_t$$ and $$\beta_t$$ satisfy the conditions $$\alpha_0 = \beta_1 = 0$$ and $$\alpha_1 = \beta_0 = 1$$, as well as $$\alpha_t$$ is monotonically increasing and $$\beta_t$$ monotonically decreasing.
+### General Interpolation Function
+
+> **Definition 2.** Consider a function 
+>
+> $$
+> \mathtt{I} : [0, 1] \times \mathbb{R}^d \times \mathbb{R}^d \to \mathbb{R}^d,
+> $$
+>
+> denoted by $$\mathtt{I}_t(x_0, x_1)$$. We say $$\mathtt{I}$$ is an *interpolation function* if it satisfies:
+>
+> $$
+> \mathtt{I}_0(x_0, x_1) = x_0 \quad \text{and} \quad \mathtt{I}_1(x_0, x_1) = x_1 \quad \text{for all } x_0, x_1 \in \mathbb{R}^d.
+> $$
+>
+> Given an interpolation function $$\mathtt{I}$$ and a coupling $$(X_0, X_1)$$, the associated interpolation process $$\{X_t\}$$ is defined by:
+>
+> $$
+> X_t = \mathtt{I}_t(X_0, X_1).
+> $$
+
 
 ### Straight, Spherical and DDIM interpolation
+
+We now consider a specific class of interpolations called _affine interpolations_, defined as $$ X_t = \alpha_t X_1 + \beta_t X_0 $$ where $$\alpha_t$$ and $$\beta_t$$ satisfy the conditions $$\alpha_0 = \beta_1 = 0$$ and $$\alpha_1 = \beta_0 = 1$$, as well as $$\alpha_t$$ is monotonically increasing and $$\beta_t$$ monotonically decreasing.
 
 **Straight Line Interpolation** (`straight` or `lerp`)
 
