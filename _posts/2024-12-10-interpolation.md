@@ -50,7 +50,7 @@ toc:
 
 ---
 
-The choice of the interpolation process can significantly impact inference performance and speed, and it may initially seem that this decision must be made during the pre-training phase. In this blog, however, we demonstrate that it is possible to convert between different affine interpolation schemes at inference time, without retraining the model. The **transformations** applied to the interpolation are **exactly the same** as those applied to the rectified flow. For affine interpolation schemes, this can be achieved with a simple rescaling of the time $$t$$ and the input $$x$$. Building on this, we will show that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings.
+The choice of interpolation process can significantly affect inference performance and speed, and it may initially appear that such a decision must be made during the pre-training stage. In this blog, however, we show that it is possible to convert between different affine interpolation schemes at inference time, without retraining the model. The **transformations** applied to the interpolation are **exactly the same** as those applied to the rectified flow. For affine interpolation schemes, this can be achieved by simply rescaling the time $t$ and the input $$x$$. Building on this, we will demonstrate that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. Consequently, it suffices to adopt a simple form—such as the straight-line interpolation $$X_t = tX_1 + (1-t)X_0$$—while maintaining the flexibility to recover all affine interpolations through appropriate adjustments in time and parameterization.
 
 For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 3 in the [Rectified Flow book]().
 
@@ -101,8 +101,6 @@ Define $$\{X'_t\} = \texttt{Transform}(\{X_t\})$$ as the aforementioned pointwis
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
 $$
-
-
 
 ### Same Transform on Interpolations and Rectified Flows
 
@@ -227,25 +225,25 @@ In practice, we determine the time scaling function $$\tau_t$$ in two ways. For 
 
 Substituting the notion of $$\tau$$ and $$\omega$$ into the theorem 1, we have:
 
-> **Theorem 2**: Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
+>**Theorem 2**: Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
 >
-> 1) Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
+>1) Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
 >
-> $$
-> Z'_t = \omega_t^{-1} Z_{\tau_t}, \quad \forall t \in [0, 1].
-> $$
+>$$
+>Z'_t = \omega_t^{-1} Z_{\tau_t}, \quad \forall t \in [0, 1].
+>$$
 >
-> 2) Their rectified couplings are equivalent:
+>2) Their rectified couplings are equivalent:
 >
-> $$
-> (Z_0, Z_1) = (Z'_0, Z'_1).
-> $$
+>$$
+>(Z_0, Z_1) = (Z'_0, Z'_1).
+>$$
 >
-> 3) Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
+>3) Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
 >
-> $$
-> v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
-> $$
+>$$
+>v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
+>$$
 
 The figure below shows the conversion between the `straight` and `spherical` interpolations using a binary search method. Observe that once converted, the trajectory of the original `straight` interpolation matches perfectly with the newly derived `straight` curve, confirming that these interpolations are indeed pointwise transformable. See the flow book for explicit solution.
 
