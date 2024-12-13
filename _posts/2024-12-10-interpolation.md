@@ -27,7 +27,6 @@ authors:
   - name: Runlong Liao
   - name: Xixi Hu
   - name: Bo Liu
-  - name: Yule Duan
 
 # 如果有文献，请指定bibliography文件
 # bibliography: 2024-12-11-distill.bib
@@ -56,11 +55,7 @@ For a more comprehensive and rigorous discussion on this topic, please refer to 
 
 ### TL; DR
 
-Assume that we are given an arbitrary coupling $(X_0, X_1)$ of source distribution $\pi_0$ and target distribution$\pi_1$. We first construct a time-differentialble interpolation process diefined by
-
-$$\{X_t\}:\{X_t=\alpha_t X_1 + \beta_t X_0, t\in[0,1]\}.$$
-
-Then, the Rectified Flow $$\{Z_t\}$$ induced by $$\{X_t\}$$ is given by
+Assume that we are given an arbitrary coupling $(X_0, X_1)$ of source distribution $\pi_0$ and target distribution$\pi_1$. With a time-differentialble interpolation process $$X_t = \texttt I_t(X_0, X_1)$$, the Rectified Flow $$\{Z_t\}$$ induced by $$\{X_t\}$$ is given by
 
 $$
 \mathrm d Z_t = v_t(Z_t), \quad \forall t \in [0,1], \quad \text{starting from } Z_0 = X_0,
@@ -92,7 +87,7 @@ $$
 
 provided that this relation holds at initialization, i.e., $$Z'_0 = \phi_t(Z_0)$$.
 
-This result implies that the rectified flows of pointwisely transformable interpolations are **essentially the same**, up to the same pointwise transformation. Furthermore, if two interpolations $$X_t = \texttt I_t(X_0, X_1)$$ and $$X'_t = \texttt I_t(X_0, X_1)$$ are constructed from the same coupling $$(X_0, X_1)$$, they yield same rectified coupling $$(Z_0, Z_1') = (Z_0, Z_1)$$.
+This result implies that the rectified flows of pointwisely transformable interpolations are **essentially the same**, up to the same pointwise transformation. Furthermore, if two interpolations $$X_t = \texttt I_t(X_0, X_1)$$ and $$X'_t = \texttt I'_t(X_0, X_1)$$ are constructed from the same coupling $$(X_0, X_1)$$, they yield same rectified coupling $$(Z_0, Z_1') = (Z_0, Z_1)$$.
 
 Define $$\{X'_t\} = \texttt{Transform}(\{X_t\})$$ as the aforementioned pointwise transformation. The result then suggests that the rectification operation $$\texttt{Rectify}(\cdot)$$ is **equivariant** under these pointwise transforms:
 
