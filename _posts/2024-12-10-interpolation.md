@@ -123,13 +123,22 @@ $$
 
 This result has two implications:
 
-**Same Transform between Interpolations and Rectified Flows**
+1. *Identical Transformations for Interpolations and Rectified Flows:*  
+   Under the same conditions as Theorem 1, and assuming $$\tau(0) = 0$$, let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be the rectified flows corresponding to $$\{X_t\}$$ and $$\{X'_t\}$$, respectively. Then we have:
 
-Assume the same conditions as Theorem 1, with the additional assumption that $$\tau(0) = 0$$. Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be the rectified flows of $$\{X_t\}$$ and $$\{X'_t\}$$, respectively. Then $$Z'_t = \phi_t(Z_{\tau_t})$$ for all $$t \in [0, 1]$$.
+   $$
+   Z'_t = \phi_t(Z_{\tau_t}) \quad \text{for all } t \in [0,1].
+   $$
 
-**Equivalent Rectified Couplings**
+   In other words, the transformation applied to $$\{X_t\}$$ is exactly the same transformation that applies to $$\{Z_t\}$$.
 
-If $$\{X_t\}$$ and $$\{X'_t\}$$ are constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1),$$ and they satisfy the condition in Theorem 1 with $$\tau(0) = 0$$ and $$\tau(1) = 1$$, then their rectified flow yields the same coupling, that is, $$ (Z_0, Z_1) = (Z'\_0, Z'\_1).$$
+2. *Equivalent Rectified Couplings:*  
+   If $$\{X_t\}$$ and $$\{X'_t\}$$ are constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and meet the conditions of Theorem 1 with $$\tau(0) = 0$$ and $$\tau(1) = 1$$, then their rectified flows produce the same coupling. Specifically:
+
+   $$
+   (Z_0, Z_1) = (Z'_0, Z'_1).
+   $$
+
 
 ## Equivalence of Affine Interpolations
 
@@ -216,19 +225,19 @@ Substituting the notion of $$\tau$$ and $$\omega$$ into the theorem 1, we have:
 
 > **Theorem 2**: Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
 >
-> 1.  Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
+> + Their respective rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
 >
 > $$
 > Z'_t = \omega_t^{-1} Z_{\tau_t}, \quad \forall t \in [0, 1].
 > $$
 >
-> 2.  Their rectified couplings are equivalent:
+> + Their rectified couplings are equivalent:
 >
 > $$
 > (Z_0, Z_1) = (Z'_0, Z'_1).
 > $$
 >
-> 3.  Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
+> + Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
 >
 > $$
 > v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
