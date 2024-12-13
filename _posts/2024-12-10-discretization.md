@@ -131,7 +131,7 @@ $$
 
 >Example 3. Equivalence of Straight Euler and DDIM sampler
 >
->Consider the DDIM process defined by an affine interpolation of the form $$X_t' = \alpha'_t X_1 + \beta'_t X_0$$. Running the natural Euler sampler on DDIM using a uniform time grid $$t'_i = i/n$$ is equivalent to applying the vanilla (straight) Euler method to the straight RF (induced from $$X_t = tX_1 + (1 - t)X_0$$) but with a non-uniform time grid:
+>Since DDIM is the natural Euler sampler under spherical interpolation, and the vanllia Euler method is the natural Euler under the straight interpolation, they yield the same results under proper transform on the time grid. Specifically, the natural Euler sampler on an affine interpolation $$X_t' = \alpha'_t X_1 + \beta'_t X_0$$ using a uniform time grid $$t'_i = i/n$$ is equivalent to applying the vanilla (straight) Euler method to the straight RF (induced from $$X_t = tX_1 + (1 - t)X_0$$) but with a non-uniform time grid:
 >
 >$$
 >t_i = \frac{\alpha'_{i/n}}{\alpha'_{i/n}+\beta'_{i/n}}
