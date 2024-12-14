@@ -20,13 +20,13 @@ typograms: true
 
 # 如需添加作者信息，在下方添加authors字段
 authors:
-  - name: Qiang Liu
+  - name: Runlong Liao
     url: "mailto:rectifiedflow@googlegroups.com"
     affiliations:
       name: UT Austin
-  - name: Runlong Liao
   - name: Xixi Hu
   - name: Bo Liu
+  - name: Qiang Liu
 
 # 如果有文献，请指定bibliography文件
 # bibliography: 2024-12-11-distill.bib
@@ -54,7 +54,9 @@ This blog will first introduce the general idea of **natural Euler samplers** an
 
 > If two interpolation processes are pointwise transformable into one another, then the discrete trajectories of their rectified flow (RF) using their corresponding natural Euler samplers are also pointwise transformable using the same mapping functions, provided their time grids are related by a time scaling function $$\tau_t$$.
 
-This result implies that, when natural Euler samplers are employed, during inference time, **changing the affine interpolation scheme is essentially equivalent to altering the time grid**. Note that this equivalence is **beyond** the continuous-time limit of ODE trajectories. Even after discretization via Euler steps, once the sampled points are transformed accordingly, the resulting discrete points will match numerically — we literally get the same results.
+This result implies that, when natural Euler samplers are employed, during inference time, **changing the affine interpolation scheme is essentially equivalent to altering the time grid**. Note that this equivalence is **beyond** the continuous-time limit of ODE trajectories. Even after discretization via Euler steps, once the sampled points are transformed accordingly, the resulting discrete points will match numerically — we literally get the same results. 
+
+For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 5 in the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).
 
 ### Natural Euler Samplers
 
