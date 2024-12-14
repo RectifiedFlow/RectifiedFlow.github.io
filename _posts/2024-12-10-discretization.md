@@ -40,7 +40,13 @@ toc:
 
 ---
 
-# Equivariance of Natural Euler Samplers
+<div class="hero">
+  <img src="/assets/img/teaser_post4.png" alt="Rectified Flow Overview" style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
+</div>
+
+
+
+## Equivariance of Natural Euler Samplers
 
 The Euler method can be viewed as approximating ODE trajectories piecewise by straight segments, where each step uses the tangent line at the current point to approximate the local curve. This local straight-line approximation is a natural choice for rectified flow induced by straight interpolation. However, if the rectified flow is induced by a curved interpolation scheme, it may be more natural to use local curve segments—derived from the same interpolation scheme—instead of straight lines. We refer to such approximation schemes as **natural Euler samplers**. The term "natural" is taken from natural gradient descent, to reflect the point that its equivariant under reparameterizations, we describe below. 
 
@@ -50,7 +56,7 @@ This blog will first introduce the general idea of **natural Euler samplers** an
 
 This result implies that, when natural Euler samplers are employed, during inference time, **changing the affine interpolation scheme is essentially equivalent to altering the time grid**. Note that this equivalence is **beyond** the continuous-time limit of ODE trajectories. Even after discretization via Euler steps, once the sampled points are transformed accordingly, the resulting discrete points will match numerically — we literally get the same results.
 
-## Natural Euler Samplers
+### Natural Euler Samplers
 
 Consider an [interpolation](/blog/2024/interpolation/#general-interpolation-function) process $$X_t=\texttt I_t(X_0, X_1)$$ with a rectified flow velocity field $$v_t$$. In the vanilla Euler method, the trajectories of the flow are approximated on a discrete time gird $$\{t_i\}_i$$ as:
 
@@ -103,7 +109,7 @@ This two equations identifies the endpoints $$\hat{x}_{0 \mid t_i}$$ and $$\hat{
 >
 > which exactly matches Equation 13 of **Song et al. [2020a]**.
 
-## Equivalence of Natural Euler Trajectories
+### Equivalence of Natural Euler Trajectories
 
 The trajectories obtained from natural Euler samplers are equivariant under pointwise transformations. 
 
