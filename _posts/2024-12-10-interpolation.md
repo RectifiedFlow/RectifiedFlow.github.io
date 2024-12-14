@@ -29,7 +29,7 @@ authors:
   - name: Bo Liu
 
 # 如果有文献，请指定bibliography文件
-# bibliography: 2024-12-11-distill.bib
+bibliography: 2024-12-10-interpolation.bib
 
 # 可选的目录配置
 toc:
@@ -50,7 +50,7 @@ toc:
 
 The choice of interpolation process can significantly affect inference performance and speed, and it may initially appear that such a decision must be made during the pre-training stage. In this blog, however, we show that it is possible to convert between different affine interpolation schemes at inference time, without retraining the model. The **transformations** applied to the interpolation $$\{X_t\}$$ are **exactly the same** as those applied to the rectified flow $$\{Z_t\}$$. For affine interpolation schemes, this can be achieved by simply rescaling the time $t$ and the input $$x$$. Building on this, we will demonstrate that these interpolations yield essentially **equivalent** rectified flow dynamics and identical rectified couplings. Consequently, it suffices to adopt a simple form—such as the straight-line interpolation $$X_t = tX_1 + (1-t)X_0$$—while maintaining the flexibility to recover all affine interpolations through appropriate adjustments in time and parameterization.
 
-For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 3 in the [Rectified Flow book]().
+For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 3 in the [Rectified Flow Lecture Note](). Related observations and discussion can also be found in <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>
 
 ## Point-wisely Transformable Interpolations
 
