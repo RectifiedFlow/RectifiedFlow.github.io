@@ -150,3 +150,13 @@ $$
 > $$
 > t_i = \frac{\alpha'_{t_{i'}}}{\alpha_{t_{i'}}'+\beta'_{t_i'}}
 > $$
+
+Show Converted
+
+- Straight / Spherical with Euler 不一样
+- Num step 足够大，得到相同 coupling
+
+
+
+- Each with natural Euler 是一样的
+
