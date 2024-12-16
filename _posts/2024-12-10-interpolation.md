@@ -143,7 +143,7 @@ $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
 $$
 
-### Equivalence of Affine Interpolations
+###  Affine Interpolations are Pointwise Transformable
 
 In practice, one often considers interpolations of the form
 
@@ -182,9 +182,12 @@ All such interpolations are *affine*. For this class of interpolations, the tran
 > \omega_0 = \omega_1 = 1, \quad \tau_0 = 0, \quad \tau_1 = 1.
 > $$
 > 
->Uniqueness of the solution $$(\tau_t, \omega_t)$$ follows because $$\alpha'_t/\beta'_t \geq 0$$ and $$\alpha_t/\beta_t$$ is strictly increasing for $$t \in [0,1]$$. Thus, for any two affine interpolations of the same coupling, there is a unique pointwise transformation that relates them.
+> The solution of $$(\tau_t, \omega_t)$$  exists and is unique if  $$\alpha'_t/\beta'_t \geq 0$$ and $$\alpha_t/\beta_t$$ is continuous and strictly increasing for $$t \in [0,1]$$. 
 
-In practice, the time scaling function $$\tau_t$$ can be determined in two ways. For simpler cases, $$\tau_t$$ can be derived analytically. For more complex scenarios, a [simple binary search](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_convertor.py) can be employed to approximate $$\tau_t$$. The figure below illustrates the $$\tau$$ and $$\phi$$ transformations that convert DDIM to spherical interpolation, and straight interpolation to spherical. Note that when converting DDIM to spherical interpolation, the only difference is in the time scaling—$$\omega_t$$ remains constant at $$1$$.
+In practice, the equation regarding $$\tau_t$$ can be solved with a [simple binary search](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_convertor.py). 
+In some simple cases, the solution can be derived  analytically. 
+
+The figure below illustrates the $$\tau$$ and $$\phi$$ transformations that convert DDIM to spherical interpolation, and straight interpolation to spherical. Note that when converting DDIM to spherical interpolation, the only difference is in the time scaling—$$\omega_t$$ remains constant at $$1$$.
 
 <div class="l-body-outset" style="display: flex;">
   <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
@@ -198,29 +201,7 @@ In practice, the time scaling function $$\tau_t$$ can be determined in two ways.
           height="430px" 
           width="49%"></iframe>
 </div>
-Substituting the notion of $$\tau$$ and $$\omega$$ into Theorem 1, we have:
-
-> **Example 1.** Converting straight interpolation into affine one.
->
-> Consider the straight interpolation $$X_t=tX_1 + (1-t)X_0$$ for which $$\alpha_t=t$$ and $$\beta_t=1-t$$. We seek to transform this interpolation into another affine interpolation $$X'_t = \alpha'_t X_1 + \beta'_t X_0.$$ Solving the equations
->
-> $$
-> \omega_t = \frac{\tau_t}{\alpha'_t} = \frac{1-\tau_t}{\beta'_t}
-> $$
->
-> yields
->
->$$
-> \tau_t = \frac{\alpha'_t}{\alpha'_t + \beta_t'}, \quad \omega_t = \frac{1}{\alpha_t' + \beta_t'}
->$$
->
-> Substituting these into the velocity fields, we have
->
-> $$
-> v'_t(x) = \frac{\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t}{\alpha'_t + \beta'_t} \cdot v_{\tau_t}(\omega_t x) \;+\; \frac{\dot{\alpha}'_t + \dot{\beta}'_t}{\alpha'_t + \beta'_t} \cdot x.
-> $$
-
-### Converting Pretrained RF Velocity
+Combining Proposition 1 with Theorem 1, we have: 
 
 > **Proposition 2**. Assume $$\{X_t\}$$ and $$\{X'_t\}$$ are two affine interpolations:
 >
@@ -242,6 +223,29 @@ Substituting the notion of $$\tau$$ and $$\omega$$ into Theorem 1, we have:
 > v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
 > $$
 
+
+> **Example 1.** Converting straight interpolation into affine ones.
+>
+> Consider the straight interpolation $$X_t=tX_1 + (1-t)X_0$$ with $$\alpha_t=t$$ and $$\beta_t=1-t$$. We seek to transform it into another affine interpolation $$X'_t = \alpha'_t X_1 + \beta'_t X_0.$$ Solving the equations
+>
+> $$
+> \omega_t = \frac{\tau_t}{\alpha'_t} = \frac{1-\tau_t}{\beta'_t}
+> $$
+>
+> yields
+>
+>$$
+> \tau_t = \frac{\alpha'_t}{\alpha'_t + \beta_t'}, \quad \omega_t = \frac{1}{\alpha_t' + \beta_t'}
+>$$
+>
+> Substituting these into the velocity fields, we have
+>
+> $$
+> v'_t(x) = \frac{\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t}{\alpha'_t + \beta'_t}  v_{\tau_t}(\omega_t x) \;+\; \frac{\dot{\alpha}'_t + \dot{\beta}'_t}{\alpha'_t + \beta'_t}  x.
+> $$
+
+
+
 <div class="l-body-outset">
   <iframe src="{{ '/assets/plotly/interp_convert_200step.html' | relative_url }}" 
           frameborder="0" 
@@ -250,7 +254,7 @@ Substituting the notion of $$\tau$$ and $$\omega$$ into Theorem 1, we have:
           width="100%"></iframe>
 </div>
 
-In the figure above, we start with a pretrained RF model that uses a straight interpolation and convert it into a spherical RF. We then apply Euler sampling to both RFs. Although the two RFs follow entirely different trajectories, they both reach the same endpoint $$Z_1$$.
+In the figure above, we start with a pretrained RF model that uses a straight interpolation and convert it into a spherical RF. We then apply Euler sampling to both RFs. Although the two RFs follow entirely different trajectories, they both reach the same endpoint $$Z_1$$, and hence the same rectified coupling. 
 
 <div class="l-body-outset">
   <iframe src="{{ '/assets/plotly/interp_convert_10step.html' | relative_url }}" 
@@ -266,9 +270,11 @@ Owing to the transformation relationships described above, it is possible to cha
 
 ## Implications on Loss Functions
 
-Assume that we have trained a model $$\hat{v}_t$$ for the RF velocity field $$v_t$$ under an affine interpolation. Using the formulas from the previous section, we can convert it to a model $$\hat{v}'_t$$ for $$v'_t$$ corresponding to a different interpolation scheme at the post-training stage. This raises the question of what properties the converted model $$\hat{v}'_t$$ may have compared to the models trained directly on the same interpolation, and whether it suffers from performance degradation due to the conversion.
+Assume that we have trained a paramtric model $$v_t(x;\theta)$$ for the RF velocity field $$v_t(x)$$ under an affine interpolation. Using the formulas from the previous section, we can convert it to a model $$v'_t(x, \theta)$$ for $$v'_t(x)$$ corresponding to a different interpolation scheme at the post-training stage. 
 
-We show here that using different affine interpolation schemes during training is equivalent to applying **different time-weighting** in the loss function, as well as an affine transform on the parametric model. Unless $$\omega_t$$ and $$\tau_t$$ are highly singular, the conversion does not necessarily degrade performance.
+This raises the question of what properties the converted model $$\hat{v}'_t$$ may have compared to the models trained directly on the same interpolation, and whether it suffers from performance degradation due to the conversion.
+
+It turns out that using different affine interpolation schemes during training is equivalent to applying **different time-weighting** in the loss function, as well as an affine transform on the parametric model. Unless $$\omega_t$$ and $$\tau_t$$ are highly singular, the conversion does not necessarily degrade performance.
 
 Specifically, assume we have trained a parametric model $$v_t(x; \theta)$$ to approximate the RF velocity $$v_t$$ of interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$, using the mean square loss:
 
@@ -290,7 +296,7 @@ $$
 \mathcal L'(\theta) = \int_0^1 \mathbb{E} \left[ \eta'_t \left\| \dot{X}'_t - v'_t(X'_t; \theta) \right\|^2 \right] \mathrm dt \tag{5}
 $$
 
-When matching the loss $$(4)$$ and $$(5)$$, we find that these two training schemes are identical, except for the following time-weighting and reparametrization relationship:
+By matching the loss $$(4)$$ and $$(5)$$, derivations show  that these two training schemes are identical, except for the following time-weighting and reparametrization relationship:
 
 $$
 \eta'_t = \frac{\omega_t^2}{\dot{\tau}_t} \eta_{\tau_t},
@@ -315,24 +321,22 @@ In other words, **training with different interpolation schemes simply only intr
 
 ### Straight vs Spherical: Same Train Time Weight
 
-Consider the straight interpolation $$X_t = tX_1 + (1 - t)X_0$$ and an affine interpolation $$X_t' = \alpha_t' X_1 + \beta_t' X_0$$. If
 
+
+
+> **Example 3.** Losses for Straight vs. Spherical Interpolation
+>  Following Example 2, an interesting case is when 
 $$
 \dot \alpha_t' \beta_t' - \alpha_t \beta_t' = \text{const},
 $$
-
-then we have $$\eta_t' \propto \eta_{\tau_t}$$, meaning that the training time weighting remains constant scale across the time.
-
-For example, spherical interpolation satisfies these conditions:
-
-> **Example 3.** Losses for Straight vs. Spherical Interpolation
->
-> Consider the spherical interpolation $$X'_t = \sin\left(\frac{\pi t}{2}\right)X_1 + \cos\left(\frac{\pi t}{2}\right)X_0$$, we have
+> with which  we have $$\eta_t' \propto \eta_{\tau_t}$$. Moreover, if $\eta_t = 1$ is uniform, then $\eta_t'$ is also uniform,  meaning that the two interpolations share the same loss function.  
+> 
+> This happens to the spherical interpolation $$X'_t = \sin\left(\frac{\pi t}{2}\right)X_1 + \cos\left(\frac{\pi t}{2}\right)X_0,$$ for which we have $$\dot \alpha_t' \beta_t' - \alpha_t \beta_t'  = \frac{\pi}{2}$$ and hence 
 >
 > $$
 > \eta'_t = \frac{2}{\pi} \eta_{\tau_t},
 > \quad
-> \tau_t = \frac{\tan\left(\frac{\pi t}{2}\right)}{\tan\left(\frac{\pi t}{2}\right)+1}.
+> \tau_t = \frac{\tan\left(\frac{\pi }{2} t \right)}{\tan\left(\frac{\pi }{2}t\right)+1}.
 > $$
 >
 > In this case, training $$v_t$$ with the straight interpolation using a uniform weight $$\eta_t = 1$$ is equivalent to training $$v'_t$$ with the spherical interpolation, also with a uniform weight $$\eta'_t = 2 /\pi$$. The sole difference is a reparameterization of the model:
