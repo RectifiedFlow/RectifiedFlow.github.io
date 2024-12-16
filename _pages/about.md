@@ -17,6 +17,13 @@ social: false # includes social icons at the bottom of the page
 
 <div style="text-align: justify;">
 
-The rectified flow algorithm is a major method for image and video generation nowadays, and has deep connections to diffusion models. Here, we provide a series of blog posts on flow and diffusion models. Alongside the blogs, we also release a comprehensive codebase that integrates flow and diffusion models (including using pretrained flow models like <a href="https://github.com/black-forest-labs/flux?tab=readme-ov-file">Flux</a>) at the <a href="https://github.com/Lifelong-Robot-Learning/LIBERO">RectifiedFlow GitHub Repository</a>. The details about the derivations are provided in this <a href="#">book</a>. If you have questions regarding the posts, codebase, or the book, please contact us using this <a href="mailto:rectifiedflow@googlegroups.com">email</a>.
+Rectified flow is a unified framework for generative modeling that offers a simplified view on flow- and diffusion-based techniques. It has been applied to state-of-the-art image, audio, and video generation.
 
+In a nutshell, rectified flow interpolates between noise and data distributions through an interpolation process. This process is then "rectified" (or "causalized") to produce a generative ODE model. The procedure can be repeated to "reflow" the system, yielding ODEs with straighter trajectories that can be discretized using fewer, or even a single, step. 
+
+This series of tutorials on rectified flow addresses topics that are often sources of confusion and highlights the connections between rectified flow and other generative modeling methods.
+
+We provide a \href{https://github.com/lqiang67/rectified-flow}{codebase} and \href{#}{lecture notes} with detailed theoretical derivations.
+
+If you have questions regarding the blog posts, codebase, or notes, please feel free to reach out via this <a href="mailto:rectifiedflow@gmail.com">email</a>. 
 </div>
