@@ -97,7 +97,7 @@ In particular, all affine interpolations are pointwise transformable to one othe
 
 ## Point-wisely Transformable Interpolations
 
-Generally, for any interpolation, we can define pointwise transformability:
+Let us start with a general notion of pointwise transformability between interpolation processes. 
 
 > **Definition 1**. Consider any two interpolation processes $$\{X_t : t \in [0,1]\}$$ and $$\{X'_t : t \in [0,1]\}$$. We say they are **pointwise transformable** if there exist differentiable maps $$\tau: [0,1] \to [0,1]$$ and $$\phi: [0,1] \times \mathbb{R}^d \to \mathbb{R}^d$$ such that $$\phi_t$$ is invertible for every $$t \in [0,1]$$ and 
 > 
@@ -106,29 +106,38 @@ Generally, for any interpolation, we can define pointwise transformability:
 > $$
 > 
 
-For Rectified Flows induced from those pointwise transformable interpolations, we have:
+If two interpolations are pointwise transformable, 
+then the trajectories of their respective rectified flows satisfy the very same transform. 
+In addition, if the two interpolations are constructed from the same coupling, they yields the same recitifed coupling theoretically. 
 
-> **Theorem 1**. Suppose two interpolations $$\{X_t\}$$ and $$\{X'_t\}$$ are pointwise transformable and constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$. Let $$\{v_t\}$$ and $$\{v'_t\}$$ be their corresponding Rectified Flow velocity fields, and $$\{Z_t\}$$ and $$\{Z'_t\}$$ their Rectified Flows, respectively. Let $$\phi$$ and $$\tau$$ be the transformation maps between $$\{X_t\}$$ and $$\{X_t'\}$$ with $$\tau_0 = 0$$ and $$\tau_1 = 1$$. Then:
+ 
+> **Theorem 1**. Suppose two interpolations $$\{X_t\}$$ and $$\{X'_t\}$$ are pointwise transformable and constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
 >
-> 1. The same pointwise transformation that maps their interpolations $$\{X_t\} \to\{X'_t\}$$ also maps their Recitied Flows $$\{Z_t\}\to\{Z'_t\}$$:
+> Let $$\{v_t\}$$ and $$\{v'_t\}$$ be their corresponding Rectified Flow velocity fields, and $$\{Z_t\}$$ and $$\{Z'_t\}$$ their Rectified Flows with $$\mathrm d Z_t = v_t(Z_t)\mathrm d t$$, $$Z_0 = X_0$$, and 
+$$\mathrm d Z'_t = v'_t(Z'_t)\mathrm d t$$, $$Z'_0=X'_0$$, respectively.
+>
+>
+> Then
+> 
+> 1. The recitied rlows $$\{Z_t\}\to\{Z'_t\}$$ can be transformed with the very same  pointwise maps:
 > 
 >    $$
 >    Z'_t = \phi_t(Z_{\tau_t}) \quad \text{for all } t \in [0,1].
 >    $$
 >
-> 2. The two rectified flows produce the same coupling:
+> 3. The two rectified flows produce the rectified coupling:
 > 
 >    $$
 >    (Z_0, Z_1) = (Z'_0, Z'_1).
 >    $$
 >
-> 3. Their velocity fields are related by:
+> 4. Their velocity fields are related by:
 > 
 >    $$
 >    v'_t(x) = \partial_t \phi_t(\phi_t^{-1}(x)) + \bigl(\nabla \phi_t(\phi_t^{-1}(x))\bigr)^\top v_{\tau_t}(\phi_t^{-1}(x)) \dot{\tau}_t. \tag{1}
 >    $$
 
-In other words, define $$\{X'_t\} := \texttt{Transform}(\{X_t\})$$ to represent the pointwise transformation of the interpolation. The operation $$\texttt{Rectify}(\cdot)$$, which maps an interpolation $$\{X_t\}$$ to its corresponding rectified flow $$\{Z_t\}$$, is **equivariant** under pointwise transformations:
+In other words, denote by $$\{X'_t\} := \texttt{Transform}(\{X_t\})$$ a pointwise transformation on the interpolations. Then the result shows that the operation $$\texttt{Rectify}(\cdot)$$, which maps an interpolation $$\{X_t\}$$ to its corresponding rectified flow $$\{Z_t\}$$, is **equivariant** under pointwise transformations:
 
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
