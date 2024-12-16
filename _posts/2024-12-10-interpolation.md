@@ -49,16 +49,16 @@ This blog introduces the equivalent relationships between rectified flows induce
 
 ## Overview
 
-Given an arbitrary coupling $$(X_0, X_1)$$ of source distribution $$\pi_0$$ and target distribution $$\pi_1$$, recall that Rectified Flow learns a ODE
+Given an arbitrary coupling $$(X_0, X_1)$$ of source distribution $$X_0\sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$, recall that rectified flow learns a ODE
 
 $$
-\mathrm d Z_t = v_t(Z_t),
+\mathrm d Z_t = v_t(Z_t) \mathrm d t,
 $$
 
-which, starts from $$Z_0=X_0$$, leads to $$Z_1 = X_1$$. This velocity is learned by minimizing the mean square loss from the slope of an interpolation process:
+which, starts from the noise $$Z_0=X_0$$, leads to generated data $$Z_1$$. This velocity is learned by minimizing the mean square loss from the slope of an interpolation process:
 
 $$
-\min_v \int _0 ^1 \mathbb E \left[\left\| \dot X_t - v_t(X_t)\right\| 
+\min_v \int _0 ^1 \mathbb E \left[\left\| \dot X_t - v_t(X_t)\right\|^2 
 \right] \mathrm d t,
 $$
 
@@ -72,7 +72,7 @@ Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and ta
    X_t = tX_1 + (1-t) X_0.
    $$
 
-   This are straight lines connecting $$\pi_0$$ and $$\pi_1$$ at a constant speed $$\dot X_t = X_1 - X_0.$$
+   This yields straight lines connecting $$\pi_0$$ and $$\pi_1$$ at a constant speed $$\dot X_t = X_1 - X_0.$$
 
 2. *Spherical linear interpolation* (*slerp*), employed by iDDPM <d-cite key="nichol2021improved"></d-cite>: 
 
@@ -82,7 +82,7 @@ Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and ta
 
    which travels along the shortest great-circle arc on a sphere at a constant speed.
 
-3. *DDIM interpolation*,<d-cite key="song2020denoising"></d-cite> a spherical interpolation but with a non-uniform speed defined by $\alpha_t$:
+3. *DDIM interpolation*,<d-cite key="song2020denoising"></d-cite> a spherical interpolation satisfying $$\alpha_t^2 + \beta_^2 = 1$$ but with a non-uniform speed defined by $\alpha_t$:
 
    $$
    X_t = \alpha_t X_1 + \sqrt{1-\alpha_t^2} X_0,
@@ -90,9 +90,10 @@ Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and ta
 
    where $$\alpha_t = \exp\bigl(-\frac{1}{4}a(1-t)^2 - \tfrac{1}{2}b(1-t)\bigr)$$, and $$a=19.9,b=0.1$$ by default.
 
-Different methods employ these or other interpolation schemes. One might suspect that such choices, by influencing the learned RF velocity, must be finalized during training, because the velocity field could significantly affect inference performance and speed. However, as we will show, this need not be the case.
+Different methods employ these or other interpolation schemes. One might suspect that such choices, by influencing the learned RF velocity, must be finalized during training, because the velocity field could significantly affect inference performance and speed. However, this need not be the case.
 
-In this blog, we'll show that—under mild constraints on the interpolation scheme—it is possible to convert between those different interpolation schemes *after* training, at inference time. Moreover, we demonstrate that these interpolations yield essentially *equivalent* Rectified Flow dynamics and identical couplings. Thus, it suffices to adopt a simple interpolation, such as the straight line $$X_t = t X_1 + (1-t) X_0$$, and later recover all other interpolation paths through simple transformations. This flexibility shifts our attention to the sampling stage, where different interpolation schemes can be freely adopted, while their differences remain relatively minor during training.
+In this blog, we show that if two interpolation processes are pointwise transformable in a suitable sense, then they would induce essentially *equivalent* rectified flow dynamics and identical couplings. 
+In particular, all affine interpolations are pointwise transformable to one other. Thus, it suffices to adopt a simple interpolation, such as the straight line $$X_t = t X_1 + (1-t) X_0$$, and later recover all affine interpolation through simple transformations. This flexibility shifts our attention to the sampling stage, where different interpolation schemes can be freely adopted, while their differences remain relatively minor during training.
 
 ## Point-wisely Transformable Interpolations
 
