@@ -4,6 +4,10 @@
 
 @import url("https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic-ext,cyrillic,latin-ext");
 
+strong {
+  font-weight: 700 !important;
+}
+
 d-byline {
   border-top-color: var(--global-divider-color) !important;
 }
