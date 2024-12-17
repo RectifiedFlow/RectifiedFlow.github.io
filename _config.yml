@@ -3,10 +3,10 @@
 # -----------------------------------------------------------------------------
 
 title: blank # the website title (if blank, full name will be used instead)
-first_name: RectifiedFlow
+first_name: Rectified Flow
 middle_name:
 last_name:
-email: rectifiedflow@googlegroups.com
+email: rectifiedflow@gmail.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Everything should be made as simple as possible, but not simpler.
 footer_text: >
@@ -134,7 +134,7 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: RectifiedFlow Blogs # blog_name will be displayed in your blog page
+blog_name: Rectified Flow Blogs # blog_name will be displayed in your blog page
 blog_description: Tutorials and Blogs on Flow and Diffusion Models
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
