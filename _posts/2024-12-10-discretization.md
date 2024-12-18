@@ -129,7 +129,7 @@ The trajectories obtained from natural Euler samplers are equivariant under poin
 
 This theorem strengthens the equivariance result of the rectified flow ODE given in the interpolation blog, as the ODE result can be viewed as the limiting case of the natural Euler method when the step size approaches zero.
 
-Let $$\{X_t'\} = T(\{X_t\})$$ denote the pointwise transformation, and let $$\texttt{NaturalEuler}(\{Z_t\})$$ represent the mapping from a rectified flow ODE to its discrete trajectories produced by the natural Euler sampler. The **equivariance** property can be expressed as:
+Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote the pointwise transformation, and let $$\texttt{NaturalEulerRF}(\{Z_t\})$$ represent the mapping from a rectified flow ODE to its discrete trajectories produced by the natural Euler sampler. The **equivariance** property can be expressed as:
 
 $$
 \texttt{NaturalEulerRF}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{NaturalEulerRF}(\{X_t\})).
@@ -148,15 +148,8 @@ $$
 >Conversely, starting from the straight RF and using a vanilla Euler sampler on the time grid $$\{t_i\}$$, one can recover the DDIM sampler by finding a time grid $$\{t'_i\}$$ that satisfies:
 >
 > $$
-> t_i = \frac{\alpha'_{t_{i'}}}{\alpha_{t_{i'}}'+\beta'_{t_i'}}
+> t_i = \frac{\alpha'_{t_{i'}}}{\alpha_{t_{i'}}'+\beta'_{t_i'}}. 
 > $$
 
-Show Converted
 
-- Straight / Spherical with Euler 不一样
-- Num step 足够大，得到相同 coupling
-
-
-
-- Each with natural Euler 是一样的
 
