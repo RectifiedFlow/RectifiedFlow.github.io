@@ -2,57 +2,75 @@
 
 ## Installtion
 
-下面对上述安装与本地预览 Jekyll 项目流程进行总结（以 macOS 为例）：
+Here is a summary of the steps to install and preview a Jekyll project locally (using macOS as an example):
 
-### 安装 Ruby 环境
+### Install Ruby Environment
 
-macOS 自带 Ruby 版本较旧且系统级安装位置不适合安装 Gems。建议通过 Homebrew 安装用户级 Ruby 环境：
+The default Ruby version on macOS is outdated, and its system-level installation location is not suitable for installing Gems. It is recommended to install a user-level Ruby environment via Homebrew:
 
 ```shell
 brew install ruby
 ```
 
-安装完成后根据提示配置 PATH（确保 `/opt/homebrew/opt/ruby/bin` 在 `PATH` 中）。
+After installation, follow the instructions to configure the PATH (make sure /opt/homebrew/opt/ruby/bin is included in the PATH).
 
-### 安装 Bundler：
+### Install Bundler:
 
-在确保使用的是新安装的 Ruby 后，安装 Bundler：
+Once you ensure you are using the newly installed Ruby, install Bundler:
 
 ```shell
 gem install bundler
 ```
 
-### 项目依赖安装：
+### Install Project Dependencies:
 
-在项目根目录（有 Gemfile 的位置）执行：
+Run the following command in the project root directory (where the Gemfile is located):
 
 ```shell
 bundle install
 ```
 
-### 安装 ImageMagick（若需要处理图像）：
+### Install ImageMagick (if image processing is needed):
 
 ```shell
 brew install imagemagick
 ```
 
-移除或修改无用插件与标签：若不需要 jekyll-twitter-plugin，从 Gemfile 和 \_config.yml 的 plugins: 中删除该插件。 删除内容文件中 {% twitter ... %} 标签避免报错。若不需要 Jupyter Notebook 支持，则删除 jekyll-jupyter-notebook 插件和相关 .ipynb 文件；或安装 Jupyter：
+Remove or Modify Unnecessary Plugins and Tags
 
+If the jekyll-twitter-plugin is not needed, remove it from the Gemfile and the plugins: section of _config.yml.
+
+Remove any {% twitter ... %} tags in the content files to avoid errors.
+
+If support for Jupyter Notebook is not needed, remove the jekyll-jupyter-notebook plugin and any related .ipynb files.
+
+If Jupyter support is needed, you can install Jupyter with:
 ```shell
 pip install jupyter
 ```
 
-## 本地预览网站：
+## Local Website Preview
+
 
 ```shell
 bundle exec jekyll serve
 ```
 
-根据出现的 localhost link 本地预览change。
+Use the localhost link that appears in the terminal to preview the site locally.
 
-## 添加Blogs
+## Adding Blog Posts
 
-请在 `_posts` 下，copy-paste 此目录下任何blog post修改即可。举例，新添加的file叫做 `2024-12-24-newblogname.md` （注意这里需要按照YYYY-MM-DD-NAME.md)， 如果需要添加references, 可以在 `_bibliography` 和 `assets/bibliography`下面同时加入一个`2024-12-24-newblogname.bib`的file， 然后在里面可以使用正常copy-pasted的bibtext (e.g., from Google Scholar or Semantic Scholar). 然后使用`<d-cite key="Liu2022FlowSA"></d-cite>` 在正文Markdown即可。会自动生成底部reference list和一个hoverable的reference。注意同时需要在 `2024-12-24-newblogname.md`这个file的开头layout里添加
+To add a new blog post, copy and modify any existing blog post in the _posts directory. For example, if the new file is named 2024-12-24-newblogname.md, make sure it follows the format YYYY-MM-DD-NAME.md.
+
+If references are required, add a corresponding .bib file in both the _bibliography and assets/bibliography directories. The file should be named 2024-12-24-newblogname.bib. You can copy and paste BibTeX entries from sources like Google Scholar or Semantic Scholar.
+
+To cite references in the Markdown file, use the following format:
+
+<d-cite key="Liu2022FlowSA"></d-cite>
+
+This will automatically generate a reference list at the bottom of the post and a hoverable reference in the text.
+
+In addition, ensure that the YAML front matter at the beginning of the 2024-12-24-newblogname.md file contains the following layout configuration:
 
 ```yaml
 ---
@@ -61,16 +79,17 @@ bibliography: 2024-12-06-intro.bib
 ---
 ```
 
-## 修改Profile
+## Editing the Profile
 
-在`_pages`下有各种.md files可以修改。首页在`about.md`。具体的一些formatting参数在可在`_config.yml`里修改。
+To modify profile pages, edit the .md files in the _pages directory. The main homepage can be edited via about.md. Formatting parameters can be adjusted in the _config.yml file.
 
 ## CI & CD
 
-为了防止 CI 错误，需要确保网站中的所有超链接都是可访问的。如果有需要忽略检查的链接，需要放置在 `.lycheeignore` 文件中。Commit 前，还需要运行
+To avoid CI errors, make sure that all hyperlinks on the site are accessible. If certain links need to be ignored during link checks, add them to the .lycheeignore file.
+
+Before committing changes, format the Markdown files by running:
 
 ```sh
 npx prettier . --write
 ```
 
-来格式化 Markdown 文件。
