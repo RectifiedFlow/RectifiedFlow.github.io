@@ -67,7 +67,8 @@ For a more comprehensive and rigorous discussion on this topic, please refer to 
 Given a coupling $$(X_0, X_1)$$ of source distirbution $$X_0 \sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$, we define an interpolation function formally:
 
 > **Definition 1.** Let $$\mathtt I:[0,1] \times \mathbb R^d \times \mathbb R^d \mapsto \mathbb R^d$$ be a **interpolation function** satisfying
->$$
+> 
+> $$
 > \mathtt I_0(x_0, x_1) = x_0, \quad \mathtt I_1(x_0, x_1)=x_1.
 > $$
 > 
@@ -190,15 +191,13 @@ The trajectory points obtained from natural Euler samplers are equivalent under 
 > In particular, applying the natural Euler method to a rectified flow induced by an affine interpolation $$\{X_t'\}$$ on a uniform grid $$t_i' = i/n$$ is equivalent to applying the standard (straight) Euler method to the rectified flow induced by the corresponding straight interpolation $$\{X_t\}$$, but with a non-uniform time grid $$t_i = \tau(i/n)$$.
 {: .theorem}
 
-This result strengthens the earlier [equivariance property](../interpolation/#affine-interpolations-are-pointwise-transformable) established for continuous-time ODEs. It shows that the same property holds at the discrete level: as the step size approaches zero, the discrete trajectories converge to their continuous-time counterparts, preserving the pointwise transformable structure.
+This **discrete-level equivalence** extends the continuous-time theorem, ensuring that natural Euler samplers inherit the same invariances as the underlying rectified flow ODE.
 
-We can express the equivariance property succinctly. Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote a pointwise transformation, and let $$\texttt{NaturalEulerRF}$$ represent the operation of generating discrete trajectories from a rectified flow ODE using the natural Euler sampler. Then:
+Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote a pointwise transformation, and let $$\texttt{NaturalEulerRF}$$ represent the operation of generating discrete trajectories from a rectified flow ODE using the natural Euler sampler. Then:
 
 $$
 \texttt{NaturalEulerRF}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{NaturalEulerRF}(\{X_t\})).
 $$
-
-This **discrete-level equivalence** extends the continuous-time theore, ensuring that natural Euler samplers inherit the same invariances as the underlying rectified flow ODE.
 
 > **Example 3. Equivalence of Straight Euler and DDIM sampler**
 >
