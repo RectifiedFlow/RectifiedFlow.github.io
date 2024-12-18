@@ -33,10 +33,10 @@ bibliography: 2024-12-10-discritization.bib
 
 # 可选的目录配置
 toc:
-  - name: "Equivariance of Natural Euler Samplers"
-    subsections:
-      - name: "Natural Euler Samplers"
-      - name: "Equivalence of Natural Euler Trajectories"
+  - name: "Overview"
+  - name: "Affine Interpolation Solver"
+  - name: "Natural Euler Sampler"
+  - name: "Equivalence of Natural Euler Trajectories"
 
 ---
 
@@ -83,7 +83,7 @@ Given a coupling $$(X_0, X_1)$$ of source distirbution $$X_0 \sim \pi_0$$ and ta
 > \dot{X}_t := \partial_t \mathtt{I}_t(X_0, X_1).
 > $$
 > 
-> {: .definition}
+{: .definition}
 
 In many cases, given $$(X_t, \dot{X}_t)$$, we wish to recover $$(X_0, X_1)$$ that satisfy  
 
@@ -107,15 +107,19 @@ For affine interpolations $$(X_t = \alpha_t X_1 + \beta_t X_0)$$, this problem r
 > $$
 >
 > Given any two of $$\{v_t, \hat x_{0\mid t}, \hat x_{1\mid t}, x_t\}$$ or $$\{\dot X_t, X_0, X_1, X_t\}$$, we can explicitly solve for the other two that satisfy
->
+> 
 > $$
 > X_t = \alpha_t X_1 + \beta_t X_0, \quad \dot{X}_t = \dot{\alpha}_t X_1 + \dot{\beta}_t X_0. \\
-> \text{or} \\
+> $$
+> 
+> or
+> 
+> $$
 > x_t =\alpha_t\hat{x}_{1\mid t} + \beta_t \hat{x}_{0\mid t}, \quad v_t = \dot \alpha_t \hat{x}_{1\mid t} + \dot \beta_t \hat{x}_{0\mid t}
 > $$
->
+> 
 > This can be efficiently implemented as [affine interpolation solvers](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py).
-> {: .example}
+{: .example}
 
 ## Natural Euler Sampler
 
@@ -194,7 +198,7 @@ $$
 \texttt{NaturalEulerRF}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{NaturalEulerRF}(\{X_t\})).
 $$
 
-This **discrete-level equivalence** extends the continuous-time case, ensuring that natural Euler samplers inherit the same invariances as the underlying rectified flow ODE.
+This **discrete-level equivalence** extends the continuous-time theore, ensuring that natural Euler samplers inherit the same invariances as the underlying rectified flow ODE.
 
 > **Example 3. Equivalence of Straight Euler and DDIM sampler**
 >
@@ -204,9 +208,60 @@ This **discrete-level equivalence** extends the continuous-time case, ensuring t
 >t_i = \frac{\alpha'_{i/n}}{\alpha'_{i/n}+\beta'_{i/n}}
 >$$
 >
->Conversely, starting from the straight RF and using a vanilla Euler sampler on the time grid $$\{t_i\}$$, one can recover the DDIM sampler by finding a time grid $$\{t'_i\}$$ that satisfies:
+> Conversely, starting from the straight RF and using a vanilla Euler sampler on the time grid $$\{t_i\}$$, one can recover the DDIM sampler by finding a time grid $$\{t'_i\}$$ that satisfies:
 >
 > $$
 > t_i = \frac{\alpha'_{t_{i'}}}{\alpha_{t_{i'}}'+\beta'_{t_i'}}
 > $$
 {: .example}
+
+In the following figures, we use two identical straight RF and spherical RF to illustrate the claims above. We use spherical RF since DDIM is only a time rescaling of it.
+
+In the following figures, we compare two equivalent straight rf and a spherical rf to illustrate the points discussed. We use spherical rf since DDIM can be viewed as a simple time-rescaling of it.
+
+<div class="l-body-outset">
+  <figure id="figure-1">
+    <iframe src="{{ '/assets/plotly/discrete_euler.html' | relative_url }}" 
+            frameborder="0" 
+            scrolling="no" 
+            height="630px" 
+            width="100%">
+    </iframe>
+    <figcaption>
+      <a href="#figure-1">Figure 1</a>.
+      Although the straight and spherical RF induce the same coupling theoretically, discretization errors accumulate when using a finite number of Euler steps (here, 10 steps). As a result, the final generated samples differ significantly.
+    </figcaption>
+  </figure>
+</div>
+
+<div class="l-body-outset">
+  <figure id="figure-2">
+    <iframe src="{{ '/assets/plotly/discrete_natural_unmatch.html' | relative_url }}" 
+            frameborder="0" 
+            scrolling="no" 
+            height="630px" 
+            width="100%">
+    </iframe>
+    <figcaption>
+      <a href="#figure-2">Figure 2</a>.
+      When using a natural Euler sampler with a uniform 10-step time grid for both RFs, the results are nearly identical. Minor deviations occur because the time parameterizations do not perfectly match.
+    </figcaption>
+  </figure>
+</div>
+
+
+<div class="l-body-outset">
+  <figure id="figure-3">
+    <iframe src="{{ '/assets/plotly/discrete_natural_match.html' | relative_url }}" 
+            frameborder="0" 
+            scrolling="no" 
+            height="630px" 
+            width="100%">
+    </iframe>
+    <figcaption>
+      <a href="#figure-3">Figure 3</a>.
+      After adjusting the straight RF's time grid using \(\tau_t\), the discrete trajectories from both RFs align exactly.
+    </figcaption>
+  </figure>
+</div>
+
