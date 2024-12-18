@@ -1,7 +1,7 @@
 ---
 layout: distill
-title: Natural Euler Samplers
-description: Even discretized trajectories are transformable
+title: DDIM and Natural Euler Samplers
+description: Even discretized trajectories are equivalent
 tags: tutorial
 giscus_comments: true
 date: 2024-12-10 11:00:00
@@ -39,11 +39,11 @@ toc:
   - name: "Equivalence of Natural Euler Trajectories"
 
 ---
-
+<!-- 
 <div class="hero">
   <img src="/assets/img/teaser_post4.png" alt="Rectified Flow Overview" style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
 </div>
-
+--> 
 
 ## Overview
 
