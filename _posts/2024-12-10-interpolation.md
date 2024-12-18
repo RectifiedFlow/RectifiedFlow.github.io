@@ -62,13 +62,13 @@ $$
 \right] \mathrm d t,
 $$
 
-where $$\{X_t\} = \{X_t: t\in [0,1]\}$$ is an interpolation process connecting $$X_0$$ and $$X_1$$, and $$\dot X_t$$ denotes its time derivative.
+where $$\{X_t\} = \{X_t: t\in [0,1]\}$$ is an interpolation process connecting $$X_0$$ and $$X_1$$, and $$\dot X_t$$ denotes its time derivative. Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and target distributions. Different methods employ these or other interpolation schemes. 
 
-Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and target distributions. Different methods employ these or other interpolation schemes. One might suspect that such choices, by influencing the learned rf velocity, must be finalized during training, because the velocity field could significantly affect inference performance and speed. However, this need not be the case.
+One might suspect that, since these choices influence the learned rectified flow velocity and thus potentially affect inference performance and speed, they must be decided upon during training. But is this really necessary?
 
-In this blog, we show that if two interpolation processes are pointwise transformable in a suitable sense, then they would induce essentially ***equivalent*** rectified flow dynamics and identical couplings. 
+In this blog, we show that if two interpolation processes are *pointwise transformable* in a suitable sense, then they would induce essentially ***equivalent*** rectified flow dynamics and identical couplings. 
 
-In particular, all affine interpolations are pointwise transformable to one another. Thus, it suffices to adopt a simple interpolation, such as the straight line $$X_t = t X_1 + (1-t) X_0$$, and later recover all affine interpolation through simple transformations. This flexibility shifts our attention to the sampling stage, where different interpolation schemes can be freely adopted, while their differences remain relatively minor during training.
+Furthermore, as all affine interpolations are pointwise transformable into one another, it suffices to adopt a simple interpolation—such as the straight-line interpolation $$X_t = t X_1 + (1 - t) X_0$$—during training. Later, through simple transformations, any desired affine interpolation can be recovered at the sampling stage. Because of this flexibility, *the choice of interpolation at training time is less critical*, and different interpolation schemes can be freely adopted at inference, where their differences become more relevant.
 
 ## Point-wisely Transformable Interpolations
 
