@@ -42,9 +42,12 @@ toc:
       - name: "Straight vs Spherical: Same Train Time Weight"
 ---
 
+<!-- 
 <div class="hero">
   <img src="/assets/img/teaser_post2.png" alt="Rectified Flow Overview" style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
 </div>
+--> 
+
 This blog introduces the equivalent relationships between rectified flows induced from different affine interpolations, based on Chapter 3 of these [lecture notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).  Related observations and discussion can also be found in <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>.
 
 ## Overview
