@@ -215,9 +215,7 @@ This **discrete-level equivalence** extends the continuous-time theore, ensuring
 > $$
 {: .example}
 
-In the following figures, we use two identical straight RF and spherical RF to illustrate the claims above. We use spherical RF since DDIM is only a time rescaling of it.
-
-In the following figures, we compare two equivalent straight rf and a spherical rf to illustrate the points discussed. We use spherical rf since DDIM can be viewed as a simple time-rescaling of it.
+In the following figures, we compare two equivalent rectified flows (RFs): one induced by a straight interpolation and another by a spherical interpolation (which DDIM essentially represents via a time rescaling). We first train a straight RF and then convert it into a spherical RF, ensuring that they are exactly equivalent.
 
 <div class="l-body-outset">
   <figure id="figure-1">
@@ -229,7 +227,7 @@ In the following figures, we compare two equivalent straight rf and a spherical 
     </iframe>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-      Although the straight and spherical RF induce the same coupling theoretically, discretization errors accumulate when using a finite number of Euler steps (here, 10 steps). As a result, the final generated samples differ significantly.
+      Using the standard Euler method for both the straight and spherical RFs with 10 uniform steps in \([0,1]\), we see that, despite their theoretical equivalence, discretization errors accumulate, resulting in significantly different final samples.
     </figcaption>
   </figure>
 </div>
@@ -244,10 +242,11 @@ In the following figures, we compare two equivalent straight rf and a spherical 
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      When using a natural Euler sampler with a uniform 10-step time grid for both RFs, the results are nearly identical. Minor deviations occur because the time parameterizations do not perfectly match.
+       When using the natural Euler sampler with 10 uniform steps in \([0,1]\) for both the straight and spherical RFs, the resulting samples are nearly identical. Minor discrepancies arise because the time parameterizations do not perfectly align.
     </figcaption>
   </figure>
 </div>
+
 
 
 <div class="l-body-outset">
@@ -260,7 +259,7 @@ In the following figures, we compare two equivalent straight rf and a spherical 
     </iframe>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
-      After adjusting the straight RF's time grid using \(\tau_t\), the discrete trajectories from both RFs align exactly.
+      After re-scaling the straight RF’s time grid using \(\tau_t\), (and the spherical one still uses uniform time grid) the natural Euler sampling trajectories match exactly between the straight and spherical RFs, confirming that the remaining differences were purely due to mismatched time parameterizations.
     </figcaption>
   </figure>
 </div>
