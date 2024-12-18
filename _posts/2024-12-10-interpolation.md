@@ -33,10 +33,10 @@ bibliography: 2024-12-10-interpolation.bib
 
 # 可选的目录配置
 toc:
+  - name: "Overview"
   - name: "Point-wisely Transformable Interpolations"
     subsections:
-      - name: "Equivalence of Affine Interpolations"
-      - name: "Converting Pretrained RF Velocity"
+      - name: "Affine Interpolations are Pointwise Transformable"
   - name: "Implications on Loss Functions"
     subsections:
       - name: "Straight vs Spherical: Same Train Time Weight"
@@ -52,7 +52,7 @@ This blog introduces the equivalent relationships between rectified flows induce
 Given an arbitrary coupling $$(X_0, X_1)$$ of source distribution $$X_0\sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$, recall that rectified flow learns a ODE
 
 $$
-\mathrm d Z_t = v_t(Z_t) \mathrm d t,
+\mathrm d Z_t = v_t(Z_t) \, \mathrm d t,
 $$
 
 which, starts from the noise $$Z_0=X_0$$, leads to generated data $$Z_1$$. This velocity is learned by minimizing the mean square loss from the slope of an interpolation process:
@@ -62,9 +62,13 @@ $$
 \right] \mathrm d t,
 $$
 
-where $$\{X_t\} = \{X_t: t\in [0,1]\}$$ is an interpolation process connecting $$X_0$$ and $$X_1$$, and $$\dot X_t$$ denotes its time derivative. Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and target distributions. Different methods employ these or other interpolation schemes. 
+where $$\{X_t\} = \{X_t: t\in [0,1]\}$$ is an interpolation process connecting $$X_0$$ and $$X_1$$, and $$\dot X_t$$ denotes its time derivative. We call the ODE process $$\mathrm d Z_t = v_t(Z_t) \mathrm d t$$ with $$Z_0=X_0$$ the rectified flow induced from $$\{X_t\}$$, and denote it as:
 
-One might suspect that, since these choices influence the learned rectified flow velocity and thus potentially affect inference performance and speed, they must be decided upon during training. But is this really necessary?
+$$
+\{Z_t\} = \texttt {Rectify}(\{X_t\}).
+$$
+
+Theoretically, $$\{X_t\}$$ can be any smooth interpolation between source and target distributions. Different methods employ these or other interpolation schemes. One might suspect that, since these choices influence the learned rectified flow velocity and thus potentially affect inference performance and speed, they must be decided upon during training. But is this really necessary?
 
 In this blog, we show that if two interpolation processes are *pointwise transformable* in a suitable sense, then they would induce essentially ***equivalent*** rectified flow dynamics and identical couplings. 
 
@@ -224,7 +228,7 @@ Combining Proposition 1 with Theorem 1, we have:
 > (Z_0, Z_1) = (Z'_0, Z'_1).
 > $$
 >
-> + Their RF velocity fields $$v_t$$ and $$v'_t$$ satisfy:
+> + Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ satisfy:
 >
 > $$
 > v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
@@ -243,10 +247,10 @@ Combining Proposition 1 with Theorem 1, we have:
 > yields
 >
 >$$
-> \tau_t = \frac{\alpha'_t}{\alpha'_t + \beta_t'}, \quad \omega_t = \frac{1}{\alpha_t' + \beta_t'}
+> \tau_t = \frac{\alpha'_t}{\alpha'_t + \beta_t'}, \quad \omega_t = \frac{1}{\alpha_t' + \beta_t'}.
 >$$
 >
-> Substituting these into the velocity fields, we have
+> Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ satisfy:
 >
 > $$
 > v'_t(x) = \frac{\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t}{\alpha'_t + \beta'_t}  v_{\tau_t}(\omega_t x) \;+\; \frac{\dot{\alpha}'_t + \dot{\beta}'_t}{\alpha'_t + \beta'_t}  x.
