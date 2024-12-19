@@ -156,18 +156,19 @@ Some examples of affine interpolations:
 
 For affine interpolations, the maps $$\phi$$ and $$\tau$$ reduce to scalar transforms: **All affine interpolations are pointwise transformable by adjusting time and scaling**. Hence, their induced rectified flows and couplings are equivalent. This result aligns with observations made by other authors<d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>. 
 
-> **Proposition 1.** Let $$X_t = \alpha_t X_1 + \beta_t X_0$$ and $$X_t' = \alpha_t' X_1 + \beta_t' X_0$$ be two affine interpolations from the same coupling $$(X_0, X_1).$$ Then there exist scalar functions $$\tau_t$$ and $$\omega_t$$ such that
-> 
+> **Proposition 1. Conversion of Affine Interpolations**
+>
+> Let $$X_t = \alpha_t X_1 + \beta_t X_0$$ and $$X_t' = \alpha_t' X_1 + \beta_t' X_0$$ be two affine interpolations from the same coupling $$(X_0, X_1).$$ Then there exist scalar functions $$\tau_t$$ and $$\omega_t$$ such that
 > $$
 > X_t' = \frac{1}{\omega_t} X_{\tau_t}, \quad \forall t \in [0,1],
->$$
-> 
+> $$
+>
 > where $$\tau_t$$ and $$\omega_t$$ solve
-> 
+>
 > $$
 > \frac{\alpha_{\tau_t}}{\beta_{\tau_t}} = \frac{\alpha'_t}{\beta'_t}, \quad \omega_t = \frac{\alpha_{\tau_t}}{\alpha'_t} = \frac{\beta_{\tau_t}}{\beta'_t}, \quad \forall t \in (0, 1) \tag{2}
->$$
-> 
+> $$
+>
 > with the boundary conditions $$\omega_0 = \omega_1 = 1,  \tau_0 = 0,  \tau_1 = 1.$$
 {: .definition}
 
@@ -197,7 +198,9 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
 
 Combining Proposition 1 with Theorem 1, we have: 
 
-> **Proposition 2**. For **affine interpolations** $$\{X_t\}$$ and $$\{X'_t\}$$:
+> **Proposition 2. Rectified Flows between Affine Interpolation**
+>
+> For affine interpolations $$\{X_t\}$$ and $$\{X'_t\}$$:
 >
 > + Their rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
 >
@@ -219,7 +222,7 @@ Combining Proposition 1 with Theorem 1, we have:
 {: .definition}
 
 
-> **Example 1. Converting Straight to Affine**.
+> **Example 1. Velocity from Straight  to Affine**
 >
 > For the straight interpolation $$X_t=tX_1 + (1-t)X_0$$ with $$\alpha_t=t$$ and $$\beta_t=1-t$$. Convert it into another affine interpolation $$X'_t = \alpha'_t X_1 + \beta'_t X_0$$ yields:
 >
@@ -278,9 +281,7 @@ This leads to two related questions:
 1. How does training with one interpolation differ from training directly with another?  
 2. Does converting a pretrained model $$v_t$$ to $$v'_t$$ degrade performance?
 
-It turns out that using different affine interpolation schemes during training is equivalent to applying **different time-weighting** in the loss function, as well as an affine transform on the parametric model. Unless $$\omega_t$$ and $$\tau_t$$ are highly singular, the conversion does not necessarily degrade performance.
-
-It turns out that choosing a different affine interpolation during training is equivalent to changing the **time-weighting** in the loss function and applying an affine transform to the model parameterization. As long as the transformations $$\omega_t$$ and $$\tau_t$$ are not singular, converting a model from one affine interpolation to another does not inherently reduce performance.
+It turns out that choosing a different affine interpolation during training is equivalent to changing the **time-weighting** in the loss function and applying an affine transform to the model parameterization. As long as the transformations $$\omega_t$$ and $$\tau_t$$ are not highly singular, converting a model from one affine interpolation to another does not inherently reduce performance.
 
 Specifically, consider a model $$v_t(x; \theta)$$ trained to approximate the RF velocity $$v_t$$ of interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$:
 
@@ -383,4 +384,3 @@ This reparameterization does not significantly affect performance. In the follow
     </figcaption>
   </figure>
 </div>
-
