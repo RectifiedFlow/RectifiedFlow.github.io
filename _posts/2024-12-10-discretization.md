@@ -47,46 +47,36 @@ toc:
 
 ## Overview
 
-Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta)$$ by minimizing the loss between its velocity field and the slope of an interpolation process. As [previously discussed](../interpolation/#affine-interpolations-are-pointwise-transformable), affine interpolations yield essentially equivalent rectified flows thus identical couplings.
+Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta)$$ by minimizing the loss between its velocity field and that of an interpolation process. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations yield equivalent velocity fields and identical noise-data couplings.
 
-In practice, those ODE trajectories must be approximated by **discrete steps**. A standard approach is the Euler method: at each step, the local trajectory is approximated by its tangent line. For rectified flows induced by straight interpolation, this is a intuitive choice. However, if the interpolation is nonlinear (e.g., spherical), it may be more natural to approximate each step with a locally curved segment that matches the interpolation. We refer to such methods as **natural Euler samplers**.
+In practice, we must approximate ODEs with **discrete solvers**. A standard approach is to use the Euler method: at each step, we approximate the local trajectory by a tangent line. For rectified flows induced by straight interpolations, this approach is intuitive. However, if the interpolation is nonlinear (e.g., spherical), a more natural choice is to approximate each step with a curved segment that matches the interpolation. We refer to these methods as **natural Euler samplers**.
 
-Notably, the DDIM sampler can be viewed as a natural Euler sampler under its interpolation. In this perspective, we can understand DDIM without complex derivation of its coefficients.
+Notably, the DDIM sampler can be interpreted as a natural Euler sampler under its corresponding interpolation. From this perspective, we do not need complicated coefficient derivations for DDIM’s inference steps.
 
-A key property shares across pointwise transformable interpolations is:
+A key property of natural Euler samplers is:
 
-> If two interpolation processes are pointwise transformable into one another using maps $$\phi$$ and $$\tau$$, then the **discrete sampling points produced by their respective natural Euler samplers are also pointwise transformable** under the same mappings, provided their time grids are related by a time scaling function $$\tau_t$$.
+> If two interpolation processes are related by a pointwise transform, then **their discrete trajectories obtained through natural Euler sampling are also related by the same pointwise transform**, provided the time grids are appropriately scaled.
 {: .definition}
 
-In other words, **when using natural Euler samplers, changing the affine interpolation scheme *at inference time* is essentially adjusting the sampling time grid.** In the case of DDIM, one obtains **exactly the same results** as those produced by the vanilla Euler sampler (appropriately rescaling the time grid) applied to a rectified flow induced by a straight interpolation.
+In other words, **when using natural Euler samplers, switching the affine interpolation scheme *at inference time* is essentially adjusting the sampling time grid.** For DDIM, we obtain **exactly the same discrete samples** as those produced by a standard Euler solver applied to the rectified flow induced by straight interpolation, once we properly rescale the time grid.
 
 For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 5 in the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).
 
 ## Affine Interpolation Solver
 
-Given a coupling $$(X_0, X_1)$$ of source distirbution $$X_0 \sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$, we define an interpolation function formally:
+Consider a coupling $$(X_0, X_1)$$ of source distirbution $$X_0 \sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$. Define an interpolation function: $$\mathtt I:[0,1] \times \mathbb R^d \times \mathbb R^d \mapsto \mathbb R^d$$ such that 
 
-> **Definition 1.** Let $$\mathtt I:[0,1] \times \mathbb R^d \times \mathbb R^d \mapsto \mathbb R^d$$ be a **interpolation function** satisfying
-> 
-> $$
-> \mathtt I_0(x_0, x_1) = x_0, \quad \mathtt I_1(x_0, x_1)=x_1.
-> $$
-> 
->We construct the interpolation process $$\{X_t\}$$ by
-> 
-> $$
-> X_t = \mathtt I_t(X_0, X_1).
-> $$
-> 
-> We also require that $$\{X_t\}$$ is differentiable in time, that is, the time derivative exists pointwise
-> 
-> $$
-> \dot{X}_t := \partial_t \mathtt{I}_t(X_0, X_1).
-> $$
-> 
-{: .definition}
+$$
+\mathtt I_0(X_0, X_1) = X_0, \quad \mathtt I_1(X_0, X_1)=X_1.
+$$
 
-In many cases, given $$(X_t, \dot{X}_t)$$, we wish to recover $$(X_0, X_1)$$ that satisfy  
+We assume $$\mathtt I_t$$ is differentiable in $$t$$, and denote
+
+$$
+X_t = \mathtt I_t(X_0, X_1), \quad \dot{X}_t = \partial_t \mathtt{I}_t(X_0, X_1).
+$$
+
+In many cases, given sample and velocity $$(X_t, \dot{X}_t)$$, we want to recover $$(X_0, X_1)$$ that satisfy  
 
 $$
 \begin{cases}
@@ -95,10 +85,12 @@ X_t = \mathtt{I}_t(X_0, X_1), \\[6pt]
 \end{cases}
 $$
 
-For affine interpolations $$(X_t = \alpha_t X_1 + \beta_t X_0)$$, this problem reduces to solving a simple $$2 \times 2$$ linear system. Moreover, because expectations are linear, conditional expectations under affine interpolation also inherit this linear structure.
+For affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, this problem reduces to solving a simple $$2 \times 2$$ linear system. Moreover, because expectations are linear, the conditional expectations below also inherit this linear structure.
 
-> **Affine Interpolation Solvers.**  Define
+> **Affine Interpolation Solvers.**  
 >
+> Define
+> 
 > $$
 > \begin{aligned}
 > v_t(x) &:= \mathbb{E}[\dot{X}_t \mid X_t = x], &\text{(RF velocity field)} \\[6pt]
@@ -107,40 +99,40 @@ For affine interpolations $$(X_t = \alpha_t X_1 + \beta_t X_0)$$, this problem r
 > \end{aligned}
 > $$
 >
-> Given any two of $$\{v_t, \hat x_{0\mid t}, \hat x_{1\mid t}, x_t\}$$ or $$\{\dot X_t, X_0, X_1, X_t\}$$, we can explicitly solve for the other two that satisfy
-> 
+> Given any two of $$\{\dot X_t, X_0, X_1, X_t\}$$ (from interpolation) or $$\{v_t, \hat x_{0\mid t}, \hat x_{1\mid t}, x_t\}$$ (from rectified flow), we can solve explicitly for the other two that satisfy
+>
 > $$
 > X_t = \alpha_t X_1 + \beta_t X_0, \quad \dot{X}_t = \dot{\alpha}_t X_1 + \dot{\beta}_t X_0. \\
 > $$
-> 
+>
 > or
-> 
+>
 > $$
 > x_t =\alpha_t\hat{x}_{1\mid t} + \beta_t \hat{x}_{0\mid t}, \quad v_t = \dot \alpha_t \hat{x}_{1\mid t} + \dot \beta_t \hat{x}_{0\mid t}
 > $$
-> 
+>
 > This can be efficiently implemented as [affine interpolation solvers](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py).
 {: .example}
 
 ## Natural Euler Sampler
 
-The vanilla Euler method approximates the flow $$\{Z_t\}$$ on a discrete time grid $$\{t_i\}$$ by locally linear steps:
+The standard Euler method approximates the flow $$\{Z_t\}$$ on a discrete time grid $$\{t_i\}$$ by using  locally linear steps:
 
 $$
 \hat{z}_{t_{i+1}} = \hat{z}_{t_i} + (t_{i+1} - t_i) \cdot v_{t_i}(\hat{z}_{t_i}).
 $$
 
-At each step, the solution is approximated by the straight line tangent to the rectified flow at $$\hat{z}_{t_i}$$.
+This treats the local trajectory as a straight line tangent at $$\hat{z}_{t_i}$$.
 
-In contrast, the **natural Euler sampler** replaces the straight line with an interpolation curve that is tangent at $$\hat{z}_{t_i}$$. The update rule becomes:
+In contrast, the **natural Euler sampler** uses the interpolation curve that is tangent at $$\hat{z}_{t_i}$$. Instead of advancing along a straight line, it follows a locally curved trajectory consistent with the given interpolation scheme. The update rule is:
 
 $$
 \hat{z}_{t_{i+1}} = \mathtt{I}_{t_{i+1}}(\hat{x}_{0 \mid t_i}, \hat{x}_{1 \mid t_i}),
 $$
 
-where $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ are obtained through the affine interpolation solver. These serve as the estimated endpoints of the interpolation curve passing through $$\hat{z}_{t_i}$$ and matching the slope $$\partial \mathtt I_{t_i}(\hat{x}_{0 \mid t_i}, \hat{x}_{1 \mid t_i}) = v_{t_i}(\hat{z}_{t_i})$$ at time $$t_i$$. In other words, the natural Euler method updates the solution by advancing along a locally curved path that is consistent with underlying interpolation curve.
+where $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ are determined by identifying the interpolation curve that passes through $$\hat{z}_{t_i}$$ and satisfies $$\partial \mathtt{I}_{t_i}(\hat{x}_{0 \mid t_i}, \hat{x}_{1 \mid t_i}) = v_{t_i}(\hat{z}_{t_i}).$$ In other words, we first find the specific interpolation curve $$\mathtt{I}$$ that matches the given slope at $$\hat{z}_{t_i}$$, then advance one step along it.
 
-For instance, the natural euler sampler under spherical rectified flow can be derived as:
+For instance, the natural euler sampler under spherical rectified flow is
 
 
 > **Example 1. Natural Euler Sampler for Spherical Interpolation**
@@ -151,11 +143,11 @@ For instance, the natural euler sampler under spherical rectified flow can be de
 >
 {: .example}
 
-As a more involved example, consider the DDIM algorithm. Despite its complex appearance, DDIM’s inference scheme can be viewed as a natural Euler sampler:
+Another example is DDIM. Although it may appear complex, DDIM can be interpreted as a natural Euler sampler derived from a spherical interpolation.
 
 > **Example 2. Natural Euler Sampler for DDIM**
 >
-> The discretized inference scheme of DDIM is the instance of natural Euler sampler for spherical interpolations satisfying $$\alpha_t^2 + \beta_t^2 = 1$$. The inference update of DDIM is written in terms of the expected noise $$\hat{x}_{0\mid t}(x) = \mathbb{E}[X_0 \mid X_t = x]$$, we rewrite the update steo using $$\hat{x}_{0 \mid t}$$: 
+> The discretized inference scheme of DDIM is a instance of natural Euler sampler for spherical interpolations satisfying $$\alpha_t^2 + \beta_t^2 = 1$$. Note that the inference update of DDIM is written in terms of the expected noise $$\hat{x}_{0\mid t}(x) = \mathbb{E}[X_0 \mid X_t = x]$$, we rewrite the update step using $$\hat{x}_{0 \mid t}$$: 
 >
 > $$
 > \begin{aligned}
@@ -171,27 +163,23 @@ As a more involved example, consider the DDIM algorithm. Despite its complex app
 > \frac{\hat{z}_{t+\epsilon}}{\alpha_{t+\epsilon}} = \frac{\hat{z}_t}{\alpha_t} + \left( \frac{\beta_{t+\epsilon}}{\alpha_{t+\epsilon}} - \frac{\beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{z}_t),
 > $$
 >
-> which exactly matches Equation 13 of <d-cite key="song2020denoising"></d-cite>.
+> which matches Equation 13 of <d-cite key="song2020denoising"></d-cite>.
 {: .example}
 
 ## Equivalence of Natural Euler Trajectories
 
-The trajectory points obtained from natural Euler samplers are equivalent under pointwise transformations. 
+Natural Euler sampling preserves pointwise equivalences of discrete trajectory points across different interpolations:
 
 > **Theorem 1. Equivalence of Natural Euler Trajectories**
 > 
-> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes contructed from the same couping and that they're related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Consider the trajectories $$\{\hat{z}_{t_i}\}_i$$ and $$\{\hat{z}_{t_i'}'\}_i$$, generated by applying the natural Euler method to the rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$, respectively, on time grids $$\{t_i\}$$ and $$\{t_i'\}$$.
+> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes contructed from the same couping, related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Consider the discrete trajectories $$\{\hat{z}_{t_i}\}_i$$ and $$\{\hat{z}_{t_i'}'\}_i$$, produced by the natural Euler samplers of rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$, respectively, on time grids $$\{t_i\}$$ and $$\{t_i'\}$$.
 >
 > If the time grids satisfy $$\tau(t_i') = t_i$$ for all $$i$$, and the initial conditions align via $$\hat{z}_{t_0}' = \phi(\hat{z}_{t_0})$$, then the **discrete** trajectories also match under the same transform:
 >
 > $$
 > \hat{z}_{t_i'}' = \phi_{t_i}(\hat{z}_{t_i}) \quad \text{for all } i = 0,1,\ldots
 > $$
->
-> In particular, applying the natural Euler method to a rectified flow induced by an affine interpolation $$\{X_t'\}$$ on a uniform grid $$t_i' = i/n$$ is equivalent to applying the standard (straight) Euler method to the rectified flow induced by the corresponding straight interpolation $$\{X_t\}$$, but with a non-uniform time grid $$t_i = \tau(i/n)$$.
 {: .theorem}
-
-This **discrete-level equivalence** extends the continuous-time theorem, ensuring that natural Euler samplers inherit the same invariances as the underlying rectified flow ODE.
 
 Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote a pointwise transformation, and let $$\texttt{NaturalEulerRF}$$ represent the operation of generating discrete trajectories from a rectified flow ODE using the natural Euler sampler. Then:
 
@@ -199,22 +187,27 @@ $$
 \texttt{NaturalEulerRF}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{NaturalEulerRF}(\{X_t\})).
 $$
 
+As another example, while the DDIM sampler might appear complex, it can be understood as a natural Euler sampler derived from a spherical interpolation. Once the time grids are properly scaled, their discrete trajectories align exactly.
+
 > **Example 3. Equivalence of Straight Euler and DDIM sampler**
 >
-> Since DDIM is the natural Euler sampler under spherical interpolation, and the vanllia Euler method is the natural Euler under the straight interpolation, they yield the same results under proper transform on the time grid. Specifically, the natural Euler sampler on an affine interpolation $$X_t' = \alpha'_t X_1 + \beta'_t X_0$$ using a uniform time grid $$t'_i = i/n$$ is equivalent to applying the vanilla (straight) Euler method to the straight RF (induced from $$X_t = tX_1 + (1 - t)X_0$$) but with a non-uniform time grid:
->
->$$
->t_i = \frac{\alpha'_{i/n}}{\alpha'_{i/n}+\beta'_{i/n}}
->$$
->
-> Conversely, starting from the straight RF and using a vanilla Euler sampler on the time grid $$\{t_i\}$$, one can recover the DDIM sampler by finding a time grid $$\{t'_i\}$$ that satisfies:
+> Consider the natural Euler sampler applied to a RF induced by an affine interpolation $$\{X_t' = \alpha'_t X_1 + \beta'_t X_0\}$$ using a uniform time grid $$t'_i = i/n$$. This procedure is equivalent to applying the standard (straight) Euler method to the straight RF (induced by $$\{X_t = tX_1 + (1 - t)X_0\}$$), but with a non-uniform time grid:
 >
 > $$
-> t_i = \frac{\alpha'_{t_{i'}}}{\alpha_{t_{i'}}'+\beta'_{t_i'}}
+> t_i = \frac{\alpha'_{i/n}}{\alpha'_{i/n}+\beta'_{i/n}}.
 > $$
+>
+> Conversely, starting from the straight RF and applying the standard Euler sampler on $$\{t_i\}$$, one can recover the natural Euler sampler for the affine interpolation by selecting a time grid $$\{t'_i\}$$ such that:
+>
+> $$
+> t_i = \frac{\alpha'_{t'_{i}}}{\alpha'_{t'_{i}}+\beta'_{t'_{i}}}.
+> $$
+>
+> Since DDIM is the natural Euler sampler under spherical interpolation, and the straight-interpolation counterpart corresponds to the standard Euler method, appropriately scaling the time grid for the straight RF reproduces the results of the DDIM sampler exactly.
+>
 {: .example}
 
-In the following figures, we compare two equivalent rectified flows (RFs): one induced by a straight interpolation and another by a spherical interpolation (which DDIM essentially represents via a time rescaling). We first train a straight RF and then convert it into a spherical RF, ensuring that they are exactly equivalent.
+Below, we compare two equivalent RFs: one induced by straight interpolation and the other induced by spherical interpolation. To ensure exact equivalence, we train a rectified flow using the straight interpolation, then transform it into the spherical form.
 
 <div class="l-body-outset">
   <figure id="figure-1">
@@ -226,7 +219,7 @@ In the following figures, we compare two equivalent rectified flows (RFs): one i
     </iframe>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-      Using the standard Euler method for both the straight and spherical RFs with 10 uniform steps in \([0,1]\), we see that, despite their theoretical equivalence, discretization errors accumulate, resulting in significantly different final samples.
+       Applying the standard Euler method with 10 uniform steps in \([0,1]\) to both the straight and spherical RFs results in significant final discrepancies.  
     </figcaption>
   </figure>
 </div>
@@ -241,7 +234,7 @@ In the following figures, we compare two equivalent rectified flows (RFs): one i
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-       When using the natural Euler sampler with 10 uniform steps in \([0,1]\) for both the straight and spherical RFs, the resulting samples are nearly identical. Minor discrepancies arise because the time parameterizations do not perfectly align.
+       Using the natural Euler sampler with 10 uniform steps in \([0,1]\) produces nearly identical results for both the straight and spherical RFs, apart from minor differences due to slightly mismatched time parameterizations.  
     </figcaption>
   </figure>
 </div>
@@ -258,7 +251,7 @@ In the following figures, we compare two equivalent rectified flows (RFs): one i
     </iframe>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
-      After re-scaling the straight RF’s time grid using \(\tau_t\), (and the spherical one still uses uniform time grid) the natural Euler sampling trajectories match exactly between the straight and spherical RFs, confirming that the remaining differences were purely due to mismatched time parameterizations.
+      After adjusting the straight RF’s time grid using \(\tau_t\) (while keeping a uniform grid for the spherical RF), the natural Euler sampling trajectories align exactly, confirming that the remaining discrepancies in Figure 2 were caused solely by mismatched time scaling.
     </figcaption>
   </figure>
 </div>
