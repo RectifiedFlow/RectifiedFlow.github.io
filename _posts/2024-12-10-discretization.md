@@ -85,7 +85,7 @@ X_t = \mathtt{I}_t(X_0, X_1), \\[6pt]
 \end{cases}
 $$
 
-For affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, this problem reduces to solving a simple $$2 \times 2$$ linear system. Moreover, because expectations are linear, the conditional expectations below also inherit this linear structure.
+For affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, this problem reduces to solving a simple $$2 \times 2$$ linear system. Moreover, due to the linearity of expectatins, the following conditional expectations also inherit this linear structure.
 
 > **Affine Interpolation Solvers.**  
 >
@@ -254,4 +254,3 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
     </figcaption>
   </figure>
 </div>
-
