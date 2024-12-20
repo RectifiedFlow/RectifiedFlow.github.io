@@ -29,7 +29,7 @@ authors:
   - name: Qiang Liu
 
 # 如果有文献，请指定bibliography文件
-bibliography: 2024-12-10-discritization.bib
+bibliography: reference.bib
 
 # 可选的目录配置
 toc:
