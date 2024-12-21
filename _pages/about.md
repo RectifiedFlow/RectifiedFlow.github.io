@@ -6,7 +6,7 @@ subtitle: <a href='https://www.cs.utexas.edu/~lqiang/'>The Statistical Learning 
 
 profile:
   align: right
-  image: logo.png
+  image: cutecat.png
   image_circular: false # crops the image to make it circular
   more_info:
 
