@@ -10,15 +10,41 @@ pagination:
   permalink: /page/:num/
   per_page: 5
   sort_field: date
-  sort_reverse: false
+  sort_reverse: true
   trail:
     before: 1 # The number of links before the current page
     after: 3 # The number of links after the current page
 ---
 
+<div style="text-align: center; margin-bottom: 20px;">
+  <img src="assets/img/logo_header.png" alt="Description of image" style="max-width: 100%; height: auto;">
+</div>
+
 <div class="post">
 
-{% assign blog_name_size = site.blog_name | size %}
+  <div style="text-align: justify;">
+    <p><strong>Rectified flow</strong> is a unified framework for generative modeling that offers a simplified view on flow- and diffusion-based techniques. It has been applied to state-of-the-art image, audio, and video generation. In a nutshell, rectified flow interpolates between noise and data distributions through an interpolation process. This process is then "rectified" (or "causalized") to produce a generative ODE model. The procedure can be repeated to "reflow" the system, yielding ODEs with straighter trajectories that can be discretized using fewer, or even a single, step.</p>
+
+    <p>This series of tutorials on rectified flow addresses topics that are often sources of confusion and highlights the connections between rectified flow and other generative modeling methods.</p>
+
+    <p>
+      For those eager to dive deeper, we provide:
+      <ul>
+        <li>
+          A comprehensive <a href="https://github.com/lqiang67/rectified-flow" target="_blank">codebase</a> for practical exploration.
+        </li>
+        <li>
+          <a href="#" target="_blank">Lecture notes</a> containing detailed theoretical derivations.
+        </li>
+      </ul>
+    </p>
+
+    <p>If you have questions regarding the blog posts, codebase, or notes, please feel free to reach out via this <a href="mailto:rectifiedflow@gmail.com">email</a>.</p>
+  </div>
+
+<hr style="border: 1px solid #ccc; margin: 20px 0;">
+
+<!-- {% assign blog_name_size = site.blog_name | size %}
 {% assign blog_description_size = site.blog_description | size %}
 
 {% if blog_name_size > 0 or blog_description_size > 0 %}
@@ -54,7 +80,7 @@ pagination:
       {% endfor %}
     </ul>
   </div>
-  {% endif %}
+  {% endif %} -->
 
 <!-- {% assign featured_posts = site.posts | where: "featured", "true" %}
 {% if featured_posts.size > 0 %}
