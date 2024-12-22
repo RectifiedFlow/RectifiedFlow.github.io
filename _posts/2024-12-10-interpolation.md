@@ -50,7 +50,6 @@ toc:
 
 Most diffusion and flow models can be analyzed through the rectified flow lens, but they employ different interpolation methods, typically affine interpolations such as straight-line or spherical interpolations. A critical question is to understand the impact of using different interpolation processes. This blog introduces the equivalent relationships between rectified flows induced by these different interpolation processes, as discussed in Chapter 3 of these [lecture notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related observations and discussions can also be found in <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>.
 
-
 ## Overview
 
 Given a coupling $$(X_0, X_1)$$ of source distribution $$X_0\sim \pi_0$$ and target unknown data distribution $$X_1 \sim \pi_1$$, recall that rectified flow learns an ODE
@@ -83,7 +82,7 @@ In this blog, we demonstrate that if two interpolation processes are *pointwise 
 
 ## Point-wisely Transformable Interpolations
 
-We first define what we mean by pointwise transformability.
+We first define what we mean by pointwise transformability between two processes. 
 
 > **Definition 1.** Let $$\{X_t : t \in [0,1]\}$$ and $$\{X'_t : t \in [0,1]\}$$ be two interpolations. They are **pointwise transformable** if there exist differentiable maps $$\tau: [0,1] \to [0,1]$$ and $$\phi: [0,1] \times \mathbb{R}^d \to \mathbb{R}^d$$ such that $$\phi_t$$ is invertible for each $$t \in [0,1],$$ and 
 > 
@@ -118,7 +117,7 @@ If two interpolations are pointwise transformable and contructed from the same c
 >    $$
 {: .theorem}
 
-Thus, for a pointwise transform $$\texttt{Transform},$$
+This is equivalent to saying that the $$\texttt{Rectify}(\cdot)$$ map is **equivariant** under the pointwise transforms $$\texttt{Transform}:$$ 
 
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
@@ -126,15 +125,9 @@ $$
 
 ###  Affine Interpolations are Pointwise Transformable
 
-Many commonly used interpolation schemes are affine, they can be expressed as:
-
-$$
-X_t = \alpha_t X_1 + \beta_t X_0,
-$$
-
-with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$
-
-Some examples of affine interpolations:
+Many commonly used interpolation schemes are affine 
+$$X_t = \alpha_t X_1 + \beta_t X_0,$$ 
+with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$ Examples include:
 
 1. ***Straight interpolation*** <d-cite key="liu2022flow,lipman2022flow,albergo2023stochastic"></d-cite>:
 
