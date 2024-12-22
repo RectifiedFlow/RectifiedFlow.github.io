@@ -175,19 +175,19 @@ For affine interpolations, the maps $$\phi$$ and $$\tau$$ reduce to scalar trans
 
 In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary search](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_convertor.py)—or derive an analytic solution in certain simple cases.
 
-<div class="l-body-outset">
+<div class="l-body">
   <figure id="figure-1">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="430px" 
-              width="49%"></iframe>
+              height="330px" 
+              width="50%"></iframe>
       <iframe src="{{ 'assets/plotly/interp_tau_straight_spherical.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="430px" 
-              width="49%"></iframe>
+              height="330px" 
+              width="50%"></iframe>
     </div>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
@@ -195,6 +195,7 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
     </figcaption>
   </figure>
 </div>
+
 
 
 Combining Proposition 1 with Theorem 1, we have: 
@@ -238,12 +239,12 @@ Combining Proposition 1 with Theorem 1, we have:
 >$$
 {: .example}
 
-<div class="l-body-outset">
+<div class="l-body">
   <figure id="figure-2">
     <iframe src="{{ '/assets/plotly/interp_convert_200step.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
-            height="630px" 
+            height="530px" 
             width="100%">
     </iframe>
     <figcaption>
@@ -253,6 +254,7 @@ Combining Proposition 1 with Theorem 1, we have:
   </figure>
 </div>
 
+
 ### Implication on Inference
 
 <div class="l-body-outset">
@@ -261,13 +263,13 @@ Combining Proposition 1 with Theorem 1, we have:
       <iframe src="{{ 'assets/plotly/interp_convert_10step_straight.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="430px" 
-              width="49%"></iframe>
+              height="330px" 
+              width="50%"></iframe>
       <iframe src="{{ 'assets/plotly/interp_convert_10step_spherical.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="430px" 
-              width="49%"></iframe>
+              height="330px" 
+              width="50%"></iframe>
     </div>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
@@ -275,6 +277,7 @@ Combining Proposition 1 with Theorem 1, we have:
     </figcaption>
   </figure>
 </div>
+
 
 <div class="l-body">
   <figure id="figure-4">
@@ -378,12 +381,12 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
 
 This reparameterization does not significantly affect performance. In the following figures, we show that choosing between straight or spherical interpolation makes **little difference** in training outcomes.
 
-<div class="l-body-outset">
+<div class="l-body">
   <figure id="figure-5">
     <iframe src="{{ '/assets/plotly/interp_convert_double_rf.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
-            height="630px" 
+            height="530px" 
             width="100%">
     </iframe>
     <figcaption>
