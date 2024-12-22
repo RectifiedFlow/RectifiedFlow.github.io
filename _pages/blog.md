@@ -17,7 +17,7 @@ pagination:
 ---
 
 <div style="text-align: center; margin-bottom: 20px;">
-  <img src="assets/img/logo_header.png" alt="Description of image" style="max-width: 100%; height: auto;">
+  <img src="assets/img/cutecat.png" alt="Description of image" style="max-width: 100%; height: auto;">
 </div>
 
 <div class="post">
