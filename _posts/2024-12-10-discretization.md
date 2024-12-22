@@ -51,6 +51,26 @@ Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta)$$ by
 
 In practice, we must approximate ODEs with **discrete solvers**. A standard approach is to use the Euler method: at each step, we approximate the local trajectory by a tangent line. For rectified flows induced by straight interpolations, this approach is intuitive. However, if the interpolation is nonlinear (e.g., spherical), a more natural choice is to approximate each step with a curved segment that matches the interpolation. We refer to these methods as **natural Euler samplers**.
 
+<div class="l-body">
+  <figure id="figure-svg">
+    <object
+      data="{{ '/assets/img/natural_euler.svg' | relative_url }}"
+      type="image/svg+xml"
+      width="100%"
+      height="200px"
+    >
+      <!-- Fallback content for browsers that do not support embedded SVG -->
+      <p>
+        Your browser does not support embedded SVG.
+        <a href="{{ '/assets/img/natural_euler.svg' | relative_url }}">Download here</a>.
+      </p>
+    </object>
+    <figcaption>
+      <a href="#figure-natural-euler"></a>
+    </figcaption>
+  </figure>
+</div>
+
 Notably, the DDIM sampler can be interpreted as a natural Euler sampler under its corresponding interpolation. From this perspective, we do not need complicated coefficient derivations for DDIM’s inference steps.
 
 A key property of natural Euler samplers is:
