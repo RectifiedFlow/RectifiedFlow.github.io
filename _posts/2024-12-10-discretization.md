@@ -229,48 +229,41 @@ As for the DDIM sampler, once we rescale the time grids appropriately, its discr
 
 Below, we compare two equivalent RFs: one induced by straight interpolation and the other induced by spherical interpolation. To ensure exact equivalence, we train a RF using the straight interpolation, then transform it into the spherical form.
 
-<div class="l-body-outset">
-  <figure id="figure-1">
-    <iframe src="{{ '/assets/plotly/discrete_euler.html' | relative_url }}" 
-            frameborder="0" 
-            scrolling="no" 
-            height="630px" 
-            width="100%">
-    </iframe>
+<div class="l-body">
+  <figure id="figure-3">
+    <div style="display: flex;">
+      <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="420px" 
+              width="45%"></iframe>
+      <iframe src="{{ 'assets/plotly/discrete_natural_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="420px" 
+              width="45%"></iframe>
+    </div>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-       Applying the standard Euler method with 10 uniform steps in \([0,1]\) to both the straight and spherical RFs results in significant final discrepancies.  
+      Comparison of the Vanilla Euler sampler (left) and the Natural Euler sampler (right) on spherical RF. The left approximates each step using straight segments, while the right uses local curves for each step. Zoom in to observe the differences in detail.
     </figcaption>
   </figure>
 </div>
 
-<div class="l-body-outset">
+
+
+<div class="l-body">
   <figure id="figure-2">
-    <iframe src="{{ '/assets/plotly/discrete_natural_unmatch.html' | relative_url }}" 
+    <iframe src="{{ '/assets/plotly/discrete_natural_double_match.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
-            height="630px" 
+            height="430px" 
             width="100%">
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-       Using the natural Euler sampler with 10 uniform steps in \([0,1]\) produces nearly identical results for both the straight and spherical RFs, apart from minor differences due to slightly mismatched time parameterizations.  
+      Sampling with the Natural Euler sampler on both Straight and Spherical RF. By adjusting the time grid of the Straight RF using \(\tau_t\) (while maintaining a uniform grid for the Spherical RF), the final generated results are identical.
     </figcaption>
   </figure>
 </div>
 
-
-<div class="l-body-outset">
-  <figure id="figure-3">
-    <iframe src="{{ '/assets/plotly/discrete_natural_match.html' | relative_url }}" 
-            frameborder="0" 
-            scrolling="no" 
-            height="630px" 
-            width="100%">
-    </iframe>
-    <figcaption>
-      <a href="#figure-3">Figure 3</a>.
-      After adjusting the straight RF’s time grid using \(\tau_t\) (while keeping a uniform grid for the spherical RF), the natural Euler sampling results align exactly, confirming that the remaining discrepancies in Figure 2 were caused solely by mismatched time scaling.
-    </figcaption>
-  </figure>
-</div>
