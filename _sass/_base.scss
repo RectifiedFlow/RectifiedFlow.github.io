@@ -471,12 +471,14 @@ footer.sticky-bottom {
   }
 }
 
-.blog-header{
-  text-align: center; /* Centers the text horizontally */
-  margin: 0 auto; /* Centers the div horizontally if it has a set width */
-  padding: 10px; /* Optional: Adjust spacing */
+.blog-header {
+  text-align: left; /* Align text to the left */
+  margin: 0;       /* Remove auto margins that center the div */
+  padding: 0px;
   font-size: 1.8rem;
   font-weight: bold;
+  margin-top: 50px;
+  margin-bottom: 20px;
 }
 
 .post-list {
