@@ -118,7 +118,7 @@ The analytic relation enables us to analyze the impact of training and inference
 
 ## Point-wisely Transformable Interpolations
 
-We next formalize *pointwise transformability* between two interpolation processes.
+We first formalize *pointwise transformability* between two interpolation processes.
 
 > **Definition 1.** Let $$\{X_t : t \in [0,1]\}$$ and $$\{X'_t : t \in [0,1]\}$$ be two interpolations. They are **pointwise transformable** if there exist differentiable maps 
 > 
@@ -133,12 +133,12 @@ We next formalize *pointwise transformability* between two interpolation process
 > $$
 {: .definition}
 
-If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, leading to the same rectified coupling.
+If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
 
 
 > **Theorem 1.** Suppose $$\{X_t\}$$ and $$\{X'_t\}$$ constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and are pointwise transformable. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
 >
-> Let $$\{v_t\}$$ and $$\{v'_t\}$$ denote their rectified flow velocity fields. Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ denote their rectified flows with $$\mathrm d Z_t = v_t(Z_t)\mathrm d t,Z_0 = X_0$$ and $$\mathrm d Z'_t = v'_t(Z'_t)\mathrm d t, Z'_0=X'_0.$$ Then:
+> Denote by $$\{v_t\}$$ and $$\{v'_t\}$$ their rectified flow velocity fields. Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be their rectified flows with $$\mathrm d Z_t = v_t(Z_t)\mathrm d t,Z_0 = X_0$$ and $$\mathrm d Z'_t = v'_t(Z'_t)\mathrm d t, Z'_0=X'_0.$$ Then:
 > 
 > 1. $$\{Z_t\},\{Z'_t\}$$ can be transformed with the same pointwise maps:
 > 
@@ -146,7 +146,7 @@ If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are p
 >    Z'_t = \phi_t(Z_{\tau_t}) \quad \text{for all } t \in [0,1].
 >    $$
 >
-> 3. The rectified couplings match: $$(Z_0, Z_1) = (Z'_0, Z'_1).$$
+> 3. Their rectified couplings are the same: $$(Z_0, Z_1) = (Z'_0, Z'_1).$$
 > 
 > 4. The velocity fields satisfy:
 > 
@@ -163,13 +163,7 @@ $$
 
 ###  Affine Interpolations are Pointwise Transformable
 
-Many commonly used interpolation schemes are affine
-
-$$
-X_t = \alpha_t X_1 + \beta_t X_0,
-$$
-
-with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$ Examples include:
+Many commonly used interpolation schemes are affine $X_t = \alpha_t X_1 + \beta_t X_0,$ with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$ Examples include:
 
 1. ***Straight interpolation*** <d-cite key="liu2022flow,lipman2022flow,albergo2023stochastic"></d-cite>:
 
@@ -195,9 +189,10 @@ with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\a
    
    where $$\alpha_t = \exp\bigl(-\frac{1}{4}a(1-t)^2 - \tfrac{1}{2}b(1-t)\bigr)$$, and $$a=19.9,b=0.1$$ by default.
 
-**All affine interpolations are pointwise transformable by adjusting time and scaling**. In this case, the maps $$\phi$$ and $$\tau$$ reduce to scalar transforms. These affine interpolations induced rectified flows and couplings are equivalent. This result aligns with observations made by other authors<d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>. 
+**All affine interpolations are pointwise transformable by adjusting time and scaling**. In this case, the maps $$\phi$$ and $$\tau$$ reduce to scalar transforms; see <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>. 
+Hence, the rectified flows of all affine interpolations can be analytically transformed into one other, and they lead to the same rectified couplings. 
 
-> **Proposition 1. Conversion of Affine Interpolations**
+> **Proposition 1. Pointwise Transforms Between Affine Interpolations**
 >
 > Let $$X_t = \alpha_t X_1 + \beta_t X_0$$ and $$X_t' = \alpha_t' X_1 + \beta_t' X_0$$ be two affine interpolations from the same coupling $$(X_0, X_1).$$ Then there exist scalar functions $$\tau_t$$ and $$\omega_t$$ such that
 > 
