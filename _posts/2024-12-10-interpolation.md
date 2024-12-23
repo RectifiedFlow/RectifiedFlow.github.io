@@ -113,7 +113,7 @@ In this blog, we demonstrate that if two interpolation processes are *pointwise 
 </div>
 
 
-The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [\textit{blog}](https://rectifiedflow.github.io/blog/2024/discretization/).  
+The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
 
 
 ## Point-wisely Transformable Interpolations
@@ -189,7 +189,7 @@ Many commonly used interpolation schemes are affine $X_t = \alpha_t X_1 + \beta_
    
    where $$\alpha_t = \exp\bigl(-\frac{1}{4}a(1-t)^2 - \tfrac{1}{2}b(1-t)\bigr)$$, and $$a=19.9,b=0.1$$ by default.
 
-**All affine interpolations are pointwise transformable by adjusting time and scaling**. In this case, the maps $$\phi$$ and $$\tau$$ reduce to scalar transforms; see <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>. 
+**All affine interpolations are pointwise transformable by adjusting time and scaling**. In this case, the maps $$\phi$$ and $$\tau$$ reduce to scalar transforms, as observed in a line of works <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>. 
 Hence, the rectified flows of all affine interpolations can be analytically transformed into one other, and they lead to the same rectified couplings. 
 
 > **Proposition 1. Pointwise Transforms Between Affine Interpolations**
@@ -227,7 +227,7 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
     </div>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-      The \(\tau\) and \(\omega\) transformations that convert DDIM to spherical interpolation (left) and convert straight interpolation to spherical (right). When converting DDIM to spherical, \(\omega_t\) remains fixed at 1, only the time scaling changes.
+      The \(\tau\) and \(\omega\) transformations that convert DDIM to spherical interpolation (left) and convert straight interpolation to spherical (right). When converting DDIM to spherical, \(\omega_t\) remains fixed at 1, because only the time scaling changes.
     </figcaption>
   </figure>
 </div>
@@ -237,7 +237,7 @@ Combining Proposition 1 with Theorem 1, we have:
 
 > **Proposition 2. Rectified Flows between Affine Interpolations**
 >
-> For affine interpolations $$\{X_t\}$$ and $$\{X'_t\}$$:
+> For the affine interpolations $$\{X_t\}$$ and $$\{X'_t\}$$ in Proposition 1, we have 
 >
 > + Their rectified flows $$\{Z_t\}$$ and $$\{Z'_t\}$$ satisfy:
 >
@@ -245,9 +245,9 @@ Combining Proposition 1 with Theorem 1, we have:
 > Z'_t = \frac 1 {\omega_t} Z_{\tau_t}, \quad \forall t \in [0, 1].
 > $$
 >
-> + Their rectified couplings match: $$(Z_0, Z_1) = (Z'_0, Z'_1).$$
+> + Their rectified couplings are identical: $$(Z_0, Z_1) = (Z'_0, Z'_1).$$
 >
-> + Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ relate as:
+> + Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ relate via:
 > 
 > $$
 >v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
