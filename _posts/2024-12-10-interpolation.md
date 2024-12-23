@@ -250,7 +250,7 @@ Combining Proposition 1 with Theorem 1, we have:
 > + Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ relate via:
 > 
 > $$
->v'_t(x) = \frac{1}{\omega_t} \left( \dot{\tau}_t v_{\tau_t}(\omega_t x) - \dot{\omega}_t x \right). \tag{3}
+>v'_t(x) = \frac{\dot{\tau}_t}{\omega_t}  v_{\tau_t}(\omega_t x) - \frac{\dot{\omega}_t}{\omega_t} x \right). \tag{3}
 > $$
 {: .definition}
 
@@ -342,12 +342,13 @@ Suppose we have a parametric model $$v_t(x;\theta)$$ trained to approximate the 
 
 This leads to two related questions:  
 
-1. How does training with one interpolation differ from training directly with another?  
-2. Does converting a pretrained model $$v_t$$ to $$v'_t$$ degrade performance?
+1) How does training with one interpolation differ from converting an RF trained with another interpolation?
+   
+2) Does post-training conversion between models degrade performance?  
 
-It turns out that choosing a different affine interpolation during training is equivalent to changing the **time-weighting** in the loss function and applying an affine transform to the model parameterization. As long as the transformations $$\omega_t$$ and $$\tau_t$$ are not highly singular, converting a model from one affine interpolation to another does not inherently reduce performance.
+It turns out that choosing a different affine interpolation during training is equivalent to changing the **time-weighting** in the loss function and applying an affine transform to the model parameterization. As long as the transformations $$\omega_t$$ and $$\tau_t$$ are not highly singular, converting a model from one affine interpolation to another may not impact the performance dramatically.
 
-Consider a model $$v_t(x; \theta)$$ trained to approximate the RF velocity $$v_t$$ of interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$:
+Consider a model $$v_t(x; \theta)$$ trained to approximate the RF velocity $$v_t$$ of interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ by minimizing a time-weighted mean square loss: 
 
 $$
 \mathcal L(\theta) = \int_0^1 \mathbb E\left[
@@ -355,9 +356,9 @@ $$
 \right] \mathrm dt,\tag{4}
 $$
 
-where $$\eta_t$$ is a time-weighting function.
+where $$\eta_t$$ is a positive time-weighting function.
 
-After training, we can convert this model $$v_t(x; \theta)$$ into an approximation of $$v'_t$$ of a different interpolation $$X'_t = \alpha_t' X_1 + \beta_t' X_0$$ via:
+After training, we can convert this model $$v_t(x; \theta)$$ into an approximation $$v'_t(x; \theta)$$  of $$v'_t$$ of a different interpolation $$X'_t = \alpha_t' X_1 + \beta_t' X_0$$ via:
 
 $$
 v'_t(x; \theta) = \frac{\dot{\tau}_t}{\omega_t} v_{\tau_t}(\omega_t x; \theta) - \frac{\dot{\omega}_t}{\omega_t} x.
