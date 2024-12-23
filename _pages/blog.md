@@ -1,7 +1,7 @@
 ---
 layout: default
 permalink: /
-title: ""
+title: "Home"
 nav: true
 nav_order: 1
 pagination:
@@ -39,12 +39,16 @@ pagination:
       <p>If you have questions regarding the blog posts, codebase, or notes, please feel free to reach out via this <a href="mailto:rectifiedflow@gmail.com">email</a>.</p>
     </div>
 
-    <div style="flex: 0; margin-left: 20px;">
-      <img src="assets/img/cutecat.png" alt="Description of image" style="max-width: 300px; height: auto;">
+    <div style="flex: 0; margin-left: 40px;">
+      <img src="assets/img/cutecat.png" alt="Description of image" style="max-width: 280px; height: auto;">
     </div>
   </div>
 
-<hr style="border: 1px solid #ccc; margin: 20px 0;">
+<hr style="border: 0.05px solid #ddd; margin: 20px 0;">
+
+  <div class="blog-header">
+    Blogs
+  </div>
 
 <!-- {% assign blog_name_size = site.blog_name | size %}
 {% assign blog_description_size = site.blog_description | size %}
@@ -155,7 +159,7 @@ pagination:
 <div class="row">
           <div class="col-sm-9">
 {% endif %}
-        <h3>
+        <p class="post-bigtitle">
         {% if post.redirect == blank %}
           <a class="post-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
         {% elsif post.redirect contains '://' %}
@@ -166,41 +170,22 @@ pagination:
         {% else %}
           <a class="post-title" href="{{ post.redirect | relative_url }}">{{ post.title }}</a>
         {% endif %}
-      </h3>
-      <p>{{ post.description }}</p>
+      </p>
+      <p class="post-subtitle">{{ post.description }}</p>
       <p class="post-meta">
         {{ read_time }} min read &nbsp; &middot; &nbsp;
         {{ post.date | date: '%B %d, %Y' }}
-        {% if post.external_source %}
-        &nbsp; &middot; &nbsp; {{ post.external_source }}
+        {% if tags != "" %}
+        &nbsp; &middot; &nbsp;
+          {% for tag in post.tags %}
+          <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl}}">
+            <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }}</a>
+            {% unless forloop.last %}
+              &nbsp;
+            {% endunless %}
+            {% endfor %}
         {% endif %}
       </p>
-      <p class="post-tags">
-        <a href="{{ year | prepend: '/blog/' | prepend: site.baseurl}}">
-          <i class="fa-solid fa-calendar fa-sm"></i> {{ year }} </a>
-
-          {% if tags != "" %}
-          &nbsp; &middot; &nbsp;
-            {% for tag in post.tags %}
-            <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl}}">
-              <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }}</a>
-              {% unless forloop.last %}
-                &nbsp;
-              {% endunless %}
-              {% endfor %}
-          {% endif %}
-
-          {% if categories != "" %}
-          &nbsp; &middot; &nbsp;
-            {% for category in post.categories %}
-            <a href="{{ category | slugify | prepend: '/blog/category/' | prepend: site.baseurl}}">
-              <i class="fa-solid fa-tag fa-sm"></i> {{ category }}</a>
-              {% unless forloop.last %}
-                &nbsp;
-              {% endunless %}
-              {% endfor %}
-          {% endif %}
-    </p>
 
 {% if post.thumbnail %}
 
