@@ -18,7 +18,9 @@ chart:
 tikzjax: true
 typograms: true
 
-# 如需添加作者信息，在下方添加authors字段
+thumbnail: /assets/img/thumbnail/interpolation_thumbnail.png
+thumbnail_alt: "Thumbnail of Interpolation"
+
 authors:
   - name: Runlong Liao
     url: "mailto:rectifiedflow@googlegroups.com"

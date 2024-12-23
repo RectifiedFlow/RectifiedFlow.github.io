@@ -471,15 +471,6 @@ footer.sticky-bottom {
   }
 }
 
-.post-title {
-  font-size: 1.3rem; /* Adjust size as needed */
-  font-weight: 400;
-
-  mjx-container[jax="CHTML"][display="true"] {
-    display: unset;
-  }
-}
-
 .blog-header{
   text-align: center; /* Centers the text horizontally */
   margin: 0 auto; /* Centers the div horizontally if it has a set width */
@@ -496,36 +487,36 @@ footer.sticky-bottom {
   li {
     border-bottom: 1px solid var(--global-divider-color);
     list-style: none;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
-    .post-bigtitle{
+    .post-bigtitle {
       font-size: 1.5rem;
       font-weight: 500;
-      margin-bottom: 0.0rem;
+      margin-bottom: 0rem;
     }
 
     .post-subtitle {
       color: var(--global-text-color-less-light);
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.0rem;
+      margin-bottom: 0.1rem;
     }
 
     .post-meta {
       color: var(--global-text-color-light);
       font-size: 0.8rem;
       margin-bottom: 0;
-    }
 
-    .post-meta a {
-      color: inherit; /* Ensures links have the same color as the rest of the text */
-      text-decoration: none; /* Optional: removes underline if present */
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
     }
 
     .post-tags {
       color: var(--global-text-color-light);
       font-size: 0.8rem;
-      padding-top: 0.0rem;
+      padding-top: 0rem;
       padding-bottom: 0;
     }
 
@@ -533,13 +524,27 @@ footer.sticky-bottom {
       color: var(--global-text-color);
       text-decoration: none;
 
-      &:hover {
+      &:hover,
+      &:focus {
         color: var(--global-theme-color);
+        text-decoration: underline;
       }
-    }
 
-    mjx-container[jax="CHTML"][display="true"] {
-      display: unset;
+      &.post-title {
+        color: #136abcf6;
+        font-size: 1.4rem;
+        font-weight: 400;
+
+        &:hover,
+        &:focus {
+          color: #1271be; 
+          text-decoration: underline;
+        }
+      }
+
+      mjx-container[jax="CHTML"][display="true"] {
+        display: unset;
+      }
     }
   }
 }

@@ -258,6 +258,7 @@ exclude:
   - README.md
   - readme_preview/
   - vendor
+  - "assets/plotly/plot_notebooks"
 keep_files:
   - CNAME
   - .nojekyll
