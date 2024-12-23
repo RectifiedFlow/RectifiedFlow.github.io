@@ -23,7 +23,7 @@ thumbnail_alt: "Thumbnail of Interpolation"
 
 authors:
   - name: Runlong Liao
-    url: "mailto:rectifiedflow@googlegroups.com"
+    url: "mailto:rectifiedflow@gmail.com"
     affiliations:
       name: UT Austin
   - name: Xixi Hu
