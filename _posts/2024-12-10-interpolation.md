@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: "Interpolations: All Flows are One Flow"
-description: Affine Interpolations Result in Equivariant Rectified Flows
+description: Various interpolation schemes have been suggested in different methods. How do they impact performance? Is the simplest straight-line interpolation enough?
 tags: tutorial
 giscus_comments: true
 date: 2024-12-10 10:00:00
@@ -23,13 +23,12 @@ thumbnail_alt: "Thumbnail of Interpolation"
 
 authors:
   - name: Runlong Liao
-    url: "mailto:rectifiedflow@gmail.com"
-    affiliations:
-      name: UT Austin
   - name: Xixi Hu
   - name: Bo Liu
   - name: Qiang Liu
-
+    url: "mailto:rectifiedflow@gmail.com"
+    affiliations:
+      name: UT Austin
 
 bibliography: reference.bib
 
