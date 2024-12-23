@@ -280,12 +280,16 @@ Combining Proposition 1 with Theorem 1, we have:
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      Straight and spherical interpolation produce the same coupling. Although their ODE trajectories differ, they both end at the same \(Z_1\) because the continuous-time flows are equivalent.
+We first train a random field (RF) using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation produces different ODE trajectories, both ultimately converge to the same endpoint \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
     </figcaption>
   </figure>
 </div>
 
 ### Implication on Inference
+
+The trajectories of the RF derived from different affine interpolations can be viewed as deformations of one another via time and space scaling. When the same numerical discretization methods, such as the Euler method, are applied to these differently deformed trajectories, they produce varying discretization errors, leading to different results. This difference becomes pronounced when a large step size is used, as it introduces significant discretization errors (see Figure 3 for the results of the Euler method with 4 steps). However, the difference diminishes as the discretization becomes sufficiently fine to accurately approximate the underlying ODEs (as shown in Figure 2 with 100 Euler steps). 
+
+Figure 4 illustrates how the difference in the inference results for the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
 
 <div class="l-body-outset">
   <figure id="figure-3">
@@ -303,12 +307,11 @@ Combining Proposition 1 with Theorem 1, we have:
     </div>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
-      Different final samples when the number of Euler steps is reduced to 4.
+      Different results when the number of Euler steps is reduced to 4.
     </figcaption>
   </figure>
 </div>
 
-In theory, any affine interpolation induces an equivalent continuous-time rectified flow, but numerical ODE solvers introduce discretization errors that can make these ODEs behave differently in practice. As Figure 4 suggests, using fewer solver steps can amplify the gap between spherical and straight interpolations. 
 
 <div class="l-body">
   <figure id="figure-4">
@@ -320,12 +323,18 @@ In theory, any affine interpolation induces an equivalent continuous-time rectif
     </iframe>
     <figcaption>
       <a href="#figure-4">Figure 4</a>.
-      The mean square error (MSE) between rectified flows trained with straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes (“integration priors”) can still produce varying performance when the step count is small.
+      The mean square error (MSE) between the estimtion of $$Z_1$$ from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
     </figcaption>
   </figure>
 </div>
 
-Generally, we want to reduce these errors by seeking “straighter” trajectories. However, **“straightness” is relative**: as we show in the [following blog](https://rectifiedflow.github.io/blog/2024/discretization/), for spherical interpolation, locally **curved** paths are equivalent to **straight** lines in the straight interpolations. Although we may not know what is the best inference interpolation scheme, we fortunately can convert between all affine interpolation schemes without retraining and thus select the one that yields better sampling results in practice.
+In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, when "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
+
+Although it is challenging to predict the best inference interpolation scheme *a priori*, post-training conversion enables the selection of a scheme that yields better sampling results during inference in practice. Furthermore, one can take this a step further by directly optimizing the pointwise transform to minimize discretization error, without necessarily reasoning about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair \( (\phi_t, \tau_t) \) such that the Euler method applied to the transformed ODE, \( Z_t' = \phi_t(Z_{\tau_t}) \), is as accurate as possible.
+
+
+Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion makes it possible to select the scheme that yields better sampling results during inference in practice. Furthermore, one can take this a step further by directly optimizing the pointwise transform to minimize discretization error, without necessarily reasoning about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair \( (\phi_t, \tau_t) \) such that the Euler method applied to the transformed ODE, \( Z_t' = \phi_t(Z_{\tau_t}) \), is as accurate as possible.
+
 
 ## Implications on Loss Functions
 
