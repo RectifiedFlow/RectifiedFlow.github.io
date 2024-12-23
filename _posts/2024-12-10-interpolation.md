@@ -384,7 +384,7 @@ In other words, **training under different affine interpolation schemes is equiv
 >
 > Consider the straight interpolation $$X_t = t X_1 + (1 - t) X_0$$ and another affine interpolation $$X_t' = \alpha_t' X_1 + \beta_t' X_0.$$
 >
-> Suppose we trained a model $$v_t$$ for the straight interpolation with time weights $$\eta_t.$$ Then converted $$v_t'$$ corresponds to the RF trained with the parametrization in $$(6)$$, and a different time-weighting:
+> Suppose we have trained a model $$v_t(x, \theta)$$ for the straight interpolation with time weights $$\eta_t.$$ Then converted $$v_t'(x, \theta)$$ corresponds to the RF trained with the parametrization in $$(6)$$, and a different time-weighting:
 >
 > $$
 > \eta_t' = \frac{\omega_t^2}{\tau_t'} \eta_{\tau_t} = \frac{1}{\dot{\alpha}_t' \beta_t' - \alpha_t' \dot{\beta}_t'} \eta_{\tau_t}.
@@ -394,7 +394,7 @@ In other words, **training under different affine interpolation schemes is equiv
 >
 {: .example}
 
-### Straight vs. Spherical: Identical Train Time Weight
+### Straight vs. Spherical: Identical Training Time Weight
 
 Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t$$ is constant: $$\eta'_t$$ is proportional to $$\eta_{\tau_t}$$. If $$\eta_t = 1$$ is uniform, then $$\eta'_t$$ is also uniform, which implies the two interpolation schemes share the *same* loss function.
 
