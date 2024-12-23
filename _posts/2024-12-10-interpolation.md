@@ -1,6 +1,6 @@
 ---
 layout: distill
-title: All Flows are One Flow
+title: Interpolations: All Flows are One Flow
 description: Affine Interpolations Result in Equivalent Rectified Flows
 tags: tutorial
 giscus_comments: true
