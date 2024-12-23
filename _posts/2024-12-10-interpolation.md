@@ -394,9 +394,9 @@ In other words, **training under different affine interpolation schemes is equiv
 >
 {: .example}
 
-### Straight vs. Spherical: Identical Training Time Weight
+### Straight vs. Spherical: Identical Training Loss With Uniform Weights
 
-Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t$$ is constant: $$\eta'_t$$ is proportional to $$\eta_{\tau_t}$$. If $$\eta_t = 1$$ is uniform, then $$\eta'_t$$ is also uniform, which implies the two interpolation schemes share the *same* loss function.
+Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t - \alpha'_t \dot{\beta}'_t$$ is constant, in which case $$\eta'_t$$ is proportional to $$\eta_{\tau_t}$$. Furthermore, if $$\eta_t = 1$$ is uniform, then $$\eta'_t$$ is also uniform, which implies the two interpolation schemes share the *same* loss function in this case.
 
 > **Example 3. Losses for Straight vs. Spherical Interpolation**
 > 
@@ -411,16 +411,16 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
 > \eta'_t = \frac{2}{\pi}\eta_{\tau_t}, \quad \tau_t = \frac{\tan\left(\frac{\pi t}{2}\right)}{\tan\left(\frac{\pi t}{2}\right)+1}.
 > $$
 >
-> Thus, training $$v_t$$ for the straight interpolation with a uniform weight ($$\eta_t=1$$) is equivalent to training $$v'_t$$ for the spherical interpolation with a uniform weight ($$\eta'_t=2/\pi$$). The only difference is a reparameterization of the model:
+> Thus, training $$v_t(x,\theta)$$ for the straight interpolation with a uniform weight ($$\eta_t=1$$) is equivalent to training $$v'_t(x, \theta)$$ for the spherical interpolation also with a uniform weight ($$\eta'_t=2/\pi$$). In this case, the only difference in training for these two interpolations is the reparameterization of the model:
 >
 > $$
 > v'_t(x, \theta) = \frac{\pi \omega_t}{2} \left( v_{\tau_t}(\omega_t x; \theta) + \left( \cos\left(\frac{\pi t}{2}\right) - \sin\left(\frac{\pi t}{2}\right) \right) x \right),
 > $$
 >
-> where $$\omega_t = (\sin(\frac{\pi t}{2}) + \cos(\frac{\pi t}{2}))^{-1}$$ is bounded within $$[1/\sqrt{2}, 1]$$. 
+> where $$\omega_t = (\sin(\frac{\pi t}{2}) + \cos(\frac{\pi t}{2}))^{-1}$$ is bounded within $$[1/\sqrt{2}, 1]$$.
+> 
+> This reparameterization is quite "minor" and does seem to impact model quality significantly. As shown Figure 5 below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
 {: .example}
-
-This reparameterization does not significantly impact model quality. As shown below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
 
 <div class="l-body">
   <figure id="figure-5">
@@ -432,7 +432,7 @@ This reparameterization does not significantly impact model quality. As shown be
     </iframe>
     <figcaption>
       <a href="#figure-5">Figure 5</a>.
-      Two RF models generates similar results: one trained with straight interpolation and another trained with spherical interpolation, both uniform loss weight. We then convert the straight RF into a spherical form ("RF trained from straight"). Since both share the same loss function, the only difference lies in model parameterization. Since the only difference lies in parameterization, final results are quite similar, indicating limited performance impact.
+Training the RF with straight and spherical interpolations using uniform weights yields similar results. The blue curve represents the RF trained with spherical interpolation, while the red curve represents the RF trained with straight interpolation and then converted to spherical interpolation. Since both share the same loss function, as shown in Example 3, the only difference lies in model parameterization, which appears to have limited impact on performance in this case.
     </figcaption>
   </figure>
 </div>
