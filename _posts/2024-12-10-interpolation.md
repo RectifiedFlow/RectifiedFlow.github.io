@@ -68,7 +68,7 @@ We call the ODE process $$\{Z_t\}$$ defined above the rectified flow induced by 
 $$
 \{Z_t\} = \texttt {Rectify}(\{X_t\}),~~~~~~~~(Z_0,Z_1)= \texttt{RectifiedCoupling}(\{X_t\}). 
 $$
- 
+
 In principle, any time-differentiable interpolation process $$\{X_t\}$$ that connects $$X_0$$ and $$X_1$$ can be used within this framework. Different methods employ different interpolation schemes. The simplest choice is the straight-line interpolation, defined as 
 
 $$
@@ -250,7 +250,7 @@ Combining Proposition 1 with Theorem 1, we have:
 > + Their rectified flow velocity fields $$v_t$$ and $$v'_t$$ relate via:
 > 
 > $$
->v'_t(x) = \frac{\dot{\tau}_t}{\omega_t}  v_{\tau_t}(\omega_t x) - \frac{\dot{\omega}_t}{\omega_t} x \right). \tag{3}
+>v'_t(x) = \frac{\dot{\tau}_t}{\omega_t}  v_{\tau_t}(\omega_t x) - \frac{\dot{\omega}_t}{\omega_t} x. \tag{3}
 > $$
 {: .definition}
 
@@ -280,10 +280,11 @@ Combining Proposition 1 with Theorem 1, we have:
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-We first train a random field (RF) using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation produces different ODE trajectories, both ultimately converge to the same endpoint \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
+We first train a rectified flow using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation produces different ODE trajectories, both ultimately converge to the same endpoint \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
     </figcaption>
   </figure>
 </div>
+
 
 ### Implication on Inference
 
@@ -323,17 +324,15 @@ Figure 4 illustrates how the difference in the inference results for the predict
     </iframe>
     <figcaption>
       <a href="#figure-4">Figure 4</a>.
-      The mean square error (MSE) between the estimtion of $$Z_1$$ from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
+      The mean square error (MSE) between the estimtion of \(Z_1\) from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
     </figcaption>
   </figure>
 </div>
 
-In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, when "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
 
-Although it is challenging to predict the best inference interpolation scheme *a priori*, post-training conversion enables the selection of a scheme that yields better sampling results during inference in practice. Furthermore, one can take this a step further by directly optimizing the pointwise transform to minimize discretization error, without necessarily reasoning about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair \( (\phi_t, \tau_t) \) such that the Euler method applied to the transformed ODE, \( Z_t' = \phi_t(Z_{\tau_t}) \), is as accurate as possible.
+In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, if "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
 
-
-Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion makes it possible to select the scheme that yields better sampling results during inference in practice. Furthermore, one can take this a step further by directly optimizing the pointwise transform to minimize discretization error, without necessarily reasoning about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair \( (\phi_t, \tau_t) \) such that the Euler method applied to the transformed ODE, \( Z_t' = \phi_t(Z_{\tau_t}) \), is as accurate as possible.
+Although it is challenging to predict the best inference interpolation scheme *a priori*, post-training conversion allows us to choose whichever scheme yields better sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, without worrying about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
 
 
 ## Implications on Loss Functions
@@ -419,7 +418,7 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
 >
 > where $$\omega_t = (\sin(\frac{\pi t}{2}) + \cos(\frac{\pi t}{2}))^{-1}$$ is bounded within $$[1/\sqrt{2}, 1]$$.
 > 
-> This reparameterization is quite "minor" and does seem to impact model quality significantly. As shown Figure 5 below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
+> This reparameterization is quite "minor" and does seem to impact model quality significantly. As shown [Figure 5](#figure-5) below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
 {: .example}
 
 <div class="l-body">
@@ -436,4 +435,3 @@ Training the RF with straight and spherical interpolations using uniform weights
     </figcaption>
   </figure>
 </div>
-
