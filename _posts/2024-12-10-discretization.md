@@ -49,9 +49,28 @@ toc:
 
 ## Overview
 
-Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta)$$ by minimizing the loss between its velocity field and that of an interpolation process. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations yield equivalent velocity fields and identical noise-data couplings.
+Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta) \mathrm{d} t$$ by matching its velocity field $v_t(x)$ and the expected slope $\mathbb{E}[\dot X_t |X_t=x] of an interpolation process $\{X_t\}$ that connects the noise $X_0$ and data $X_1$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ yield equivariant rectified flows and the identical noise-data coupling.
 
-In practice, we must approximate ODEs with **discrete solvers**. A standard approach is to use the Euler method: at each step, we approximate the local trajectory by a tangent line. For rectified flows induced by straight interpolations, this approach is intuitive. However, if the interpolation is nonlinear (e.g., spherical), a more natural choice is to approximate each step with a curved segment that matches the interpolation. We refer to these methods as **natural Euler samplers**.
+In practice, ordinary differential equations (ODEs) must be approximated using **discrete solvers**. A common approach is the Euler method:
+
+$$
+\hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon v_t(\hat{Z}_t),
+$$
+
+where the local trajectory is approximated by a tangent line with a step size of \(\epsilon\). For rectified flows induced by straight-line interpolation, \(X_t = t X_1 + (1-t)X_0\), this approach is natural. However, if the interpolation is curved, it may be natural to approximate each step with a curved segment that aligns with the interpolation. 
+We refer to this method as **natural Euler samplers**.
+
+For example, in the case of affine interpolations \(X_t = \alpha_t X_1 + \beta_t X_0\), 
+as shown in the sequel, such **natural Euler samplers** can be derived as 
+
+$$
+\hat{Z}_{t+\epsilon} = 
+\frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t  
++ \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
+$$
+
+While this expression looks complex, it simplifies to the standard Euler method when \(\alpha_t = t\) and \(\beta_t = 1-t\).  
+Furthermore, it reproduces the  inference update rule of DDIM in the case where \(\alpha_t^2 + \beta_t^2 = 1\), matching Equation 13 in \cite{song2020denoising}. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
 
 <div class="l-body">
   <figure id="figure-svg">
@@ -73,16 +92,14 @@ In practice, we must approximate ODEs with **discrete solvers**. A standard appr
   </figure>
 </div>
 
-Notably, the DDIM sampler can be interpreted as a natural Euler sampler under its corresponding interpolation. From this perspective, we do not need complicated coefficient derivations for DDIM’s inference steps.
-
-A key property of natural Euler samplers is:
+Importantly, all natural Euler samplers of pointwisely transformable interpolations are equivalent: 
 
 > If two interpolation processes are related by a pointwise transform, then **their discrete trajectories obtained through natural Euler sampling are also related by the same pointwise transform**, provided the time grids are appropriately scaled.
 {: .definition}
 
 In other words, **when using natural Euler samplers, switching the affine interpolation scheme *at inference time* is essentially adjusting the sampling time grid.** For DDIM, we obtain **exactly the same discrete samples** as those produced by a standard Euler solver applied to the rectified flow induced by straight interpolation, once we properly rescale the time grid.
 
-For a more comprehensive and rigorous discussion on this topic, please refer to Chapter 5 in the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).
+For a more in-depth discussion on this topic, please refer to Chapter 5 in the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).
 
 ## Affine Interpolation Solver
 
