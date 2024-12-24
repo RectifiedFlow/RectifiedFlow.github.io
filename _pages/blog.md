@@ -15,9 +15,11 @@ pagination:
     before: 1 # The number of links before the current page
     after: 3  # The number of links after the current page
 ---
+<!--
 <div class="blog-header">
   Let us Flow Together 🚀
 </div>
+--> 
 
 <div class="post" style="text-align: justify;">
 
@@ -36,18 +38,12 @@ pagination:
 
   <!-- Text -->
   <p>
-    <strong>Rectified flow</strong> is a unified framework for generative modeling that offers a
-    simplified view on flow- and diffusion-based techniques. It has been applied to state-of-the-art
-    image, audio, and video generation. In a nutshell, rectified flow interpolates between noise and
-    data distributions through an interpolation process. This process is then "rectified" (or
-    "causalized") to produce a generative ODE model. The procedure can be repeated to "reflow" the
-    system, yielding ODEs with straighter trajectories that can be discretized using fewer, or even
-    a single, step.
+    <strong>Rectified flow</strong> offers a simplified yet unified perspective on flow- and diffusion-based generative modeling and has been widely applied to state-of-the-art image, audio, and video generation. It was derived by simplifying diffusion models to the extreme both conceptually and algorithmically, thereby uncovering a principled framework for rectifying transport maps to learn straighten ODE dynamics for fast discretized inference. 
   </p>
 
   <p>
     This series of tutorials on rectified flow addresses topics that are often sources of confusion
-    and highlights the connections between rectified flow and other generative modeling methods.
+    and clarifies the connections with other generative modeling methods.
   </p>
 
   <p>
