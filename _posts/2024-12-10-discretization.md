@@ -64,9 +64,7 @@ For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t
 as shown in the sequel, such **natural Euler samplers** can be derived as 
 
 $$
-\hat{Z}_{t+\epsilon} = 
-\frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t  
-+ \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
+\hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
 $$
 
 While this expression looks complex, it simplifies to the standard Euler method when $$\alpha_t = t$$ and $$\beta_t = 1-t$$.  
