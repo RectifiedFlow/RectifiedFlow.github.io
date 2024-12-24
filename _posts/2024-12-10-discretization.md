@@ -86,6 +86,7 @@ We refer to this method as the **natural Euler sampler**.
 
 For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
 as shown in the sequel, such **natural Euler samplers** can be derived as 
+
 $$
 \hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
 $$
@@ -279,3 +280,4 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
     </figcaption>
   </figure>
 </div>
+
