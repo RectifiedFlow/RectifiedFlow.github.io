@@ -1,7 +1,7 @@
 ---
 layout: distill
-title: DDIM and Natural Euler Samplers
-description: Even discretized trajectories are equivalent
+title: "Curved$$\times$$Curved = Straight: DDIM is Straight Rectified Flow"
+description: The discretized inference scheme of DDIM corresponds to a curved Euler method on curved trajectories, and is equivalent to the vanilla Euler method applied to straight rectified flow. But the later is simpler...
 tags: tutorial
 giscus_comments: true
 date: 2024-12-10 11:00:00
