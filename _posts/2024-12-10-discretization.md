@@ -49,7 +49,7 @@ toc:
 
 ## Overview
 
-Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta) \mathrm{d} t$$ by matching its velocity field $v_t(x)$ and the expected slope $\mathbb{E}[\dot X_t |X_t=x] of an interpolation process $\{X_t\}$ that connects the noise $X_0$ and data $X_1$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ yield equivariant rectified flows and the identical noise-data coupling.
+Rectified flow learns an ODE of the form $$\mathrm{d}Z_t = v_t(Z_t; \theta) \mathrm{d} t$$ by matching its velocity field $$v_t(x)$$ and the expected slope $$\mathbb{E}[\dot X_t |X_t=x]$$ of an interpolation process $$\{X_t\}$$ that connects the noise $$X_0$$ and data $$X_1$$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ yield equivariant rectified flows and the identical noise-data coupling.
 
 In practice, ordinary differential equations (ODEs) must be approximated using **discrete solvers**. A common approach is the Euler method:
 
@@ -57,10 +57,10 @@ $$
 \hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon v_t(\hat{Z}_t),
 $$
 
-where the local trajectory is approximated by a tangent line with a step size of \(\epsilon\). For rectified flows induced by straight-line interpolation, \(X_t = t X_1 + (1-t)X_0\), this approach is natural. However, if the interpolation is curved, it may be natural to approximate each step with a curved segment that aligns with the interpolation. 
+where the local trajectory is approximated by a tangent line with a step size of $$\epsilon$$. For rectified flows induced by straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$, this approach is natural. However, if the interpolation is curved, it may be natural to approximate each step with a curved segment that aligns with the interpolation. 
 We refer to this method as **natural Euler samplers**.
 
-For example, in the case of affine interpolations \(X_t = \alpha_t X_1 + \beta_t X_0\), 
+For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
 as shown in the sequel, such **natural Euler samplers** can be derived as 
 
 $$
@@ -69,8 +69,8 @@ $$
 + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
 $$
 
-While this expression looks complex, it simplifies to the standard Euler method when \(\alpha_t = t\) and \(\beta_t = 1-t\).  
-Furthermore, it reproduces the  inference update rule of DDIM in the case where \(\alpha_t^2 + \beta_t^2 = 1\), matching Equation 13 in \cite{song2020denoising}. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
+While this expression looks complex, it simplifies to the standard Euler method when $$\alpha_t = t$$ and $$\beta_t = 1-t$$.  
+Furthermore, it reproduces the  inference update rule of DDIM in the case where $$\alpha_t^2 + \beta_t^2 = 1$$, matching Equation 13 in \cite{song2020denoising}. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
 
 <div class="l-body">
   <figure id="figure-svg">
