@@ -36,8 +36,9 @@ bibliography: reference.bib
 # 可选的目录配置
 toc:
   - name: "Overview"
-  - name: "Affine Interpolation Solver"
   - name: "Natural Euler Sampler"
+    subsections:
+      - name: "Natural Euler Samplers for Affine Interpolations"
   - name: "Equivalence of Natural Euler Trajectories"
 
 ---
@@ -47,7 +48,7 @@ toc:
 </div>
 --> 
 
-DDIM is a widely used deterministic sampler in diffusion models, yet its update rule may appear complex at first glance. In contrast, rectified flow employs a simple Euler method to generate samples. Both approaches are deterministic—so why do they look so different? In this blog, we reveal that DDIM is actually equivalent to the vanilla Euler method applied to a straight-line rectified flow, and thus it falls under a broader family of samplers we call natural Euler methods. Moreover, we show that natural Euler trajectories for affine rectified flows are *pointwise transformable* to one another—a result that not only unifies these seemingly different samplers but also represents a stronger statement than the equivalence in the continuous-time ODE setting.
+DDIM is a widely used deterministic sampler in diffusion models, yet its update rule may appear complex at first glance. In contrast, rectified flow employs a simple Euler method to generate samples. Both approaches are deterministic—so why do they look so different? In this blog, we show that DDIM is actually equivalent to the vanilla Euler method applied to a straight-line rectified flow, and it further falls under a broader family of samplers we call natural Euler samplers. Moreover, we show that natural Euler trajectories for affine rectified flows are *pointwise transformable* to one another—a result that not only unifies these seemingly different samplers but also represents a stronger statement than the equivalence in the continuous-time ODE setting.
 
 ## Overview
 
@@ -62,15 +63,6 @@ $$
 where the local trajectory is approximated by a tangent line with a step size of $$\epsilon$$. For rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$, this approach is natural. However, for a *curved* interpolation, it may be natural to approximate each step with a curved segment that aligns with the interpolation. 
 
 We refer to this method as the **natural Euler sampler**.
-
-For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
-as shown in the sequel, such **natural Euler samplers** can be derived as 
-
-$$
-\hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
-$$
-
-While this expression looks complex, it simplifies to the standard Euler method when $$\alpha_t = t$$ and $$\beta_t = 1-t.$$ Furthermore, it reproduces the inference update rule of DDIM in the case where $$\alpha_t^2 + \beta_t^2 = 1$$, matching Equation 13 in \cite{song2020denoising}. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
 
 <div class="l-body">
   <figure id="figure-svg">
@@ -91,6 +83,15 @@ While this expression looks complex, it simplifies to the standard Euler method 
     </figcaption>
   </figure>
 </div>
+
+For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
+as shown in the sequel, such **natural Euler samplers** can be derived as 
+$$
+\hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
+$$
+
+While this expression looks complex, it simplifies to the standard Euler method when $$\alpha_t = t$$ and $$\beta_t = 1-t.$$ Furthermore, it reproduces the inference update rule of DDIM in the case where $$\alpha_t^2 + \beta_t^2 = 1$$, matching Equation 13 in <d-cite key="song2020denoising"></d-cite>. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
+
 
 However, we can go one step further to eliminate DDIM completely, as all natural Euler samplers of affine interpolations—being pointwise transformable to one another—are equivalent:
 
@@ -150,7 +151,7 @@ For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, due to the line
 > We implement these operations as [affine interpolation solvers](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py) in our code base.
 {: .example}
 
-For instance, the natural Euler sampler under spherical RF is
+Solving these equations, the natural Euler sampler under spherical RF is
 
 
 > **Example 1. Natural Euler Sampler for Spherical Interpolation**
@@ -196,8 +197,10 @@ Another example is **DDIM**, which, as aforementioned, can be viewed as a natura
 > \end{aligned}
 > $$
 >
-> where in $$\overset{*}{=}$$ we used $$\alpha_t \cdot \hat{x}_{1\vert t}(\hat{z}_t) + \beta_t\cdot \hat{x}_{0\vert t}(\hat{z}_t) = \hat{z}_t$$. We can slightly rewrite the update as:
+> where in $$\overset{*}{=}$$ we used $$\alpha_t \cdot \hat{x}_{1\vert t}(\hat{z}_t) + \beta_t\cdot \hat{x}_{0\vert t}(\hat{z}_t) = \hat{z}_t$$. 
 >
+> We can slightly rewrite the update as:
+> 
 > $$
 > \frac{\hat{z}_{t+\epsilon}}{\alpha_{t+\epsilon}} = \frac{\hat{z}_t}{\alpha_t} + \left( \frac{\beta_{t+\epsilon}}{\alpha_{t+\epsilon}} - \frac{\beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{z}_t),
 > $$
@@ -205,11 +208,11 @@ Another example is **DDIM**, which, as aforementioned, can be viewed as a natura
 > which precisely matches Equation 13 of <d-cite key="song2020denoising"></d-cite>.
 >
 > Substituting $$v_t(\hat{z}_t)$$ gives the natural Euler update rule:
-> 
+>
 > $$
 > \hat{z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{z}_t).
 > $$
-> 
+>
 {: .example}
 
 ## Equivalence of Natural Euler Trajectories
@@ -272,8 +275,7 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
     </iframe>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      Sampling with the Natural Euler method on both Straight and Spherical RFs. By suitably adjusting the Straight RF's time grid via \(\tau_t\) (while keeping a uniform grid for the Spherical RF), we obtain identical final results. Furthermore, their intermediate trajectories can also be aligned point by point under transform.
+      Running natural Euler samplers on both Straight and Spherical RFs. By adjusting the Straight RF's time grid via \(\tau_t\) (while keeping a uniform grid for the Spherical RF), we obtain identical final results. Furthermore, their intermediate trajectories can also be aligned point by point under their corresponding interpolation transforms.
     </figcaption>
   </figure>
 </div>
-
