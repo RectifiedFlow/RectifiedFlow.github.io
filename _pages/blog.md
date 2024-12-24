@@ -15,6 +15,9 @@ pagination:
     before: 1 # The number of links before the current page
     after: 3  # The number of links after the current page
 ---
+<div class="blog-header">
+  Let us Flow Together 🚀
+</div>
 
 <div class="post" style="text-align: justify;">
 
@@ -69,11 +72,6 @@ pagination:
 
 
 <hr style="border: 0.05px solid #ddd; margin: 20px 0;">
-
-
-<div class="blog-header">
-  Let us Flow Together 🚀
-</div>
 
 <!--
 {% assign blog_name_size = site.blog_name | size %}
