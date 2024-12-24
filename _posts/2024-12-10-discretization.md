@@ -92,7 +92,7 @@ Furthermore, it reproduces the  inference update rule of DDIM in the case where 
   </figure>
 </div>
 
-Importantly, all natural Euler samplers of pointwisely transformable interpolations are equivalent: 
+However, we can go one step further to eliminate DDIM completely, as all natural Euler samplers of affine interpolations—being pointwise transformable to one another—are equivalent:
 
 > If two interpolation processes are related by a pointwise transform, then **their discrete trajectories obtained through natural Euler sampling are also related by the same pointwise transform**, provided the time grids are appropriately scaled.
 {: .definition}
