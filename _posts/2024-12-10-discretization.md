@@ -1,6 +1,6 @@
 ---
 layout: distill
-title: "Curved × Curved = Straight: DDIM is Straight RF"
+title: "Curved × Curved = Straight: DDIM is Straight RF" 
 description: The discretized inference scheme of DDIM corresponds to a curved Euler method on curved trajectories, and is equivalent to the vanilla Euler method applied to straight rectified flow. But the later is simpler...
 tags: tutorial
 giscus_comments: true
