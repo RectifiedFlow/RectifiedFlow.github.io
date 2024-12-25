@@ -139,6 +139,11 @@ d-article {
   }
 }
 
+d-article figcaption,
+d-article .figcaption {
+  color: var(--global-text-color) !important;
+}
+
 d-appendix {
   border-top-color: var(--global-divider-color) !important;
   color: var(--global-distill-app-color) !important;
