@@ -35,7 +35,6 @@ bibliography: reference.bib
 
 # 可选的目录配置
 toc:
-  - name: "Overview"
   - name: "Natural Euler Sampler"
     subsections:
       - name: "Natural Euler Samplers for Affine Interpolations"
