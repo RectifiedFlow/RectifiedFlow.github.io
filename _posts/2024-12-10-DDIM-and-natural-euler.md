@@ -61,20 +61,19 @@ What is the nature of Equation (1) as a discretization technique for ODEs? How i
 In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. Additionally, we present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
 
 
-
 ## Overview
 
 Rectified flow learns an ordinary differential equation (ODE) of the form $$\mathrm{d} Z_t = v_t(Z_t; \theta) \,\mathrm{d} t$$ by matching its velocity field $$v_t(x)$$ to the expected slope $$\mathbb{E}[\dot X_t  \mid X_t=x]$$ of an interpolation process $$\{X_t\}$$ that connects the noise $$X_0$$ and data $$X_1$$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ are pointwise transformable to one another and induce equivalent rectified flows with the same noise-data coupling.
 
-In practice, continuous-time ODEs must be solved numerically, with **discrete solvers**. A common approach is the Euler method:
+In practice, continuous-time ODEs must be solved numerically, with **discrete solvers**. A common approach is the Euler method, which approximates the flow $$\{Z_t\}$$ on a discrete time grid $$\{t_i\}$$ by:
 
 $$
-\hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon \cdot v_t(\hat{Z}_t),
+\hat{Z}_{t_{i+1}} = \hat{Z}_{t_i} + (t_{i+1} - t_i) \cdot v_{t_i}(\hat{Z}_{t_i}),
 $$
 
-where the local trajectory is approximated by a tangent line with a step size of $$\epsilon$$. For rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$, this approach is natural. However, for a *curved* interpolation, it may be natural to approximate each step with a curved segment that aligns with the interpolation. 
+which yields a discrete trajectory $$\{\hat{Z}_{t_i}\}_i$$ composed of piecewise straight segments.
 
-We refer to this method as the **natural Euler sampler**.
+The piecewise straight approximation is natural for rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$. However, for a *curved* interpolation, it may be natural to approximates each step by a locally curved segment aligned with the corresponding interpolation process. 
 
 <div class="l-body">
   <figure id="figure-svg" style="margin: 1em auto;">
@@ -95,6 +94,27 @@ We refer to this method as the **natural Euler sampler**.
     </figcaption>
   </figure>
 </div>
+
+Specifically, given a general interoplation scheme $$X_t= \mathtt{I}_t(X_0, X_1)$$, we update trajectory along a curve segment defined by $$\mathtt{I}$$:
+
+$$
+\hat{Z}_{t_{i+1}} = \mathtt{I}_{t_{i+1}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}),
+$$
+
+where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by first identifying the *unique interpolation curve* that passes through $$\hat{Z}_{t_i}$$ and has slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{
+Z}_{t_i})$$, that is, they are the solutions of the following equation: 
+
+$$
+\hat{Z}_{t_i} = \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~
+v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~
+$$
+
+In other words, we solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to get $$\hat{Z}_{t_{i+1}}$$.
+
+
+We refer to this method as the **natural Euler sampler**.
+
+
 
 
 For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
