@@ -25,7 +25,7 @@ $max-content-width: {{ site.max_width }};
 ;
 
 blockquote {
-  background-color: #e7f3fa;      /* 浅蓝色背景 */
+  background-color: #e7f3fa;      /* Light blue background */
   padding: 1em 0.8em;
   margin: 1em 0;
   border-radius: 40px;
@@ -38,15 +38,15 @@ blockquote {
     margin-bottom: 0;
   }
 
-  /* 定义块（绿色主题） */
+  /* Definition block (Green theme) */
   &.definition {
-    border-left-color: #68b684;    /* 柔和的绿色边框 */
-    background-color: #eef7ee;     /* 浅绿色背景 */
+    border-left-color: #68b684;    /* Soft green border */
+    background-color: #eef7ee;     /* Light green background */
 
     > p:first-child strong {
       font-weight: bold;
       margin-top: 0;
-      color: #2e7d32;             /* 深绿色标题文字 */
+      color: #2e7d32;             /* Dark green title text */
     }
 
     a {
@@ -57,15 +57,15 @@ blockquote {
     }
   }
 
-  /* 定理块（黄色主题） */
+  /* Theorem block (Yellow theme) */
   &.theorem {
-    border-left-color: #e0c65d;    /* 柔和的金黄色边框 */
-    background-color: #fdf6e3;     /* 浅黄色背景 */
+    border-left-color: #e0c65d;    /* Soft golden yellow border */
+    background-color: #fdf6e3;     /* Light yellow background */
 
     > p:first-child strong {
       font-weight: bold;
       margin-top: 0;
-      color: #bfa500;             /* 深黄标题文字 */
+      color: #bfa500;             /* Dark yellow title text */
     }
 
     a {
@@ -76,15 +76,15 @@ blockquote {
     }
   }
 
-  /* 示例块（蓝色主题） */
+  /* Example block (Blue theme) */
   &.example {
-    border-left-color: #517dbf;    /* 柔和的深蓝色边框 */
-    background-color: #e7f0fc;     /* 浅蓝色背景 */
+    border-left-color: #517dbf;    /* Soft dark blue border */
+    background-color: #e7f0fc;     /* Light blue background */
 
     > p:first-child strong {
       font-weight: bold;
       margin-top: 0;
-      color: #335C8D;             /* 深蓝标题文字 */
+      color: #335C8D;             /* Dark blue title text */
     }
 
     a {
@@ -96,50 +96,54 @@ blockquote {
   }
 }
 
-/* 深色主题下的通用样式 */
+html[data-theme='light'] blockquote {
+  color: #000;
+}
+
+/* Common styles for dark theme */
 html[data-theme='dark'] blockquote {
-  background-color: #2c3a4a; /* 深色基础背景 */
+  background-color: #2c3a4a; /* Base background for dark theme */
   color: #ddd;               
 }
 
-/* 深色主题下 .definition 定义块（绿色主题深色） */
+/* Definition block in dark theme (Green theme) */
 html[data-theme='dark'] blockquote.definition {
-  background-color: #213326;     /* 深绿色调背景 */
-  color: #a7d9a1;                /* 浅绿色文字 */
+  background-color: #213326;     /* Dark greenish background */
+  color: #a7d9a1;                /* Light green text */
 }
 
 html[data-theme='dark'] blockquote.definition a {
-  color: #a7d9a1;                /* 链接为浅绿 */
+  color: #a7d9a1;                /* Links in light green */
 }
 
 html[data-theme='dark'] blockquote.definition > p:first-child strong {
-  color: #a7d9a1;                /* 标题文字为浅绿色 */
+  color: #a7d9a1;                /* Title text in light green */
 }
 
-/* 深色主题下 .theorem 定理块（黄色主题深色） */
+/* Theorem block in dark theme (Yellow theme) */
 html[data-theme='dark'] blockquote.theorem {
-  background-color: #3a3522;     /* 深色偏暖背景 */
-  color: #e6dfb9;                /* 浅黄色文字 */
+  background-color: #3a3522;     /* Dark warm background */
+  color: #e6dfb9;                /* Light yellow text */
 }
 
 html[data-theme='dark'] blockquote.theorem a {
-  color: #e6dfb9;                /* 链接同文字颜色 */
+  color: #e6dfb9;                /* Links match the text color */
 }
 
 html[data-theme='dark'] blockquote.theorem > p:first-child strong {
-  color: #e6dfb9;                /* 标题文字为浅黄色 */
+  color: #e6dfb9;                /* Title text in light yellow */
 }
 
-/* 深色主题下 .example 示例块（蓝色主题深色） */
+/* Example block in dark theme (Blue theme) */
 html[data-theme='dark'] blockquote.example {
-  background-color: #1e2d3f;     /* 深蓝灰背景 */
-  color: #95bff4;                /* 浅蓝文字 */
+  background-color: #1e2d3f;     /* Dark blue-gray background */
+  color: #95bff4;                /* Light blue text */
 }
 
 html[data-theme='dark'] blockquote.example a {
-  color: #95bff4;                /* 浅蓝链接 */
+  color: #95bff4;                /* Light blue links */
 }
 
 html[data-theme='dark'] blockquote.example > p:first-child strong {
-  color: #95bff4;                /* 标题文字为浅蓝色 */
+  color: #95bff4;                /* Title text in light blue */
 }
