@@ -106,7 +106,7 @@ Z}_{t_i})$$, that is, they are the solutions of the following equation:
 
 $$
 \hat{Z}_{t_i} = \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~
-v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~
+v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~ \tag{2}.
 $$
 
 In other words, we solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to get $$\hat{Z}_{t_{i+1}}$$.
@@ -118,42 +118,29 @@ We refer to this method as the **natural Euler sampler**.
 
 ### Natural Euler Samplers for Affine Interpolations
 
-For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, due to the linearity of expectations, solving for $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ reduces to solving a simple $$2 \times 2$$ linear system.
+For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, Equation (2) reduces to 
 
-> **Find $$\hat x_{0\mid t}$$ and $$\hat x_{1\mid t}$$**  
->
-> Given any two of $$\{\dot X_t, X_0, X_1, X_t\}$$ in an affine interpolation, we can explicitly solve for the remaining so that
-> 
-> $$
-> X_t = \alpha_t X_1 + \beta_t X_0, \quad \dot{X}_t = \dot{\alpha}_t X_1 + \dot{\beta}_t X_0. \\
-> $$
-> 
-> For rectified flow, define
-> 
-> $$
-> \begin{aligned}
-> v_t(x) &:= \mathbb{E}[\dot{X}_t \mid X_t = x], &\text{(RF velocity field)} \\[6pt]
-> \hat{x}_{0\mid t}(x) &:= \mathbb{E}[X_0 \mid X_t = x], &\text{(Expected noise $X_0$)} \\[6pt]
-> \hat{x}_{1\mid t}(x) &:= \mathbb{E}[X_1 \mid X_t = x]. &\text{(Expected data $X_1$)}
-> \end{aligned}
-> $$
->
-> By linearity of expectations, given any two of $$\{v_t, \hat x_{0\mid t}, \hat x_{1\mid t}, x_t\}$$ from rectified flow, we can similarly solve for the other two to satisfy
->
-> $$
-> x_t =\alpha_t\hat{x}_{1\mid t} + \beta_t \hat{x}_{0\mid t}, \quad v_t = \dot \alpha_t \hat{x}_{1\mid t} + \dot \beta_t \hat{x}_{0\mid t}
-> $$
->
-> We implement these operations as [affine interpolation solvers](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py) in our code base.
-{: .example}
+$$
+\hat{Z}_{t} =\alpha_t\hat{X}_{1|t} + \beta_t \hat{X}_{0|t}, ~~~~~~~
+v_t(\hat{Z}_{t}) = 
+\hat{Z}_{t} =\dot{\alpha}_t\hat{X}_{1|t} + \dot{\beta}_t \hat{X}_{0|t}. 
+$$
+This gives 
+\bb
+ \hat X_{0|t} =  \frac{-\alpha_t v_t(\hat Z_t) +\dot \alpha_t \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }, && 
+ \hat X_{1|t} =  \frac{\beta_t v_t(\hat Z_t) - \dot \beta_t  \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }. 
+ \ee 
+Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1|t} + \beta_{t+\epsilon} \hat X_{0|t}$$ yields Equation (1). 
 
-Solving these equations, the natural Euler sampler under spherical RF is
+ In our code base, equations invovled in affine interpolations are automatically solved
+ with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
+
 
 
 > **Example 1. Natural Euler Sampler for Spherical Interpolation**
-> 
+> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} \cdot\epsilon\right) X_0$$, the natural Euler update rule reduces to 
 >$$
->\hat z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
+>\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
 >$$
 >
 {: .example}
