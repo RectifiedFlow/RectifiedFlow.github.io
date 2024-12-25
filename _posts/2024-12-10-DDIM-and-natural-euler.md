@@ -17,7 +17,7 @@ chart:
   vega_lite: true
 tikzjax: true
 typograms: true
-
+ 
 thumbnail: /assets/img/thumbnail/natural_euler_thumbnail.png
 thumbnail_alt: "Thumbnail of Natural Euler"
 
@@ -61,7 +61,7 @@ What is the nature of Equation (1) as a discretization technique for ODEs? How i
 In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. Additionally, we present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
 
 
-## Overview
+## Natural Euler Samplers 
 
 Rectified flow learns an ordinary differential equation (ODE) of the form $$\mathrm{d} Z_t = v_t(Z_t; \theta) \,\mathrm{d} t$$ by matching its velocity field $$v_t(x)$$ to the expected slope $$\mathbb{E}[\dot X_t  \mid X_t=x]$$ of an interpolation process $$\{X_t\}$$ that connects the noise $$X_0$$ and data $$X_1$$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ are pointwise transformable to one another and induce equivalent rectified flows with the same noise-data coupling.
 
@@ -115,7 +115,6 @@ In other words, we solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}
 We refer to this method as the **natural Euler sampler**.
 
 
-
 ### Natural Euler Samplers for Affine Interpolations
 
 For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, Equation (2) reduces to 
@@ -136,14 +135,6 @@ Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1|t} + \bet
  with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
 
-
-> **Example 1. Natural Euler Sampler for Spherical Interpolation**
-> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} \cdot\epsilon\right) X_0$$, the natural Euler update rule reduces to 
->$$
->\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
->$$
->
-{: .example}
 
 <div class="l-body">
   <figure id="figure-1" style="margin: 1em auto;">
@@ -167,9 +158,9 @@ Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1|t} + \bet
 </div>
 
 
-Another example is **DDIM**, which, as aforementioned, can be viewed as a natural Euler method under the spherical interpolation.
+As aforementioned, the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
 
-> **Example 2. Natural Euler Sampler for DDIM**
+> **Example 1. Natural Euler Sampler for DDIM**
 >
 > DDIM’s discretized inference scheme can be seen as a natural Euler sampler for spherical interpolations where $$\alpha_t^2 + \beta_t^2 = 1$$. Note that the inference update of DDIM is written in terms of the expected noise $$\hat{x}_{0\mid t}(x) = \mathbb{E}[X_0 \mid X_t = x]$$, we rewrite the update step using $$\hat{x}_{0 \mid t}$$: 
 >
@@ -191,11 +182,15 @@ Another example is **DDIM**, which, as aforementioned, can be viewed as a natura
 >
 > which precisely matches Equation 13 of <d-cite key="song2020denoising"></d-cite>.
 >
-> Substituting $$v_t(\hat{z}_t)$$ gives the natural Euler update rule:
 >
-> $$
-> \hat{z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{z}_t).
-> $$
+{: .example}
+
+
+> **Example 2. Natural Euler Sampler for Spherical Interpolation**
+> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} \cdot\epsilon\right) X_0$$, the natural Euler update rule reduces to 
+>$$
+>\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
+>$$
 >
 {: .example}
 
