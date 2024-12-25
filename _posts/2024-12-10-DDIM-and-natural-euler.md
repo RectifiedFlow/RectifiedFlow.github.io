@@ -48,7 +48,7 @@ toc:
 </div>
 --> 
 
-We know that the continuous-time ODE of the denoising diffusion implicit model (DDIM) is rectified flow with a time-scaled spherical interpolation. However, the discrete inference rule of DDIM does not exactly apply the vanilla Euler method, $$\hat Z_{t+\epsilon } = \hat Z_t + \epsilon v_t(\hat Z_t)$$,  to the ODE. Instead, it uses a somewhat complicated rule:
+We know that the continuous-time ODE of the denoising diffusion implicit model (DDIM) is rectified flow (RF) with a time-scaled spherical interpolation. However, the discrete inference rule of DDIM does not exactly apply the vanilla Euler method, $$\hat Z_{t+\epsilon } = \hat Z_t + \epsilon v_t(\hat Z_t)$$,  to the RF ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. Instead, it uses a somewhat complicated rule:
 
 $$
 \hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t),  \tag{1}
