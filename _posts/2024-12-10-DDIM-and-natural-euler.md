@@ -48,7 +48,19 @@ toc:
 </div>
 --> 
 
-DDIM is a widely used deterministic sampler in diffusion models, yet its update rule may appear complex at first glance. In contrast, rectified flow employs a simple Euler method to generate samples. Both approaches are deterministic—so why do they look so different? In this blog, we show that DDIM is actually equivalent to the vanilla Euler method applied to a straight-line rectified flow, and it further falls under a broader family of samplers we call natural Euler samplers. Moreover, we show that natural Euler trajectories for affine rectified flows are *pointwise transformable* to one another—a result that not only unifies these seemingly different samplers but also represents a stronger statement than the equivalence in the continuous-time ODE setting.
+We know that the continuous-time ODE of the denoising diffusion implicit model (DDIM) is rectified flow with a time-scaled spherical interpolation. However, the discrete inference rule of DDIM does not exactly apply the vanilla Euler method, $$\hat Z_{t+\epsilon } = \hat Z_t + \epsilon v_t(\hat Z_t)$$,  to the ODE. Instead, it uses a somewhat complicated rule:
+
+$$
+\hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t),  \tag{1}
+$$
+
+where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
+
+What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?
+
+In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. Additionally, we present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
+
+
 
 ## Overview
 
