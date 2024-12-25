@@ -116,44 +116,6 @@ We refer to this method as the **natural Euler sampler**.
 
 
 
-
-For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
-as shown in the sequel, such **natural Euler samplers** can be derived as 
-
-$$
-\hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t).
-$$
-
-While this expression looks complex, it simplifies to the standard Euler method when $$\alpha_t = t$$ and $$\beta_t = 1-t.$$ Furthermore, it reproduces the inference update rule of DDIM in the case where $$\alpha_t^2 + \beta_t^2 = 1$$, matching Equation 13 in <d-cite key="song2020denoising"></d-cite>. The natural Euler perspective provides simplified understanding and implementation of DDIM. 
-
-
-However, we can go one step further to eliminate DDIM completely, as all natural Euler samplers of affine interpolations—being pointwise transformable to one another—are equivalent:
-
-> If two interpolation processes are related by a pointwise transform, then **their discrete trajectories obtained through natural Euler sampling are also related by the same pointwise transform**, provided the time grids are appropriately scaled.
-{: .definition}
-
-In other words, **when using natural Euler samplers, switching the affine interpolation scheme *at inference time* is essentially adjusting the sampling time grid.** For DDIM, we obtain **exactly the same discrete samples** as those produced by a standard Euler solver applied to the straight rectified flow, once we properly rescale the time grid during inference.
-
-For a more in-depth discussion on this topic, please refer to Chapter 5 in the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf).
-
-## Natural Euler Sampler
-
-The standard Euler method approximates the flow $$\{Z_t\}$$ on a discrete time grid $$\{t_i\}$$ by:
-
-$$
-\hat{z}_{t_{i+1}} = \hat{z}_{t_i} + (t_{i+1} - t_i) \cdot v_{t_i}(\hat{z}_{t_i}),
-$$
-
-which yields a discrete trajectory $$\{\hat{z}_{t_i}\}_i$$ composed of piecewise straight segments.
-
-In contrast, the **natural Euler sampler** approximates each step by a locally curved segment aligned with the interpolation process. Denote $$\mathtt{I}_t(X_0, X_1) = X_t$$ as the interpolation, with derivative $$\partial_t \mathtt{I}_t(X_0, X_1) = \dot{X}_t$$. Then the natural Euler update rule is:
-
-$$
-\hat{z}_{t_{i+1}} = \mathtt{I}_{t_{i+1}}(\hat{x}_{0 \mid t_i}, \hat{x}_{1 \mid t_i}),
-$$
-
-where $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ are determined by first identifying the *unique interpolation curve* that passes through $$\hat{z}_{t_i}$$ and has slope $$\partial_t \mathtt{I}_{t_i}(\hat{x}_{0 \mid t_i}, \hat{x}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{z}_{t_i})$$. In other words, we solve for $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to get $$\hat{z}_{t_{i+1}}$$.
-
 ### Natural Euler Samplers for Affine Interpolations
 
 For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, due to the linearity of expectations, solving for $$\hat{x}_{0 \mid t_i}$$ and $$\hat{x}_{1 \mid t_i}$$ reduces to solving a simple $$2 \times 2$$ linear system.
