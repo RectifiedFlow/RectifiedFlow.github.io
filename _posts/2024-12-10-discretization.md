@@ -65,7 +65,7 @@ where the local trajectory is approximated by a tangent line with a step size of
 We refer to this method as the **natural Euler sampler**.
 
 <div class="l-body">
-  <figure id="figure-svg">
+  <figure id="figure-svg" style="margin: 1em auto;">
     <object
       data="{{ '/assets/img/natural_euler.svg' | relative_url }}"
       type="image/svg+xml"
@@ -83,6 +83,7 @@ We refer to this method as the **natural Euler sampler**.
     </figcaption>
   </figure>
 </div>
+
 
 For example, in the case of affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$, 
 as shown in the sequel, such **natural Euler samplers** can be derived as 
@@ -164,7 +165,7 @@ Solving these equations, the natural Euler sampler under spherical RF is
 {: .example}
 
 <div class="l-body">
-  <figure id="figure-3">
+  <figure id="figure-1" style="margin: 1em auto;">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
               frameborder="0" 
@@ -183,6 +184,7 @@ Solving these equations, the natural Euler sampler under spherical RF is
     </figcaption>
   </figure>
 </div>
+
 
 Another example is **DDIM**, which, as aforementioned, can be viewed as a natural Euler method under the spherical interpolation.
 
@@ -267,7 +269,7 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
 
 
 <div class="l-body">
-  <figure id="figure-2">
+  <figure id="figure-2" style="margin: 1em auto;">
     <iframe src="{{ '/assets/plotly/discrete_natural_double_match.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
@@ -280,4 +282,3 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
     </figcaption>
   </figure>
 </div>
-

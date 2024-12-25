@@ -93,7 +93,7 @@ At first glance, it may appear that the interpolation process must be chosen dur
 In this blog, we demonstrate that if two interpolation processes are *pointwise transformable* (or *topologically equivalent*) in an appropriate sense, their rectified flows can also be pointwise transformed using the same mappings, and lead to identical rectified couplings. Notably, any two affine interpolation processes are pointwise transformable through simple time and variable scaling. As a result, it is sufficient in principle to use the simplest straight-line interpolation during training, while recovering the rectified flow of all affine interpolations at inference time.  
 
 <div class="l-body">
-  <figure id="figure-svg">
+  <figure id="figure-svg" style="margin: 1em auto;">
     <object
       data="{{ '/assets/img/interpolation/interpolation.svg' | relative_url }}"
       type="image/svg+xml"
@@ -111,6 +111,7 @@ In this blog, we demonstrate that if two interpolation processes are *pointwise 
     </figcaption>
   </figure>
 </div>
+
 
 
 The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
@@ -212,7 +213,7 @@ Hence, the rectified flows of all affine interpolations can be analytically tran
 In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary search](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_convertor.py)—or derive an analytic solution in certain simple cases.
 
 <div class="l-body">
-  <figure id="figure-1">
+  <figure id="figure-1" style="margin: 1em auto;">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
               frameborder="0" 
@@ -231,7 +232,6 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
     </figcaption>
   </figure>
 </div>
-
 
 Combining Proposition 1 with Theorem 1, we have: 
 
@@ -271,7 +271,7 @@ Combining Proposition 1 with Theorem 1, we have:
 {: .example}
 
 <div class="l-body">
-  <figure id="figure-2">
+  <figure id="figure-2" style="margin: 0em auto;">
     <iframe src="{{ '/assets/plotly/interp_convert_200step.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
@@ -286,14 +286,15 @@ We first train a rectified flow using straight interpolation, and then transform
 </div>
 
 
+
 ### Implication on Inference
 
-The trajectories of the RF derived from different affine interpolations can be viewed as deformations of one another via time and space scaling. When the same numerical discretization methods, such as the Euler method, are applied to these differently deformed trajectories, they produce varying discretization errors, leading to different results. This difference becomes pronounced when a large step size is used, as it introduces significant discretization errors (see Figure 3 for the results of the Euler method with 4 steps). However, the difference diminishes as the discretization becomes sufficiently fine to accurately approximate the underlying ODEs (as shown in Figure 2 with 100 Euler steps). 
+The trajectories of the RF derived from different affine interpolations can be viewed as deformations of one another via time and space scaling. When the same numerical discretization methods, such as the Euler method, are applied to these differently deformed trajectories, they produce varying discretization errors, leading to different results. This difference becomes pronounced when a large step size is used, as it introduces significant discretization errors (see [Figure 3](#figure-3) for the results of the Euler method with 4 steps). However, the difference diminishes as the discretization becomes sufficiently fine to accurately approximate the underlying ODEs (as shown in [Figure 2](#figure-2) with 100 Euler steps). 
 
-Figure 4 illustrates how the difference in the inference results for the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
+[Figure 4](#figure-4) illustrates how the difference in the inference results for the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
 
-<div class="l-body-outset">
-  <figure id="figure-3">
+<div class="l-body">
+  <figure id="figure-3" style="margin: 0em auto;">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/interp_convert_10step_straight.html' | relative_url }}" 
               frameborder="0" 
@@ -314,20 +315,24 @@ Figure 4 illustrates how the difference in the inference results for the predict
 </div>
 
 
+
 <div class="l-body">
-  <figure id="figure-4">
-    <iframe src="{{ '/assets/plotly/interp_mse_step.html' | relative_url }}" 
-          frameborder="0" 
-          scrolling="no" 
-          height="310px" 
-          width="60%">
-    </iframe>
+  <figure id="figure-4" style="margin: 1em auto;">
+    <div style="display: flex; justify-content: center;">
+        <iframe src="{{ '/assets/plotly/interp_mse_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="310px" 
+              width="60%">
+        </iframe>
+    </div>
     <figcaption>
       <a href="#figure-4">Figure 4</a>.
       The mean square error (MSE) between the estimtion of \(Z_1\) from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
     </figcaption>
   </figure>
 </div>
+
 
 
 In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, if "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
@@ -422,7 +427,7 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
 {: .example}
 
 <div class="l-body">
-  <figure id="figure-5">
+  <figure id="figure-5" style="margin: 0em auto;">
     <iframe src="{{ '/assets/plotly/interp_convert_double_rf.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
