@@ -110,7 +110,7 @@ v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}
 \end{cases}
 $$
 
-We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to compute $$\hat{Z}_{t_{i+1}}$$.
+We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ to find the interpolation curve $$\texttt {I}$$, then *advance* one step along this curve to compute $$\hat{Z}_{t_{i+1}}$$.
 
 We refer to this method as the **natural Euler sampler**.
 
@@ -126,35 +126,14 @@ $$
 This gives 
 
 $$
- \hat X_{0|t} =  \frac{-\alpha_t v_t(\hat Z_t) +\dot \alpha_t \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t },
- \hat X_{1|t} =  \frac{\beta_t v_t(\hat Z_t) - \dot \beta_t  \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }. 
+\hat X_{0|t} =  \frac{-\alpha_t v_t(\hat Z_t) +\dot \alpha_t \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }, \quad
+ \hat X_{1|t} =  \frac{\beta_t v_t(\hat Z_t) - \dot \beta_t  \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }.
 $$
 
 Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields Equation (1). 
 
 In our code base, equations invovled in affine interpolations are automatically solved with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
-
-<div class="l-body">
-  <figure id="figure-1" style="margin: 1em auto;">
-    <div style="display: flex;">
-      <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
-              frameborder="0" 
-              scrolling="no" 
-              height="420px" 
-              width="45%"></iframe>
-      <iframe src="{{ 'assets/plotly/discrete_natural_euler_4_step.html' | relative_url }}" 
-              frameborder="0" 
-              scrolling="no" 
-              height="420px" 
-              width="45%"></iframe>
-    </div>
-    <figcaption>
-      <a href="#figure-1">Figure 1</a>.
-      Comparing the Vanilla Euler sampler (left) and the Natural Euler sampler (right) on spherical RF. The Vanilla Euler method approximates each step with a straight segment, while the Natural Euler method uses a locally curved segment derived from the spherical interpolation.
-    </figcaption>
-  </figure>
-</div>
 
 Here, we show the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
 
@@ -186,13 +165,34 @@ Here, we show the DDIM inference rule (1) can be viewed as a natural Euler metho
 
 > **Example 2. Natural Euler Sampler for Spherical Interpolation**
 > 
-> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} \cdot\epsilon\right) X_0$$, the natural Euler update rule reduces to 
+> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} t\right) X_0$$, the natural Euler update rule reduces to 
 > 
 >$$
->\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
+>\hat z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \epsilon\right) \cdot v_t(\hat z_t)
 >$$
 >
 {: .example}
+
+<div class="l-body">
+  <figure id="figure-1" style="margin: 1em auto;">
+    <div style="display: flex;">
+      <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="420px" 
+              width="45%"></iframe>
+      <iframe src="{{ 'assets/plotly/discrete_natural_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="420px" 
+              width="45%"></iframe>
+    </div>
+    <figcaption>
+      <a href="#figure-1">Figure 1</a>.
+      Comparing the Vanilla Euler sampler (left) and the Natural Euler sampler (right) on spherical RF. The Vanilla Euler method approximates each step with a straight segment, while the Natural Euler method uses a locally curved segment derived from the spherical interpolation.
+    </figcaption>
+  </figure>
+</div>
 
 ## Equivalence of Natural Euler Trajectories
 
