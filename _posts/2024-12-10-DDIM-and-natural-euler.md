@@ -47,7 +47,7 @@ toc:
 </div>
 --> 
 
-We know that the continuous-time ODE of the denoising diffusion implicit model (DDIM) is rectified flow (RF) with a time-scaled spherical interpolation. However, the discrete inference rule of DDIM does not exactly apply the vanilla Euler method, $$\hat Z_{t+\epsilon } = \hat Z_t + \epsilon v_t(\hat Z_t)$$,  to the RF ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. Instead, it uses a somewhat complicated rule:
+We know that the continuous-time ODE of the denoising diffusion implicit model (DDIM) is rectified flow (RF) with a time-scaled spherical interpolation. However, the discrete inference rule of DDIM does not exactly apply the vanilla Euler method, $$\hat Z_{t+\epsilon } = \hat Z_t + \epsilon \cdot v_t(\hat Z_t)$$, to the RF ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. Instead, it uses a somewhat complicated rule:
 
 $$
 \hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t),  \tag{1}
@@ -94,45 +94,45 @@ The piecewise straight approximation is natural for rectified flows induced from
   </figure>
 </div>
 
-Specifically, given a general interoplation scheme $$X_t= \mathtt{I}_t(X_0, X_1)$$, we update trajectory along a curve segment defined by $$\mathtt{I}$$:
+Specifically, given a general interpolation scheme $$X_t= \mathtt{I}_t(X_0, X_1)$$, we update trajectory along a curve segment defined by $$\mathtt{I}$$:
 
 $$
 \hat{Z}_{t_{i+1}} = \mathtt{I}_{t_{i+1}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}),
 $$
 
-where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by first identifying the *unique interpolation curve* that passes through $$\hat{Z}_{t_i}$$ and has slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{
-Z}_{t_i})$$, that is, they are the solutions of the following equation: 
+where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by  identifying the *unique interpolation curve* that passes through $$\hat{Z}_{t_i}$$. This curve has slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{
+Z}_{t_i})$$. In other words, $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are the solutions of the following equation: 
 
 $$
-\hat{Z}_{t_i} = \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~
-v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), ~~~~~~~ \tag{2}.
+\begin{cases}
+\hat{Z}_{t_i} = \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), \\[4px]
+v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}). \tag{2}
+\end{cases}
 $$
 
-In other words, we solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to get $$\hat{Z}_{t_{i+1}}$$.
-
+We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ so that the interpolation connecting them matches the local velocity at $$t_i$$, then *advance* one step along this curved path to compute $$\hat{Z}_{t_{i+1}}$$.
 
 We refer to this method as the **natural Euler sampler**.
-
 
 ### Natural Euler Samplers for Affine Interpolations
 
 For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, Equation (2) reduces to 
 
 $$
-\hat{Z}_{t} =\alpha_t\hat{X}_{1|t} + \beta_t \hat{X}_{0|t}, ~~~~~~~
-v_t(\hat{Z}_{t}) = 
-\hat{Z}_{t} =\dot{\alpha}_t\hat{X}_{1|t} + \dot{\beta}_t \hat{X}_{0|t}. 
+\hat{Z}_{t} =\alpha_t\hat{X}_{1 \mid t} + \beta_t \hat{X}_{0 \mid t}, \quad
+v_t(\hat{Z}_{t}) =\dot{\alpha}_t\hat{X}_{1 \mid t} + \dot{\beta}_t \hat{X}_{0 \mid t}. 
 $$
+
 This gives 
-\bb
- \hat X_{0|t} =  \frac{-\alpha_t v_t(\hat Z_t) +\dot \alpha_t \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }, && 
+
+$$
+ \hat X_{0|t} =  \frac{-\alpha_t v_t(\hat Z_t) +\dot \alpha_t \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t },
  \hat X_{1|t} =  \frac{\beta_t v_t(\hat Z_t) - \dot \beta_t  \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }. 
- \ee 
-Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1|t} + \beta_{t+\epsilon} \hat X_{0|t}$$ yields Equation (1). 
+$$
 
- In our code base, equations invovled in affine interpolations are automatically solved
- with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
+Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields Equation (1). 
 
+In our code base, equations invovled in affine interpolations are automatically solved with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
 
 <div class="l-body">
@@ -156,8 +156,7 @@ Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1|t} + \bet
   </figure>
 </div>
 
-
-As aforementioned, the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
+Here, we show the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
 
 > **Example 1. Natural Euler Sampler for DDIM**
 >
@@ -186,7 +185,9 @@ As aforementioned, the DDIM inference rule (1) can be viewed as a natural Euler 
 
 
 > **Example 2. Natural Euler Sampler for Spherical Interpolation**
+> 
 > For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} \cdot\epsilon\right) X_0$$, the natural Euler update rule reduces to 
+> 
 >$$
 >\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \cdot\epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \cdot\epsilon\right) \cdot v_t(\hat z_t)
 >$$
