@@ -93,16 +93,42 @@ This combined SDE achieves two key objectives:
 
 When the simulation is accurate, Langevin dynamics naturally remain in equilibrium, avoiding unnecessary changes to the distribution. However, if deviations occur, this mechanism guides the estimate back on track, enhancing the robustness of the inference process.
 
-The figure below illustrates the score function $$\nabla \log \rho_t$$ along the SDE trajectories. We can see that $$\nabla \log \rho_t$$ points toward high-density regions, and hence can guid trajectories back to areas of higher probability whenever deviations occur.
-
-<div class="l-body" style="text-align:center;">
-  <img src="/assets/img/score_function_on_sde_traj.png" alt="cross" style="max-width:58%;" />
+<div class="l-body">
+  <figure id="figure-1" style="margin: 1em auto;">
+  <div style="display: flex; justify-content: center;">
+    <iframe src="{{ '/assets/plotly/diffusion_score_function.html' | relative_url }}" 
+            frameborder="0" 
+            scrolling="no" 
+            height="450px" 
+            width="80%">
+    </iframe>
+      </div>
+    <figcaption>
+      <a href="#figure-1">Figure 1</a>.
+      Illustration of the score function \(\nabla \log \rho_t\) along the SDE trajectories. We can see that \(\nabla \log \rho_t\) points toward high-density regions, and hence can guid trajectories back to areas of higher probability whenever deviations occur.
+    </figcaption>
+  </figure>
 </div>
 
-The figure below compares the results of two sampling methods. On the left, we show the result of the Euler discretization on the deterministic ODE applied to an insufficiently trained $v_t$ (due to early stopping), resulting in a significant presence of outliers. On the right, the Euler–Maruyama method is used to simulate the SDE, which effectively suppresses the outliers through the feedback mechanism introduced by the score functions.
-
 <div class="l-body">
-  <img src="/assets/img/euler_sde_compare.png" alt="cross" style="max-width:100%;margin-bottom: 20px" />
+  <figure id="figure-2" style="margin: 1em auto;">
+    <div style="display: flex;">
+      <iframe src="{{ 'assets/plotly/diffusion_deterministic_single.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="350px" 
+              width="48%"></iframe>
+      <iframe src="{{ 'assets/plotly/diffusion_stochastic_single.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="350px" 
+              width="48%"></iframe>
+    </div>
+    <figcaption>
+      <a href="#figure-2">Figure 2</a>.
+      Comparing the results of two sampling methods. On the left, we show the result of the Euler discretization on the deterministic ODE applied to an insufficiently trained \(v_t\) (due to early stopping), resulting in a significant presence of outliers. On the right, the Euler–Maruyama method is used to simulate the SDE, which effectively suppresses the outliers through the feedback mechanism introduced by the score functions.
+    </figcaption>
+  </figure>
 </div>
 
 This correction mechanism seems to have effect on state-of-the-art text-to-image generation as well.
@@ -169,9 +195,20 @@ Although things work out nicely in theory, we need to be careful that the introd
 This is indeed the case in practice. As shown in the figure below, when we increase the noise magnitude $$\sigma_t$$,  the generated samples to cluster closer to the centers of the Gaussian modes.
 
 <div class="l-body">
-  <img src="/assets/img/sde_concentrate_2d.png" alt="cross" style="max-width:100%;margin-bottom: 20px" />
+<figure id="figure-4" style="margin: 1em auto;">
+      <div style="display: flex; justify-content: center;">
+        <iframe src="{{ '/assets/plotly/diffusion_noise_scales_4pics.html' | relative_url }}" 
+                frameborder="0" 
+                scrolling="no" 
+                height="220px" 
+                width="100%">
+        </iframe>
+      </div>
+    <figcaption>
+      <a href="#figure-4"></a>
+    </figcaption>
+  </figure>
 </div>
-
 
 So, large diffusion yields more concentrate results. This is rather counter-intuitive. Why is it the case? 
 
@@ -190,4 +227,3 @@ In the context of text-to-image generation, this over-concentration effect often
 <div class="l-body">
   <img src="/assets/img/euler_sde_comp_flux.png" alt="cross" style="max-width:100%;margin-bottom: 20px" />
 </div>
-
