@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: "Flow to Diffusion: Langevin is a Guardrail" 
-description: It is known that we can convert between diffusion (SDE) and flow (ODE) models at inference time without rettraining? How is this possible? What are the pros and cons adding diffusion noise to flows?
+description: It is known that we can convert between diffusion (SDE) and flow (ODE) models at inference time without retraining. But how is this possible? What is the intuition and purpose? What are the pros and cons of diffusion vs. flow?
 tags: tutorial
 giscus_comments: true
 date: 2024-12-7 10:00:00
@@ -47,27 +47,42 @@ toc:
 --> 
 
 ## Overview
-Rectified flow (RF) yields an deterministic ODE (a.k.a. flow) model, of the form $$\mathrm d Z_t = v_t(Z_t)\mathrm d t$$, which generates the data $$Z_1$$ starting from an initial noise $$Z_0$$. This approach offers a simplification compared to diffusion models that on a stochastic differential equation (SDE) to generate data from noise, such as DDPM and score-based models. 
+Rectified flow (RF) yields a deterministic ODE (a.k.a. flow) model, of the form $$\mathrm d Z_t = v_t(Z_t)\mathrm d t$$, which generates the data $$Z_1$$ starting from an initial noise $$Z_0$$. This approach offers a simplification compared to diffusion models that use a stochastic differential equation (SDE) to generate data from noise, such as DDPM and score-based models. 
 
-However, the boundary between flow and diffusion models has been known to be blurry since the work of DDIM and probability-flow ODEs, which showed that it is possible to convert SDEs to ODEs during the post-training phase, without requiring re-training of the model. Now taking the ODE models, it is also possible to revert the process and convert the RF ODE to SDE to obtain stochastic samplers at inference time. Several questions arises:  
+However, the boundary between flow and diffusion models has been known to be blurry since the work of DDIM and probability-flow ODEs, which showed that it is possible to convert SDEs to ODEs during the post-training phase, without requiring re-training of the model. Now starting from the ODE models, it is also possible to revert the process and convert the RF ODE to SDEs to obtain stochastic samplers at inference time. Several questions arises:  
 
-1. Why and how is it possible to convert between SDEs and ODEs? What is the intuition?
+1. *Why and how is it possible to convert between SDEs and ODEs? What is the intuition?*
 
-2. Why would we bother to add diffusion noise? What are the pros and cons?
+2. *Why would we bother to add diffusion noise given that ODEs are simpler and faster? What are the pros and cons of diffusion vs. flow?*
 
-We will explore these questions in this blog. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
+This blog explores these questions. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
 
 
 ## Stochastic Samplers = RF + Langevin
 
 Given a coupling $$(X_0, X_1)$$ of noise and data points, rectified flow defines an interpolation process, such as $$X_t = t X_1 + (1 - t) X_0$$, and "rectifies" or "causalizes" it to yield an ODE model $$\mathrm{d} Z_t = v_t(Z_t) \, \mathrm{d} t$$ initialized from $$Z_0 = X_0.$$ 
-The velocity field is given by $$v_t(z) = \mathbb{E}[\dot{X}_t \mid X_t = z],$$ which is estimated by minimizing the loss $$\mathbb{E}_{t, X_0, X_1} [ \| \dot{X}_t - v_t(X_t) \|^2 ].$$
+The velocity field is given by $$v_t(z) = \mathbb{E}[\dot{X}_t \mid X_t = z],$$ which is estimated by minimizing a loss like $$\mathbb{E}_{t, X_0, X_1} [ \| \dot{X}_t - v_t(X_t) \|^2 ].$$
 
-The key property of RF ODE is the marginal preservation property: the distribution of $$Z_t$$ on the ODE trajectory matches the distribution of $$X_t$$ on the interpolation path at each time $$t$$. This is ensured by the construction of the velocity field $$v_t$$. As a result, the final output $$Z_1$$ of the ODE follows the same distribution as $$X_1$$, the target data distribution. This follows an inductive principle: if the distributions of $$X_t$$ and $$Z_t$$ match up to a given time, the construction of $$v_t$$ ensures they will continue to match at the next (infinitesimal) step. By being "scheduled to do the right thing at the right time," the process guarantees the correct final result.
+The key property of RF ODE is the *marginal preserving property*: the distribution of $$Z_t$$ on the ODE trajectory matches the distribution of $$X_t$$ on the interpolation path at each time $$t$$. This is ensured by the construction of the velocity field $$v_t$$ in an inductive way: if the distributions of $$X_t$$ and $$Z_t$$ match up to a given time, the construction of $$v_t$$ ensures they will continue to match at the next (infinitesimal) step. As a result, the final output $$Z_1$$ of the ODE follows the same distribution as $$X_1$$, the target data distribution. By being "scheduled to do the right thing at the right time," the process guarantees the correct final result.
 
-An obvious problem of this is that, in practice, errors can accumulate over time as we solve the ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. These errors arise from model approximations and numerical discretization, causing drift between the estimated distribution and the true distribution. The issue can compound: if the estimated trajectory $$\hat{Z}_t$$ deviates significantly from the distribution of $$X_t$$, the update direction $$v_t(\hat{Z}_t)$$ becomes less accurate. This happens because fewer data points are sampled in low-probability regions during training, where model inaccuracies are more pronounced.
+An obvious problem with this is that errors can accumulate over time in practice as we solve the ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. These errors arise from both model approximations and numerical discretization, causing drift between the estimated distribution and the true distribution. The issue can compound: if the estimated trajectory $$\hat{Z}_t$$ deviates significantly from the distribution of $$X_t$$, the update direction $$v_t(\hat{Z}_t)$$ becomes less accurate and hence reinforces the error. 
 
-To address this problem, we may introduce a feedback mechanism to correct the error. One such approach is to use Langevin dynamics. 
+To address this problem, we may introduce a **feedback mechanism** to correct the error. One such approach is to use Langevin dynamics. 
+
+> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (overdamped) Langevin dynamics is
+> 
+> $$
+> \mathrm{d} Z_t = \sigma_t^2 \nabla \log \rho^*(Z_t) \mathrm{d} t + \sqrt{2}\sigma_t \mathrm{d} W_t,
+> $$
+>
+> This is an SDE driven by a noise source $$\{W_t\}$$, which is assumed to be a Brownian motion. Simulating Langevin dynamics allows us to draw approximate samples from \(\rho^*\), because the distribution of \(Z_t\) guarantees to converge to \(\rho^*\) as \(t \to +\infty\) under mild conditions. 
+>
+> We do not need to know much about the theory of SDE at this point. The only thing to note that it is the continuous-time limit of the Euler-Maruyama discretization:
+>
+> $$\hat Z_{t+\epsilon} = Z_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat Z_t) + \sqrt{2\epsilon}\sigma_t \xi_t,~~~~~~~~ \xi_i \sim \mathtt{Normal}(0, I), $$
+>
+> as the step size $$\epsilon$$ goes to zero. This is how we typically solve SDEs in practice. 
+{: .definition}
 
 Let $$\rho_t$$ be the density function of $$X_t$$, representing the true distribution that we aim to follow at time $$t$$. At each time step $$t$$, we can in principle apply a short segment of Langevin dynamics to adjust the trajectory's distribution toward $$\rho_t$$:
 
