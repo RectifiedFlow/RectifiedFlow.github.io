@@ -97,7 +97,7 @@ Fully simulating Langevin dynamics would require a double-loop algorithm, where 
 In rectified flow, however, the trajectory is already close to $$\rho_t$$ at each time step $$t$$. Therefore, a single step of Langevin dynamics can be sufficient to reduce the drift. This allows us to directly integrate Langevin corrections into the rectified flow updates, yielding a combined stochastic differential equation (SDE):
 
 $$
-\mathrm{d}\tilde{Z}_t = \underbrace{v_t(\tilde{Z}_t) \mathrm{d} t}_{\text{Rectified Flow}} + \underbrace{\sigma_t^2 \nabla \log \rho_t(\tilde{Z}_t) \mathrm{d} t + \sqrt{2} \sigma_t \mathrm{d}W_t}_{\text{Langevin Dynamics}}, \quad \tilde{Z}_0 = Z_0. 
+\mathrm{d}{Z}_t = \underbrace{v_t({Z}_t) \mathrm{d} t}_{\text{Rectified Flow}} + \underbrace{\sigma_t^2 \nabla \log \rho_t({Z}_t) \mathrm{d} t + \sqrt{2} \sigma_t \mathrm{d}W_t}_{\text{Langevin Dynamics}}, \quad \tilde{Z}_0 = Z_0. 
 $$
 
 This combined SDE achieves two key objectives:
@@ -236,7 +236,7 @@ $$
 Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, and hence is significantly overestimated when $$t$$ is close to 1. Given that the directions of $$\nabla \log \rho_t(x)$$ point toward the centers of mass of clusters, an overestimated $$\nabla \log \rho_t(x)$$ magnitude would lead to results that are overly concentrated around these centers.
 
 > **Role of Noise.** the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
-{:theorem}
+{: .theorem}
 
 In the context of text-to-image generation, this over-concentration effect often produces overly smoothed images, which may appear cartoonish. Such over-smoothing eliminates fine details and high-frequency variations, resulting in outputs with a blurred appearance. The figure below illustrates these differences: samples generated using the Euler sampler exhibit more high-frequency details, as seen in the texture of the parrot's feathers and the structure of the smoke.
 
