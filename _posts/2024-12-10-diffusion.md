@@ -157,7 +157,7 @@ In this [recent work](https://arxiv.org/abs/2411.19415)<d-cite key="hu2024amo"><
 
 ## SDEs with Tweedie's formula 
 
-In general, it may be necessary to estimate the score function $$\nabla \log \rho_t$$ in addition to the RF velocity $$v_t$$. However, in certain special cases, the score function can be estimated using $$v_t$$, thereby eliminating the need to retrain an additional model. This approach enables a training-free conversion between ODEs and SDEs.
+Solving the SDEs requires us to estimate the score function $$\nabla \log \rho_t$$ in addition to the RF velocity $$v_t$$. However, in certain special cases, the score function can be estimated using $$v_t$$, thereby eliminating the need to retrain an additional model. This is what enables a training-free conversion between ODEs and SDEs.
 
 Specifically, if the rectified flow is induced by an affine interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$, where $$X_0$$ and $$X_1$$ are independent (i.e., $$X_0 \perp\!\!\!\perp X_1$$) and $$X_0$$ follows a standard Gaussian distribution, then by Tweedie's formula, we have 
 
@@ -189,14 +189,14 @@ $$
 
 where we set $$\sigma_t^2 = \lambda_t \beta_t \gamma_t$$. 
 
-In the case straight interpolation $$X_t = t X_1 + (1-t)X_0$$, we have $$\nabla \log \rho_t(x) = \frac{t v_t(x) - x}{1-t}$$, yielding 
+In the case of straight interpolation $$X_t = t X_1 + (1-t)X_0$$, we have $$\nabla \log \rho_t(x) = \frac{t v_t(x) - x}{1-t}$$, yielding 
 
 $$
-\mathrm d Z_t = v_t(Z_t)\mathrm d t +  \gamma (t v_t (x) -  x) \mathrm{d} t +  \sqrt{2 \gamma (1-t) } \mathrm{d} W_t. 
+\mathrm d Z_t = v_t(Z_t)\mathrm d t +  \gamma_t (t v_t (x) -  x) \mathrm{d} t +  \sqrt{2 \gamma_t (1-t) } \mathrm{d} W_t. 
 $$
 
 
-The SDE of DDPM and the score-based SDEs is be recovered 
+The SDE of DDPM and the score-based SDEs can be recovered 
 when $$\gamma_t = 1 / \alpha_t$$ and $$\alpha^2_t + \beta_t^2 = 1$$, yielding 
 
 $$
@@ -207,7 +207,7 @@ $$
 ## Diffusion May Cause Over-Concentration 
 
 Although things work out nicely in theory, we need to be careful that the introduced score function $$\nabla \log \rho_t(x)$$ itself has errors, and it may introduce undesirable effects if we rely on it too much (with a large $$\sigma_t$$). 
-This is indeed the case in practice. As shown in the figure below, when we increase the noise magnitude $$\sigma_t$$,  the generated samples to cluster closer to the centers of the Gaussian modes.
+This is indeed the case in practice. As shown in the figure below, when we increase the noise magnitude $$\sigma_t$$,  the generated samples tend to cluster closer to the centers of the Gaussian modes.
 
 <div class="l-body">
 <figure id="figure-4" style="margin: 1em auto;">
@@ -225,7 +225,7 @@ This is indeed the case in practice. As shown in the figure below, when we incre
   </figure>
 </div>
 
-So, large diffusion yields more concentrate results. This is rather counter-intuitive. Why is it the case? 
+So, larger diffusion yields more concentrate results?! This is rather counter-intuitive. Why is it the case? 
 
 To see this, assume the estimated velocity field is $$\hat v_t \approx v_t$$. The resulting estimated score function from Tweedie's formula is 
 
@@ -233,9 +233,9 @@ $$
 \nabla \log \hat \rho_t(x) = \frac{1}{\lambda_t \beta_t} \left( \alpha_t \hat v_t(x) - \dot{\alpha}_t x \right). 
 $$
 
-Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ is likely to diverge to infinity in this limit. This divergence leads to a significant overestimation of the true magnitude of $$\nabla \log \rho_t(x)$$, which may be finite. As a result, the outputs of the SDE tend to become overly concentrated. This occurs because $$\nabla \log \rho_t(x)$$ increasingly points toward the centers of mass clusters, or the local optima of the probability density. 
+Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, and hence is significantly overestimated when $$t$$ is close to 1. Given that the directions of $$\nabla \log \rho_t(x)$$ point toward the centers of mass of clusters, an overestimated $$\nabla \log \rho_t(x)$$ magnitude would lead to results that are overly concentrated around these centers.
 
-In other words, the Langevin guardrail may become *excessive*, causing over-concentration. Note that the deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
+In other words, the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
 
 In the context of text-to-image generation, this over-concentration effect often produces overly smoothed images, which may appear cartoonish. Such over-smoothing eliminates fine details and high-frequency variations, resulting in outputs with a blurred appearance. The figure below illustrates these differences: samples generated using the Euler sampler exhibit more high-frequency details, as seen in the texture of the parrot's feathers and the structure of the smoke.
 
