@@ -235,7 +235,8 @@ $$
 
 Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, and hence is significantly overestimated when $$t$$ is close to 1. Given that the directions of $$\nabla \log \rho_t(x)$$ point toward the centers of mass of clusters, an overestimated $$\nabla \log \rho_t(x)$$ magnitude would lead to results that are overly concentrated around these centers.
 
-In other words, the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
+> **Role of Noise.** the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
+{:theorem}
 
 In the context of text-to-image generation, this over-concentration effect often produces overly smoothed images, which may appear cartoonish. Such over-smoothing eliminates fine details and high-frequency variations, resulting in outputs with a blurred appearance. The figure below illustrates these differences: samples generated using the Euler sampler exhibit more high-frequency details, as seen in the texture of the parrot's feathers and the structure of the smoke.
 
