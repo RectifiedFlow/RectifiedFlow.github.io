@@ -18,7 +18,7 @@ chart:
 tikzjax: true
 typograms: true
 
-thumbnail: /assets/img/thumbnail/interpolation_thumbnail.png
+thumbnail: /assets/img/interpolation_conversion.gif
 thumbnail_alt: "Thumbnail of Interpolation"
 
 authors:
@@ -92,26 +92,19 @@ At first glance, it may appear that the interpolation process must be chosen dur
 
 In this blog, we demonstrate that if two interpolation processes are *pointwise transformable* (or *topologically equivalent*) in an appropriate sense, their rectified flows can also be pointwise transformed using the same mappings, and lead to identical rectified couplings. Notably, any two affine interpolation processes are pointwise transformable through simple time and variable scaling. As a result, it is sufficient in principle to use the simplest straight-line interpolation during training, while recovering the rectified flow of all affine interpolations at inference time.  
 
-<div class="l-body">
-  <figure id="figure-svg" style="margin: 1em auto;">
-    <object
-      data="{{ '/assets/img/interpolation/interpolation.svg' | relative_url }}"
-      type="image/svg+xml"
-      width="100%"
-      height="200px"
-    >
-      <!-- Fallback content for browsers that do not support embedded SVG -->
-      <p>
-        Your browser does not support embedded SVG.
-        <a href="{{ '/assets/img/interpolation/interpolation.svg' | relative_url }}">Download here</a>.
-      </p>
-    </object>
-    <figcaption>
-      <a href="#figure-natural-euler"></a>
-    </figcaption>
-  </figure>
-</div>
-
+<figure id="figure-1" style="margin: 0 auto 1em auto;">
+  <div style="display: flex; justify-content: center;">
+    <img
+      src="{{ 'assets/img/interpolation_conversion.gif' | relative_url }}"
+      alt="Lady Windermere's fan for illustration of error accumulation in Euler method trajectories."
+      style="max-width: 600px; height: auto;"
+    />
+  </div>
+  <figcaption>
+    <a href="#figure-1">Figure 1</a>.
+    Pointwise transformable affine interpolations and their corresponding rectified flows.
+  </figcaption>
+</figure>
 
 
 The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
@@ -133,6 +126,10 @@ We first formalize *pointwise transformability* between two interpolation proces
 > X'_t = \phi_t(X_{\tau_t}), \quad  \forall t \in [0,1].
 > $$
 {: .definition}
+
+<div class="l-gutter">
+  <img src="/assets/img/interpolation/interpolation.svg" style="max-width:100%;" />
+</div>
 
 If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
 
@@ -213,7 +210,7 @@ Hence, the rectified flows of all affine interpolations can be analytically tran
 In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary search](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_convertor.py)—or derive an analytic solution in certain simple cases.
 
 <div class="l-body">
-  <figure id="figure-1" style="margin: 1em auto;">
+  <figure id="figure-2" style="margin: 1em auto;">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/interp_tau_ddim_spherical.html' | relative_url }}" 
               frameborder="0" 
@@ -227,11 +224,12 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
               width="50%"></iframe>
     </div>
     <figcaption>
-      <a href="#figure-1">Figure 1</a>.
+      <a href="#figure-2">Figure 2</a>.
       The \(\tau\) and \(\omega\) transformations that convert DDIM to spherical interpolation (left) and convert straight interpolation to spherical (right). When converting DDIM to spherical, \(\omega_t\) remains fixed at 1, because only the time scaling changes.
     </figcaption>
   </figure>
 </div>
+
 
 Combining Proposition 1 with Theorem 1, we have: 
 
@@ -271,7 +269,7 @@ Combining Proposition 1 with Theorem 1, we have:
 {: .example}
 
 <div class="l-body">
-  <figure id="figure-2" style="margin: 0em auto;">
+  <figure id="figure-3" style="margin: 0em auto;">
     <iframe src="{{ '/assets/plotly/interp_convert_200step.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
@@ -279,11 +277,12 @@ Combining Proposition 1 with Theorem 1, we have:
             width="100%">
     </iframe>
     <figcaption>
-      <a href="#figure-2">Figure 2</a>.
+      <a href="#figure-3">Figure 3</a>.
 We first train a rectified flow using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation produces different ODE trajectories, both ultimately converge to the same endpoint \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
     </figcaption>
   </figure>
 </div>
+
 
 
 
@@ -294,7 +293,7 @@ The trajectories of the RF derived from different affine interpolations can be v
 [Figure 4](#figure-4) illustrates how the difference in the inference results for the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
 
 <div class="l-body">
-  <figure id="figure-3" style="margin: 0em auto;">
+  <figure id="figure-4" style="margin: 0em auto;">
     <div style="display: flex;">
       <iframe src="{{ 'assets/plotly/interp_convert_10step_straight.html' | relative_url }}" 
               frameborder="0" 
@@ -308,7 +307,7 @@ The trajectories of the RF derived from different affine interpolations can be v
               width="50%"></iframe>
     </div>
     <figcaption>
-      <a href="#figure-3">Figure 3</a>.
+      <a href="#figure-4">Figure 4</a>.
       Different results when the number of Euler steps is reduced to 4.
     </figcaption>
   </figure>
@@ -317,7 +316,7 @@ The trajectories of the RF derived from different affine interpolations can be v
 
 
 <div class="l-body">
-  <figure id="figure-4" style="margin: 1em auto;">
+  <figure id="figure-5" style="margin: 1em auto;">
     <div style="display: flex; justify-content: center;">
         <iframe src="{{ '/assets/plotly/interp_mse_step.html' | relative_url }}" 
               frameborder="0" 
@@ -327,11 +326,12 @@ The trajectories of the RF derived from different affine interpolations can be v
         </iframe>
     </div>
     <figcaption>
-      <a href="#figure-4">Figure 4</a>.
+      <a href="#figure-5">Figure 5</a>.
       The mean square error (MSE) between the estimtion of \(Z_1\) from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
     </figcaption>
   </figure>
 </div>
+
 
 
 
@@ -435,8 +435,9 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
             width="100%">
     </iframe>
     <figcaption>
-      <a href="#figure-5">Figure 5</a>.
+      <a href="#figure-6">Figure 6</a>.
 Training the RF with straight and spherical interpolations using uniform weights yields similar results. The blue curve represents the RF trained with spherical interpolation, while the red curve represents the RF trained with straight interpolation and then converted to spherical interpolation. Since both share the same loss function, as shown in Example 3, the only difference lies in model parameterization, which appears to have limited impact on performance in this case.
     </figcaption>
   </figure>
 </div>
+

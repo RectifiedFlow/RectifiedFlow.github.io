@@ -75,21 +75,22 @@ which yields a discrete trajectory $$\{\hat{Z}_{t_i}\}_i$$ composed of piecewise
 The piecewise straight approximation is natural for rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$. However, for a *curved* interpolation, it may be natural to approximates each step by a locally curved segment aligned with the corresponding interpolation process. 
 
 <div class="l-body">
-  <figure id="figure-svg" style="margin: 1em auto;">
-    <object
-      data="{{ '/assets/img/natural_euler.svg' | relative_url }}"
-      type="image/svg+xml"
-      width="100%"
-      height="200px"
-    >
-      <!-- Fallback content for browsers that do not support embedded SVG -->
-      <p>
-        Your browser does not support embedded SVG.
-        <a href="{{ '/assets/img/natural_euler.svg' | relative_url }}">Download here</a>.
-      </p>
-    </object>
+  <figure id="figure-1" style="margin: 1em auto;">
+    <div style="display: flex;">
+      <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="250px" 
+              width="50%"></iframe>
+      <iframe src="{{ 'assets/plotly/discrete_natural_euler_4_step.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="250px" 
+              width="50%"></iframe>
+    </div>
     <figcaption>
-      <a href="#figure-natural-euler"></a>
+      <a href="#figure-1">Figure 1</a>.
+      The Vanilla Euler sampler (left) and the Natural Euler sampler (right) on spherical RF. The dashed lines show the ground truth ODE trajectories. The Vanilla Euler method approximates each step with a straight segment, whereas the Natural Euler method uses a locally curved segment derived from spherical interpolation.
     </figcaption>
   </figure>
 </div>
@@ -103,6 +104,7 @@ $$
 where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by  identifying the *unique interpolation curve* that passes through $$\hat{Z}_{t_i}$$. This curve has slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{
 Z}_{t_i})$$. In other words, $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are the solutions of the following equation: 
 
+
 $$
 \begin{cases}
 \hat{Z}_{t_i} = \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}), \\[4px]
@@ -110,7 +112,12 @@ v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}
 \end{cases}
 $$
 
+
 We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ to find the interpolation curve $$\texttt {I}$$, then *advance* one step along this curve to compute $$\hat{Z}_{t_{i+1}}$$.
+
+<div class="l-gutter">
+  <img src="/assets/img/natural_euler.svg" style="max-width:200%" />
+</div>
 
 We refer to this method as the **natural Euler sampler**.
 
@@ -173,26 +180,7 @@ Here, we show the DDIM inference rule (1) can be viewed as a natural Euler metho
 >
 {: .example}
 
-<div class="l-body">
-  <figure id="figure-1" style="margin: 1em auto;">
-    <div style="display: flex;">
-      <iframe src="{{ 'assets/plotly/discrete_vanilla_euler_4_step.html' | relative_url }}" 
-              frameborder="0" 
-              scrolling="no" 
-              height="420px" 
-              width="45%"></iframe>
-      <iframe src="{{ 'assets/plotly/discrete_natural_euler_4_step.html' | relative_url }}" 
-              frameborder="0" 
-              scrolling="no" 
-              height="420px" 
-              width="45%"></iframe>
-    </div>
-    <figcaption>
-      <a href="#figure-1">Figure 1</a>.
-      Comparing the Vanilla Euler sampler (left) and the Natural Euler sampler (right) on spherical RF. The Vanilla Euler method approximates each step with a straight segment, while the Natural Euler method uses a locally curved segment derived from the spherical interpolation.
-    </figcaption>
-  </figure>
-</div>
+
 
 ## Equivalence of Natural Euler Trajectories
 
@@ -242,19 +230,24 @@ In the special case of DDIM, once we rescale the time grid appropriately, its di
 
 Below, we compare two equivalent RFs: one induced by straight interpolation and the other induced by spherical interpolation. To ensure exact equivalence, we first train a RF using the straight interpolation, then transform it into the spherical form.
 
-
-
 <div class="l-body">
   <figure id="figure-2" style="margin: 1em auto;">
-    <iframe src="{{ '/assets/plotly/discrete_natural_double_match.html' | relative_url }}" 
-            frameborder="0" 
-            scrolling="no" 
-            height="430px" 
-            width="100%">
-    </iframe>
+    <div style="display: flex;">
+      <iframe src="{{ 'assets/plotly/discrete_euler_match_t.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="250px" 
+              width="50%"></iframe>
+      <iframe src="{{ 'assets/plotly/discrete_natural_euler_match_t.html' | relative_url }}" 
+              frameborder="0" 
+              scrolling="no" 
+              height="250px" 
+              width="50%"></iframe>
+    </div>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      Running natural Euler samplers on both Straight and Spherical RFs. By adjusting the Straight RF's time grid via \(\tau_t\) (while keeping a uniform grid for the Spherical RF), we obtain identical final results. Furthermore, their intermediate trajectories can also be aligned point by point under their corresponding interpolation transforms.
+      Running natural Euler samplers on both straight (left) and spherical (right) RFs. By adjusting the Straight RF's time grid via \(\tau_t\) (while keeping a uniform grid for the Spherical RF), we obtain (exactly) identical final results. Furthermore, their intermediate trajectories can also be aligned point by point under their corresponding interpolation transforms.
     </figcaption>
   </figure>
 </div>
+

@@ -69,18 +69,18 @@ An obvious problem with this is that errors can accumulate over time in practice
 
 To address this problem, we may introduce a **feedback mechanism** to correct the error. One such approach is to use Langevin dynamics. 
 
-> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (overdamped) Langevin dynamics is
+> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (overdamped) [Langevin dynamics](https://friedmanroy.github.io/blog/2022/Langevin/) is
 > 
 > $$
 > \mathrm{d} Z_t = \sigma_t^2 \nabla \log \rho^*(Z_t) \mathrm{d} t + \sqrt{2}\sigma_t \mathrm{d} W_t,
 > $$
->
-> This is an SDE driven by a noise source $$\{W_t\}$$, which is assumed to be a Brownian motion. Simulating Langevin dynamics allows us to draw approximate samples from \(\rho^*\), because the distribution of \(Z_t\) guarantees to converge to \(\rho^*\) as \(t \to +\infty\) under mild conditions. 
->
-> We do not need to know much about the theory of SDE at this point. The only thing to note that it is the continuous-time limit of the Euler-Maruyama discretization:
->
-> $$\hat Z_{t+\epsilon} = Z_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat Z_t) + \sqrt{2\epsilon}\sigma_t \xi_t,~~~~~~~~ \xi_i \sim \mathtt{Normal}(0, I), $$
->
+> 
+>This is an SDE driven by a noise source $$\{W_t\}$$, which is assumed to be a Brownian motion. Simulating Langevin dynamics allows us to draw approximate samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ under mild conditions. 
+> 
+>We do not need to know much about the theory of SDE at this point. The only thing to note that it is the continuous-time limit of the Euler-Maruyama discretization:
+> 
+>$$ \hat Z_{t+\epsilon} = Z_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat Z_t) + \sqrt{2\epsilon}\sigma_t \xi_t, \quad \xi_i \sim \mathtt{Normal}(0, I), $$
+> 
 > as the step size $$\epsilon$$ goes to zero. This is how we typically solve SDEs in practice. 
 {: .definition}
 
@@ -97,14 +97,36 @@ Fully simulating Langevin dynamics would require a double-loop algorithm, where 
 In rectified flow, however, the trajectory is already close to $$\rho_t$$ at each time step $$t$$. Therefore, a single step of Langevin dynamics can be sufficient to reduce the drift. This allows us to directly integrate Langevin corrections into the rectified flow updates, yielding a combined stochastic differential equation (SDE):
 
 $$
-\mathrm{d}{Z}_t = \underbrace{v_t({Z}_t) \mathrm{d} t}_{\text{Rectified Flow}} + \underbrace{\sigma_t^2 \nabla \log \rho_t({Z}_t) \mathrm{d} t + \sqrt{2} \sigma_t \mathrm{d}W_t}_{\text{Langevin Dynamics}}, \quad \tilde{Z}_0 = Z_0. 
+\mathrm{d}{Z}_t 
+= \underbrace{v_t({Z}_t) \,\mathrm{d} t}_{\textcolor{blue}{\text{Rectified Flow}}}
++ \underbrace{\sigma_t^2 \nabla \log \rho_t({Z}_t)\,\mathrm{d} t
+   + \sqrt{2}\,\sigma_t\,\mathrm{d}W_t}_{\textcolor{red}{\text{Langevin Dynamics}}}
+,\quad
+\tilde{Z}_0 = Z_0.
 $$
 
 This combined SDE achieves two key objectives:
 
-1. The **rectified flow** drives the generative process forward as intended.
+<div class="l-body">
+  <figure id="figure-4" style="margin: 0em auto;">
+    <div style="display: flex; justify-content: center;">
+      <img
+        src="{{ 'assets/img/sde_velocity.png' | relative_url }}"
+        alt="velocity"
+        style="width: 25%; height: auto; margin-right: 5em;"
+      />
+      <img
+        src="{{ 'assets/img/sde_score.png' | relative_url }}"
+        alt="score funtion"
+        style="width: 25%; height: auto;"
+      />
+    </div>
+  </figure>
+</div>
 
-2. The **Langevin component** acts as a negative feedback loop, correcting distributional drift without bias when $$\tilde{Z}_t$$ and $$\rho_t$$ are well aligned.
+1. The **<span style="color:blue;">rectified flow</span>** drives the generative process forward as intended.
+
+2. The **<span style="color:red;">Langevin component</span>** acts as a negative feedback loop, correcting distributional drift without bias when $$\tilde{Z}_t$$ and $$\rho_t$$ are well aligned.
 
 When the simulation is accurate, Langevin dynamics naturally remain in equilibrium, avoiding unnecessary changes to the distribution. However, if deviations occur, this mechanism guides the estimate back on track, enhancing the robustness of the inference process.
 
@@ -120,7 +142,7 @@ When the simulation is accurate, Langevin dynamics naturally remain in equilibri
       </div>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-      Illustration of the score function \(\nabla \log \rho_t\) along the SDE trajectories. We can see that \(\nabla \log \rho_t\) points toward high-density regions, and hence can guid trajectories back to areas of higher probability whenever deviations occur.
+      Illustration of the (normalized) score function \(\nabla \log \rho_t\) along the SDE trajectories. We can see that \(\nabla \log \rho_t\) points toward high-density regions, and hence can guid trajectories back to areas of higher probability whenever deviations occur.
     </figcaption>
   </figure>
 </div>
@@ -131,13 +153,13 @@ When the simulation is accurate, Langevin dynamics naturally remain in equilibri
       <iframe src="{{ 'assets/plotly/diffusion_deterministic_single.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="350px" 
-              width="48%"></iframe>
+              height="300px" 
+              width="45%"></iframe>
       <iframe src="{{ 'assets/plotly/diffusion_stochastic_single.html' | relative_url }}" 
               frameborder="0" 
               scrolling="no" 
-              height="350px" 
-              width="48%"></iframe>
+              height="300px" 
+              width="45%"></iframe>
     </div>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
@@ -237,6 +259,10 @@ Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score funct
 
 > **Role of Noise.** the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
 {: .theorem}
+
+<div class="l-gutter">
+  <img src="/assets/img/sde_turn_off_noise.png" style="max-width:100%" />
+</div>
 
 In the context of text-to-image generation, this over-concentration effect often produces overly smoothed images, which may appear cartoonish. Such over-smoothing eliminates fine details and high-frequency variations, resulting in outputs with a blurred appearance. The figure below illustrates these differences: samples generated using the Euler sampler exhibit more high-frequency details, as seen in the texture of the parrot's feathers and the structure of the smoke.
 
