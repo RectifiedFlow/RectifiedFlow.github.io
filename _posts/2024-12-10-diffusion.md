@@ -49,13 +49,13 @@ toc:
 ## Overview
 Rectified flow (RF) yields a deterministic ODE (a.k.a. flow) model, of the form $$\mathrm d Z_t = v_t(Z_t)\mathrm d t$$, which generates the data $$Z_1$$ starting from an initial noise $$Z_0$$. This approach offers a simplification compared to diffusion models that use a stochastic differential equation (SDE) to generate data from noise, such as DDPM and score-based models. 
 
-However, the boundary between flow and diffusion models has been known to be blurry since the work of DDIM and probability-flow ODEs, which showed that it is possible to convert SDEs to ODEs during the post-training phase, without requiring re-training of the model. Now starting from the ODE models, it is also possible to revert the process and convert the RF ODE to SDEs to obtain stochastic samplers at inference time. Several questions arises:  
+However, the boundary between flow and diffusion models has been known to be blurred since the work of DDIM and probability-flow ODEs, which showed that it is possible to convert SDEs to ODEs during the post-training phase, without requiring re-training of the model. Now starting from the ODE models, it is also possible to revert the process and convert the RF ODE to SDEs to obtain stochastic samplers at inference time. Several questions arises:  
 
 1. *Why and how is it possible to convert between SDEs and ODEs? What is the intuition?*
 
 2. *Why would we bother to add diffusion noise given that ODEs are simpler and faster? What are the pros and cons of diffusion vs. flow?*
 
-This blog explores these questions. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
+This blog post explores these questions. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
 
 
 ## Stochastic Samplers = RF + Langevin
@@ -65,7 +65,7 @@ The velocity field is given by $$v_t(z) = \mathbb{E}[\dot{X}_t \mid X_t = z],$$ 
 
 The key property of RF ODE is the *marginal preserving property*: the distribution of $$Z_t$$ on the ODE trajectory matches the distribution of $$X_t$$ on the interpolation path at each time $$t$$. This is ensured by the construction of the velocity field $$v_t$$ in an inductive way: if the distributions of $$X_t$$ and $$Z_t$$ match up to a given time, the construction of $$v_t$$ ensures they will continue to match at the next (infinitesimal) step. As a result, the final output $$Z_1$$ of the ODE follows the same distribution as $$X_1$$, the target data distribution. By being "scheduled to do the right thing at the right time," the process guarantees the correct final result.
 
-An obvious problem with this is that errors can accumulate over time in practice as we solve the ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. These errors arise from both model approximations and numerical discretization, causing drift between the estimated distribution and the true distribution. The issue can compound: if the estimated trajectory $$\hat{Z}_t$$ deviates significantly from the distribution of $$X_t$$, the update direction $$v_t(\hat{Z}_t)$$ becomes less accurate and hence reinforces the error. 
+However, one challenge is that errors can accumulate over time in practice as we solve the ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t$$. These errors arise from both model approximations and numerical discretization, causing drift between the estimated distribution and the true distribution. The issue can compound: if the estimated trajectory $$\hat{Z}_t$$ deviates significantly from the distribution of $$X_t$$, the update direction $$v_t(\hat{Z}_t)$$ becomes less accurate and hence reinforces the error. 
 
 To address this problem, we may introduce a **feedback mechanism** to correct the error. One such approach is to use Langevin dynamics. 
 
@@ -77,7 +77,7 @@ To address this problem, we may introduce a **feedback mechanism** to correct th
 > 
 >This is an SDE driven by a noise source $$\{W_t\}$$, which is assumed to be a Brownian motion. Simulating Langevin dynamics allows us to draw approximate samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ under mild conditions. 
 > 
->We do not need to know much about the theory of SDE at this point. The only thing to note that it is the continuous-time limit of the Euler-Maruyama discretization:
+>We do not need to delve deep into SDE theory here. The only thing to note that the SDE is the continuous-time limit of the Euler-Maruyama discretization:
 > 
 >$$ \hat Z_{t+\epsilon} = Z_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat Z_t) + \sqrt{2\epsilon}\sigma_t \xi_t, \quad \xi_i \sim \mathtt{Normal}(0, I), $$
 > 
@@ -108,7 +108,7 @@ $$
 This combined SDE achieves two key objectives:
 
 <div class="l-body">
-  <figure id="figure-4" style="margin: 0em auto;">
+  <figure id="figure-0" style="margin: 0em auto;">
     <div style="display: flex; justify-content: center;">
       <img
         src="{{ 'assets/img/sde_velocity.png' | relative_url }}"
@@ -142,7 +142,7 @@ When the simulation is accurate, Langevin dynamics naturally remain in equilibri
       </div>
     <figcaption>
       <a href="#figure-1">Figure 1</a>.
-      Illustration of the (normalized) score function \(\nabla \log \rho_t\) along the SDE trajectories. We can see that \(\nabla \log \rho_t\) points toward high-density regions, and hence can guid trajectories back to areas of higher probability whenever deviations occur.
+      Illustration of the (normalized) score function \(\nabla \log \rho_t\) along the SDE trajectories. We can see that \(\nabla \log \rho_t\) points toward high-density regions, and hence can guide trajectories back to areas of higher probability whenever deviations occur.
     </figcaption>
   </figure>
 </div>
@@ -169,7 +169,7 @@ When the simulation is accurate, Langevin dynamics naturally remain in equilibri
 </div>
 
 This correction mechanism seems to have effect on state-of-the-art text-to-image generation as well.
-In this [recent work](https://arxiv.org/abs/2411.19415)<d-cite key="hu2024amo"></d-cite>, we find that stochastic samplers improves the text rendering qualities over deterministic samplers on SOTA models such as Flux -- it allows makes generated images better reflect the text in the prompt. The figure below highlights this improvement: on the left, applying the stochastic sampler to the Flux model consistently outperforms the deterministic Euler sampler in text rendering performance across all step sizes. On the right, we present qualitative examples showcasing the enhanced text rendering quality achieved with the stochastic sampler.
+In this [recent work](https://arxiv.org/abs/2411.19415)<d-cite key="hu2024amo"></d-cite>, we find that stochastic samplers improve the text rendering quality over deterministic samplers on SOTA models such as Flux -- it also makes generated images better reflect the text in the prompt. The figure below highlights this improvement: on the left, applying the stochastic sampler to the Flux model consistently outperforms the deterministic Euler sampler in text rendering performance across all step sizes. On the right, we present qualitative examples showcasing the enhanced text rendering quality achieved with the stochastic sampler.
 
 
 <div class="l-body">
@@ -247,7 +247,7 @@ This is indeed the case in practice. As shown in the figure below, when we incre
   </figure>
 </div>
 
-So, larger diffusion yields more concentrate results?! This is rather counter-intuitive. Why is it the case? 
+So, larger diffusion yields more concentrated results?! This appears counterintuitive at first glance. Why does this happen?
 
 To see this, assume the estimated velocity field is $$\hat v_t \approx v_t$$. The resulting estimated score function from Tweedie's formula is 
 

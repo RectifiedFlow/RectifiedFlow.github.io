@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: "Curved × Curved = Straight: DDIM is Straight RF" 
-description: The discretized inference scheme of DDIM corresponds to a curved Euler method on curved trajectories, and is equivalent to the vanilla Euler method applied to straight rectified flow. But the later is simpler...
+description: The discretized inference scheme of DDIM corresponds to a curved Euler method on curved trajectories, and is equivalent to the vanilla Euler method applied to straight rectified flow. But the latter is simpler...
 tags: tutorial
 giscus_comments: true
 date: 2024-12-10 11:00:00
@@ -57,7 +57,9 @@ where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alp
 
 What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?
 
-In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. Additionally, we present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
+In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. We also present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
+
+We now introduce a discrete sampling method that is aligned with the interpolation’s scheme, referred to as the natural Euler sampler.
 
 
 ## Natural Euler Samplers 
@@ -72,7 +74,7 @@ $$
 
 which yields a discrete trajectory $$\{\hat{Z}_{t_i}\}_i$$ composed of piecewise straight segments.
 
-The piecewise straight approximation is natural for rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$. However, for a *curved* interpolation, it may be natural to approximates each step by a locally curved segment aligned with the corresponding interpolation process. 
+The piecewise straight approximation is natural for rectified flows induced from straight-line interpolation, $$X_t = t X_1 + (1-t)X_0$$. However, for a *curved* interpolation, it may be natural to approximate each step by a locally curved segment aligned with the corresponding interpolation process. 
 
 <div class="l-body">
   <figure id="figure-1" style="margin: 1em auto;">
@@ -127,7 +129,7 @@ For affine interpolations, $$X_t = \alpha_t X_1 + \beta_t X_0$$, Equation (2) re
 
 $$
 \hat{Z}_{t} =\alpha_t\hat{X}_{1 \mid t} + \beta_t \hat{X}_{0 \mid t}, \quad
-v_t(\hat{Z}_{t}) =\dot{\alpha}_t\hat{X}_{1 \mid t} + \dot{\beta}_t \hat{X}_{0 \mid t}. 
+v_t(\hat{Z}_{t}) =\dot{\alpha}_t\hat{X}_{1 \mid t} + \dot{\beta}_t \hat{X}_{0 \mid t}.
 $$
 
 This gives 
@@ -139,7 +141,7 @@ $$
 
 Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields Equation (1). 
 
-In our code base, equations invovled in affine interpolations are automatically solved with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivaton using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
+In our code base, equations invovled in affine interpolations are automatically solved with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivation using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
 
 Here, we show the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
@@ -164,7 +166,7 @@ Here, we show the DDIM inference rule (1) can be viewed as a natural Euler metho
 > \frac{\hat{z}_{t+\epsilon}}{\alpha_{t+\epsilon}} = \frac{\hat{z}_t}{\alpha_t} + \left( \frac{\beta_{t+\epsilon}}{\alpha_{t+\epsilon}} - \frac{\beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{z}_t),
 > $$
 >
-> which precisely matches Equation 13 of <d-cite key="song2020denoising"></d-cite>.
+> which precisely matches Equation (13) of <d-cite key="song2020denoising"></d-cite>.
 >
 >
 {: .example}
@@ -180,11 +182,11 @@ Here, we show the DDIM inference rule (1) can be viewed as a natural Euler metho
 >
 {: .example}
 
-
+We next demonstrate that the discrete natural Euler sampler preserves the pointwise transforms that relate different interpolations.
 
 ## Equivalence of Natural Euler Trajectories
 
-A key feature of natural Euler sampling is that it *preserves* pointwise equivalences across different interpolation processes. In other words, if two interpolations $$\{X_t\}$$ and $$\{X_t'\}$$ are related by a pointwise transform, then their corresponding **discrete** trajectories under natural Euler remain related by the *same* transform—provided the time grids are properly scaled.
+A key feature of natural Euler sampling is that it *preserves* pointwise equivalences which we established in the continuous-time case. In other words, if two interpolations $$\{X_t\}$$ and $$\{X_t'\}$$ are related by a pointwise transform, then their corresponding **discrete** trajectories under natural Euler remain related by the *same* transform—provided the time grids are properly scaled.
 
 > **Theorem 1. Equivalence of Natural Euler Trajectories**
 >
@@ -250,4 +252,3 @@ Below, we compare two equivalent RFs: one induced by straight interpolation and 
     </figcaption>
   </figure>
 </div>
-
