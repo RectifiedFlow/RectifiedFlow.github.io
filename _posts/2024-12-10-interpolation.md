@@ -273,8 +273,8 @@ Combining Proposition 1 with Theorem 1, we have:
     <iframe src="{{ '/assets/plotly/interp_convert_200step.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
-            height="530px" 
-            width="100%">
+            height="430px" 
+            width="75%">
     </iframe>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
@@ -282,9 +282,6 @@ We first train a rectified flow using straight interpolation, and then transform
     </figcaption>
   </figure>
 </div>
-
-
-
 
 ### Implication on Inference
 
@@ -308,10 +305,11 @@ The trajectories of the RF derived from different affine interpolations can be v
     </div>
     <figcaption>
       <a href="#figure-4">Figure 4</a>.
-      Different results when the number of Euler steps is reduced to 4.
+      Different final generated samples when the number of Euler steps is reduced to 4.
     </figcaption>
   </figure>
 </div>
+
 
 
 
@@ -431,8 +429,8 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
     <iframe src="{{ '/assets/plotly/interp_convert_double_rf.html' | relative_url }}" 
             frameborder="0" 
             scrolling="no" 
-            height="530px" 
-            width="100%">
+            height="430px" 
+            width="75%">
     </iframe>
     <figcaption>
       <a href="#figure-6">Figure 6</a>.
