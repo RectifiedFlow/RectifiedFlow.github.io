@@ -245,7 +245,7 @@ In practice, we can determine $$\tau_t$$ numerically—e.g., via a [binary searc
     </div>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      The \(\tau\) and \(\omega\) transformations that convert DDIM to spherical interpolation (left) and convert straight interpolation to spherical (right). When converting DDIM to spherical, \(\omega_t\) remains fixed at 1, because only the time scaling changes.
+      The transforms \(\tau\) and \(\omega\) in Equation (2) that convert DDIM to spherical interpolation (left) and convert straight interpolation to spherical (right). When converting DDIM to spherical, \(\omega_t\) remains fixed at 1, because only the time scaling changes.
     </figcaption>
   </figure>
 </div>
@@ -298,16 +298,16 @@ Combining Proposition 1 with Theorem 1, we have:
     </iframe>
     <figcaption>
       <a href="#figure-3">Figure 3</a>.
-We first train a rectified flow using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation produces different ODE trajectories, both ultimately converge to the same endpoint \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
+We first train a rectified flow using straight interpolation, and then transform it into the RF of spherical interpolation by applying the transformation formula described above. While the transformation results in different ODE trajectories, both ultimately converge to the same endpoints \(Z_1\), as predicted by Proposition 2. The result is obtained by solving the ODE using 100 Euler steps.      
     </figcaption>
   </figure>
 </div>
 
 ### Implication on Inference
 
-The trajectories of the RF derived from different affine interpolations can be viewed as deformations of one another via time and space scaling. When the same numerical discretization methods, such as the Euler method, are applied to these differently deformed trajectories, they produce varying discretization errors, leading to different results. This difference becomes pronounced when a large step size is used, as it introduces significant discretization errors (see [Figure 4](#figure-4) for the results of the Euler method with 4 steps). However, the difference diminishes as the discretization becomes sufficiently fine to accurately approximate the underlying ODEs (as shown in [Figure 3](#figure-3) with 100 Euler steps). 
+The trajectories of the RF derived from different affine interpolations can be viewed as deformations of one another via time and space scaling. When the same numerical discretization methods, such as the Euler method, are applied to these differently deformed trajectories, they produce varying discretization errors, leading to numerically different estimations of $$Z_1$$ . This difference becomes pronounced when a large step size is used, as it introduces significant discretization errors; see [Figure 4](#figure-4) for an example of the Euler method with 4 steps. However, the difference diminishes as the discretization becomes sufficiently fine to accurately approximate the underlying ODEs (as shown in [Figure 3](#figure-3) with 100 Euler steps). 
 
-[Figure 5](#figure-5) illustrates how the difference in the inference results for the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
+[Figure 5](#figure-5) illustrates how the difference in the predicted outcome $$Z_1$$ of the RF ODEs corresponding to straight and spherical interpolation decreases as the number of Euler steps increases.
 
 <div class="l-body">
   <figure id="figure-4" style="margin: 0em auto;">
@@ -350,7 +350,7 @@ The trajectories of the RF derived from different affine interpolations can be v
 </div>
 In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, if "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
 
-Although it is challenging to predict the best inference interpolation scheme *a priori*, post-training conversion allows us to choose whichever scheme yields better sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, without worrying about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
+Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion above allows us to choose whichever scheme that yields best sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, without worrying about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
 
 
 ## Implications on Loss Functions
