@@ -55,15 +55,15 @@ Most diffusion and flow models can be analyzed through the rectified flow lens, 
 ## Overview 
 
 
-Given a coupling $$(X_0, X_1)$$ of the noise $$X_0 \sim \pi_0$$ and the data $$X_1 \sim \pi_1$$, in rectified flow, we first leverage an interpolation process $$X_t = \mathtt{I}_t(X_0, X_1)$$, $$t \in [0,1]$$, to smoothly connect $$X_0$$ and $$X_1$$. We then "causalize" or "rectify" the interpolation $$\{X_t\}$$ into its rectified flow, an ODE-based generative model of the form:
+Given a coupling $$(X_0, X_1)$$ of the noise $$X_0 \sim \pi_0$$ and data $$X_1 \sim \pi_1$$, in rectified flow, we leverage an interpolation process $$X_t = \mathtt{I}_t(X_0, X_1)$$, $$t \in [0,1]$$, to smoothly connect $$X_0$$ and $$X_1$$, and then "causalize" or "rectify" the interpolation $$\{X_t\}$$ into its rectified flow $$\{Z_t\} = \mathtt{Rectify}(\{X_t\})$$, an ODE-based generative model of the form:
 
 $$
 \mathrm{d}Z_t = v_t(Z_t)  \mathrm{d}t, \quad Z_0 = X_0, \quad  \text{with velocity field} \quad v_t(x) = \mathbb{E}[\dot{X}_t \mid X_t = x],
 $$
 
-where $$\dot{X}_t$$ denotes the time derivative of the process $$X_t$$.
+where $$\dot{X}_t$$ is the time derivative of $$X_t$$. This formulation of $$v_t$$ ensures that  $$Z_t$$ matches in distribution with $$X_t$$ at every time $$t$$. With this, we can generate data as $$Z_1$$ by evolving forward in time from noise $$Z_0$$.
 
-Intuitively, the rectified flow $$\{Z_t\}$$ "rewires" the trajectories of $$\{X_t\}$$ at their intersection points to produce non-intersecting ODE trajectories. These trajectories can be simulated forward in time starting from $$Z_0$$, while ensuring that the distribution of $$Z_t$$ matches that of $$X_t$$ at every time $$t$$. For further details, see [paper](https://arxiv.org/abs/2209.03003)<d-cite key="liu2022flow"></d-cite>, [blog](https://www.cs.utexas.edu/~lqiang/rectflow/html/intro.html), [blog](https://rectifiedflow.github.io/blog/2024/intro/).
+Intuitively, the rectified flow $$\{Z_t\}$$ "rewires" the trajectories of $$\{X_t\}$$ at their intersection points to produce non-intersecting ODE trajectories. For further details, see [paper](https://arxiv.org/abs/2209.03003)<d-cite key="liu2022flow"></d-cite>, [blog](https://www.cs.utexas.edu/~lqiang/rectflow/html/intro.html), [blog](https://rectifiedflow.github.io/blog/2024/intro/).
 
 
 In principle, any time-differentiable interpolation process $$\{X_t\}$$ that connects $$X_0$$ and $$X_1$$ can be used within this framework. Different methods employ different interpolation schemes. The simplest choice is the straight-line interpolation, defined as 
