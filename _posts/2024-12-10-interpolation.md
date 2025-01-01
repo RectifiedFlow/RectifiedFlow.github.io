@@ -107,11 +107,9 @@ This is a general and fundamental property of the rectification process and is n
   </figcaption>
 </figure>
 
+Notably, all affine interpolation processes \(X_t = \alpha_t X_1 + \beta_t X_0\) can be pointwisely transformed into one another through simple time and variable scaling. This suggests that, in principle, it is sufficient to use the simplest straight-line interpolation during training, while recovering the rectified flow for all affine interpolations at inference time.
 
-Notably, any two affine interpolation processes are pointwise transformable through simple time and variable scaling. As a result, it is sufficient in principle to use the simplest straight-line interpolation during training, while recovering the rectified flow of all affine interpolations at inference time.  
-
-
-The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
+This analytic relation allows us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on deformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
 
 
 ## Point-wisely Transformable Interpolations
