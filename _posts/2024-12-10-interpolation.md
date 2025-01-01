@@ -138,27 +138,35 @@ If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are p
 
 > **Theorem 1.** Suppose $$\{X_t\}$$ and $$\{X'_t\}$$ constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and are pointwise transformable. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
 >
-> Denote by $$\{v_t\}$$ and $$\{v'_t\}$$ their rectified flow velocity fields. Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be their rectified flows with $$\mathrm d Z_t = v_t(Z_t)\mathrm d t,Z_0 = X_0$$ and $$\mathrm d Z'_t = v'_t(Z'_t)\mathrm d t, Z'_0=X'_0.$$ Then:
+> Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be their rectified flows:
+> 
+> $$
+> \{Z_t\} = \mathtt{Rectify}(\{X_t\}),~~~~~~ \{Z_t\} = \mathtt{Rectify}(\{X_t\}). 
+> $$
 > 
 > 1. $$\{Z_t\},\{Z'_t\}$$ can be transformed with the same pointwise maps:
 > 
 >    $$
->    Z'_t = \phi_t(Z_{\tau_t}) \quad \text{for all } t \in [0,1].
+>    Z'_t = \phi_t(Z_{\tau_t}) \quad \forall t \in [0,1].
 >    $$
 >
 > 3. Their rectified couplings are the same: $$(Z_0, Z_1) = (Z'_0, Z'_1).$$
 > 
-> 4. The velocity fields satisfy:
+> 4. Let $$\{v_t\}$$ and $$\{v'_t\}$$ be the velocity fields of the rectified flows $$\{Z_t\}$$ and $$\{Z_t'\}$$, respectively. We have 
 > 
 >    $$
 >     v'_t(x) = \partial_t \phi_t(\phi_t^{-1}(x)) + \bigl(\nabla \phi_t(\phi_t^{-1}(x))\bigr)^\top v_{\tau_t}(\phi_t^{-1}(x)) \dot{\tau}_t. \tag{1}
 >    $$
 {: .theorem}
 
-This is equivalent to saying that the $$\texttt{Rectify}(\cdot)$$ map is **equivariant** under the pointwise transforms $$\texttt{Transform}:$$ 
+This is equivalent to saying that the $$\texttt{Rectify}(\cdot)$$ map is **equivariant** under the pointwise transforms $$\texttt{Transform}$$, while the the rectified coupling map $$(Z_0,Z_1) = \mathtt{RectifyCoupling}(\{X_t\})$$ is **equivalent**:  
 
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
+$$
+
+$$
+\texttt{RectifyCoupling}(\texttt{Transform}(\{X_t\})) = \texttt{RectifyCoupling}(\{X_t\}).
 $$
 
 <figure id="figure-1" style="margin: 0 auto 1em auto;">
