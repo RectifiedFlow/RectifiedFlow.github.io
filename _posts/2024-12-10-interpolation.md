@@ -355,13 +355,9 @@ Although it is challenging to predict the best inference interpolation scheme *a
 
 ## Implications on Loss Functions
 
-Suppose we have a parametric model $$v_t(x;\theta)$$ trained to approximate the RF velocity field $$v_t(x)$$ under a specific affine interpolation. After training, we can use the relationships derived above to convert this model into $$v'_t(x;\theta)$$, corresponding to a different affine interpolation, without retraining.
+Suppose we have a parametric model $$v_t(x;\theta)$$ trained to approximate the RF velocity field $$v_t(x)$$ under a specific affine interpolation. After training, we can use the relationships derived above to convert this model into $$v'_t(x;\theta)$$, corresponding to a different affine interpolation, without retraining. Some questions arise:  
 
-This leads to two related questions:  
-
-1) How does training with one interpolation differ from converting an RF trained with another interpolation?
-   
-2) Does post-training conversion between models degrade performance?  
+*How does training with one interpolation differ from converting an RF trained with another interpolation?* *Does post-training conversion between models degrade performance?*
 
 It turns out that choosing a different affine interpolation during training is equivalent to changing the **time-weighting** in the loss function and applying an affine transform to the model parameterization. As long as the transformations $$\omega_t$$ and $$\tau_t$$ are not highly singular, converting a model from one affine interpolation to another may not impact the performance dramatically.
 
