@@ -96,7 +96,7 @@ In this blog, we demonstrate that if two interpolation processes are *pointwise 
   <div style="display: flex; justify-content: center;">
     <img
       src="{{ 'assets/img/interpolation_conversion.gif' | relative_url }}"
-      alt="Lady Windermere's fan for illustration of error accumulation in Euler method trajectories."
+      alt="interpolation conversion gif"
       style="max-width: 600px; height: auto;"
     />
   </div>
@@ -105,6 +105,7 @@ In this blog, we demonstrate that if two interpolation processes are *pointwise 
     Pointwise transformable affine interpolations and their corresponding rectified flows.
   </figcaption>
 </figure>
+
 
 
 The analytic relation enables us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on transformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
@@ -158,6 +159,16 @@ This is equivalent to saying that the $$\texttt{Rectify}(\cdot)$$ map is **equiv
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
 $$
+
+<figure id="figure-1" style="margin: 0 auto 1em auto;">
+  <div style="display: flex; justify-content: center;">
+    <img
+      src="{{ 'assets/img/interpolation_conversion_illustration.svg' | relative_url }}"
+      alt="interpolation conversion illustration"
+      style="max-width: 600px; height: auto;"
+    />
+  </div>
+</figure>
 
 ###  Affine Interpolations are Pointwise Transformable
 
