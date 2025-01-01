@@ -350,7 +350,7 @@ The trajectories of the RF derived from different affine interpolations can be v
 </div>
 In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, if "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
 
-Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion above allows us to choose whichever scheme that yields best sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, without worrying about which interpolation scheme it corresponds to. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
+Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion above allows us to choose whichever scheme that yields best sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, *without worrying about which interpolation scheme it corresponds to*. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
 
 
 ## Implications on Loss Functions
