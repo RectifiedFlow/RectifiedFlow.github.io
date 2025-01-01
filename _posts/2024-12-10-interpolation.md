@@ -89,7 +89,7 @@ At first glance, it may appear that the interpolation process must be chosen dur
 
 As it turns out, if two interpolation processes can be **deformed** into each other with a differentiable pointwise transform (i.e., they are diffeomorphic in mathy terms), then the trajectories of their rectified flows can also be deformed into each other using the very same transforms. In addition, if the two processes are constructed from the same couplings, then their rectified flows lead to the same rectified coupling $$(Z_0, Z_1).$$
 
-*Why is this true?* The intuition is illustrated in Figure 1. Recall that the trajectories of the rectified flow (RF) are simply a "rewiring" of the interpolation trajectories at their intersection points to avoid crossings. As a result, the RF trajectories occupy the same "trace" as the interpolation process. Consequently, any deformation applied to the interpolation process is inherited by the rectified flow. 
+*Why is this true?* The intuition is illustrated in Figure 1. The trajectories of the rectified flow (RF) are simply a "rewiring" of the interpolation trajectories at their intersection points to avoid crossings. As a result, they occupy the same "trace" as the interpolation process, even though they switch between different trajectories at intersection points. Consequently, any deformation applied to the interpolation trajectories is inherited by the rectified flow trajectories. The deformation must be **point-to-point** here to make it insenstive to the rewiring of the trajectories. 
 
 This is a general and fundamental property of the rectification process and is not restricted to specific distributions, couplings, or interpolations.
 
