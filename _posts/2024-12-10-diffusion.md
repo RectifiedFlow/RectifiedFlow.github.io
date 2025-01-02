@@ -73,7 +73,7 @@ To address this problem, we may introduce a **feedback mechanism** to correct th
 > 
 > $$ \hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat{Z}_t) + \sqrt{2\epsilon}\sigma_t \xi_t, \quad \xi_i \sim \mathtt{Normal}(0, I), $$
 > 
-> where $$\sigma_t$$ is a diffusion coefficient, and $$\epsilon>0$$ is a step size. It is the gradient descent trajectory perturbed by Gaussian noise of variance $$\epsilon$$ at each step. Langevin dynamics is useful as an approximate method to draw samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ and $$\epsilon\to 0$$ under regularity conditions. 
+> where $$\sigma_t$$ is a diffusion coefficient, and $$\epsilon>0$$ is a step size. It is the gradient descent trajectory of the log probability $$\log \rho^*$$ perturbed by Gaussian noise of variance $$\epsilon$$ at each step. Langevin dynamics is useful as an approximate method to draw samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ and $$\epsilon\to 0$$ under regularity conditions. 
 >
 > When the step size $$\epsilon$$ approaches to zero, its continous-time limit is written as stochastic differential equation (SDE): 
 > 
@@ -94,7 +94,8 @@ $$
 \mathrm{d} Z_{t, \tau} = \sigma_t^2 \nabla \log \rho_t(Z_{t, \tau}) \, \mathrm{d} \tau + \sqrt{2} \, \sigma_t \, \mathrm{d} W_\tau, \quad \tau \geq 0,
 $$
 
-where $$\tau$$ is a new time scale introduced for the Langevin dynamics, $$\sigma_t$$ controls the noise level, and $$\nabla \log \rho_t$$ adjusts the drift to steer the distribution toward high-probability regions of $$\rho_t$$. It is well known that Langevin dynamics converge to the target distribution as $$\tau \to \infty$$.
+where $$\tau$$ is a new time scale introduced for the Langevin dynamics. 
+
 
 Fully simulating Langevin dynamics would require a double-loop algorithm, where the system must be simulated to equilibrium ($$\tau\to\infty$$) at each time $$t$$ before moving to the next time point.  
 
