@@ -55,7 +55,7 @@ $$
 
 where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ that DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
 
-*What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?*
+**Question**: *What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?*
 
 In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. We also present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
 
