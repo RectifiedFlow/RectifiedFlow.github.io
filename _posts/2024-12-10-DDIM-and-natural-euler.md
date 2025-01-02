@@ -199,13 +199,11 @@ A key feature of natural Euler sampling is that it *preserves* pointwise equival
 >
 {: .theorem}
 
-Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote a pointwise transformation between two interpolations, and let $$\{\hat{Z}_{t_i}\}=\texttt{NaturalEulerRF}(\{X_t\})$$ be the natural Euler trajectory, and  $$\hat{Z}_1=\ texttt{NaturalEulerRFZ}_1(\{X_t\})$$ the resulting final prediction of $$Z_1$$. Then:
+Let $$\{X_t'\} = \texttt{Transform}(\{X_t\})$$ denote a pointwise transformation between two interpolations, and $$\{\hat{Z}_{t_i}\}=\texttt{NaturalEulerRF}(\{X_t\})$$ be the natural Euler trajectory, and  $$\hat{Z}_1=\texttt{NaturalEulerRFZ}_1(\{X_t\})$$ the resulting final prediction of $$Z_1$$. Then $$\texttt{NaturalEulerRF}$$ is equivariant under $$\texttt{Transform}$$, while $$\texttt{NaturalEulerRFZ}_1$$ is equivalent: 
 
 $$
 \texttt{NaturalEulerRF}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{NaturalEulerRF}(\{X_t\})),
 $$
-
-and 
 
 $$
 \texttt{NaturalEulerRFZ}_1(\texttt{Transform}(\{X_t\})) =\texttt{NaturalEulerRFZ}_1(\{X_t\}).
@@ -219,7 +217,7 @@ $$
 
 where $$\tau_t$$ and $$\omega_t$$ solve $$\frac{\alpha_{\tau_t}}{\beta_{\tau_t}} = \frac{\alpha'_t}{\beta'_t},$$ and $$\omega_t = \frac{\alpha_{\tau_t}}{\alpha'_t} = \frac{\beta_{\tau_t}}{\beta'_t}.$$ 
 
-Therefore, the natural Euler samplers (including DDIM) on the RF of all affine interpolations are equivalent upto the transform and time scaling. In particular, they are equivalent to the **vanilla (straight) Euler sampler on the RF of the straight interpolation**. 
+Therefore, the natural Euler samplers (including DDIM) on the RF of affine interpolations are equivalent to one another upto the transform and time scaling. In particular, they are equivalent to the **vanilla (straight) Euler sampler on the RF of the straight interpolation**. 
 
 > **Example 3. Equivalence of Straight Euler and DDIM sampler**
 >
