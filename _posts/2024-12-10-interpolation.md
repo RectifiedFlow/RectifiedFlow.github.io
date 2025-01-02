@@ -61,9 +61,7 @@ $$
 \mathrm{d}Z_t = v_t(Z_t)  \mathrm{d}t, \quad Z_0 = X_0, \quad  \text{with velocity field} \quad v_t(x) = \mathbb{E}[\dot{X}_t \mid X_t = x],
 $$
 
-where $$\dot{X}_t$$ is the time derivative of $$X_t$$. This formulation of $$v_t$$ ensures that  $$Z_t$$ matches in distribution with $$X_t$$ at every time $$t$$. With this, we can generate data as $$Z_1$$ by evolving forward in time from noise $$Z_0$$.
-
-Intuitively, the rectified flow $$\{Z_t\}$$ "rewires" the trajectories of $$\{X_t\}$$ at their intersection points to produce non-intersecting ODE trajectories. For further details, see [paper](https://arxiv.org/abs/2209.03003)<d-cite key="liu2022flow"></d-cite>, [blog](https://www.cs.utexas.edu/~lqiang/rectflow/html/intro.html), [blog](https://rectifiedflow.github.io/blog/2024/intro/).
+where $$\dot{X}_t$$ is the time derivative of $$X_t$$. This formulation of $$v_t$$ ensures that  $$Z_t$$ matches in distribution with $$X_t$$ at every time $$t$$. With this, we can generate data as $$Z_1$$ by evolving forward in time from noise $$Z_0$$. Intuitively, the rectified flow $$\{Z_t\}$$ "rewires" the trajectories of $$\{X_t\}$$ at their intersection points to produce non-intersecting ODE trajectories. For further details, see [paper](https://arxiv.org/abs/2209.03003)<d-cite key="liu2022flow"></d-cite>, [blog](https://www.cs.utexas.edu/~lqiang/rectflow/html/intro.html), [blog](https://rectifiedflow.github.io/blog/2024/intro/).
 
 
 In principle, any time-differentiable interpolation process $$\{X_t\}$$ that connects $$X_0$$ and $$X_1$$ can be used within this framework. Different methods employ different interpolation schemes. The simplest choice is the straight-line interpolation, defined as 
@@ -87,7 +85,7 @@ where $$\alpha_t$$ and $$\beta_t$$ are chosen in different ways depending on the
 
 At first glance, it may appear that the interpolation process must be chosen during the training phase, as it directly affects the learned rectified flow. However, this is not necessarily the case. 
 
-As it turns out, if two interpolation processes can be **deformed** into each other with a differentiable pointwise transform (i.e., they are diffeomorphic in mathy terms), then the trajectories of their rectified flows can also be deformed into each other using the very same transforms. In addition, if the two processes are constructed from the same couplings, then their rectified flows lead to the same rectified coupling $$(Z_0, Z_1).$$
+As it turns out, if two interpolation processes can be **deformed** into each other with a differentiable pointwise transform (i.e., they are diffeomorphic in mathy terms), then the trajectories of their rectified flows can also be deformed into each other using **the very same transform**. In addition, if the two processes are constructed from the same couplings, then their rectified flows lead to the same rectified coupling $$(Z_0, Z_1).$$
 
 *Why is this true?* The intuition is illustrated in Figure 1. The trajectories of the rectified flow (RF) are simply a "rewiring" of the interpolation trajectories at their intersection points to avoid crossings. As a result, they occupy the same "trace" as the interpolation process, even though they switch between different trajectories at intersection points. Consequently, any deformation applied to the interpolation trajectories is inherited by the rectified flow trajectories. The deformation must be **point-to-point** here to make it insenstive to the rewiring of the trajectories. 
 
@@ -103,11 +101,11 @@ This is a general and fundamental property of the rectification process and is n
   </div>
   <figcaption>
     <a href="#figure-1">Figure 1</a>.
-    Pointwise transformable affine interpolations and their corresponding rectified flows.
+    Rectified flow (right) rewires the interpolation trajectories (left) to avoid crossing. When a deformation is applied on the interpolation trajectories, the trajectories of the corresponding rectified flow is deformed in the same way. 
   </figcaption>
 </figure>
 
-Notably, all affine interpolation processes \(X_t = \alpha_t X_1 + \beta_t X_0\) can be pointwisely transformed into one another through simple time and variable scaling. This suggests that, in principle, it is sufficient to use the simplest straight-line interpolation during training, while recovering the rectified flow for all affine interpolations at inference time.
+Notably, all affine interpolation processes $$X_t = \alpha_t X_1 + \beta_t X_0$$ can be pointwisely transformed into one another through simple time and variable scaling. This suggests that, in principle, it is sufficient to use the simplest straight-line interpolation during training, while recovering the rectified flow for all affine interpolations at inference time.
 
 This analytic relation allows us to analyze the impact of training and inference under different interpolations. For training, using different affine interpolations corresponds to applying time weightings in the training loss. We analyze this for the common straight-line and cosine interpolations and find that it appears to have limited impact on performance. For inference, using different interpolations corresponds to applying numerical discretization on deformed ODE trajectories, which is discussed in depth in this [blog](https://rectifiedflow.github.io/blog/2024/discretization/).  
 
@@ -133,7 +131,7 @@ We first formalize *pointwise transformability* between two interpolation proces
   <img src="/assets/img/interpolation/interpolation.svg" style="max-width:100%;" />
 </div>
 
-If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
+If two interpolations are contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
 
 
 > **Theorem 1.** Suppose $$\{X_t\}$$ and $$\{X'_t\}$$ constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and are pointwise transformable. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
@@ -159,10 +157,10 @@ If two interpolations contructed from the same coupling $$(X_0, X_1)$$ and are p
 >    $$
 {: .theorem}
 
-This is equivalent to saying that the $$\texttt{Rectify}(\cdot)$$ map is **equivariant** under the pointwise transforms $$\texttt{Transform}$$, while the the rectified coupling map $$(Z_0,Z_1) = \mathtt{RectifyCoupling}(\{X_t\})$$ is **equivalent**:  
+This is equivalent to saying that the $$\{Z_t\} = \texttt{Rectify}(\{X_t\})$$ map is **equivariant** under the pointwise transforms $$\{X_t'\}=\texttt{Transform}(\{X_t\})$$, while the the rectified coupling map $$(Z_0,Z_1) = \mathtt{RectifyCoupling}(\{X_t\})$$ is **equivalent**:  
 
 $$
-\texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})).
+\texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})), 
 $$
 
 $$
@@ -199,7 +197,7 @@ Many commonly used interpolation schemes are affine $X_t = \alpha_t X_1 + \beta_
    
    which traces a shortest great-circle arc on a sphere at constant speed.
    
-3. ***DDIM interpolation*** <d-cite key="song2020denoising"></d-cite> A spherical interpolation satisfying $$\alpha_t^2 + \beta_t^2 = 1$$ but with a non-uniform speed defined by $\alpha_t$:
+3. ***DDPM/DDIM interpolation*** <d-cite key="song2020denoising"></d-cite> A spherical interpolation satisfying $$\alpha_t^2 + \beta_t^2 = 1$$ but with a non-uniform speed defined by $\alpha_t$:
 
    $$
    X_t = \alpha_t X_1 + \sqrt{1-\alpha_t^2} X_0,
@@ -275,7 +273,7 @@ Combining Proposition 1 with Theorem 1, we have:
 
 > **Example 1. Velocity from Straight to Affine**
 >
-> For the straight interpolation $$X_t=tX_1 + (1-t)X_0$$ with $$\alpha_t=t$$ and $$\beta_t=1-t$$. Convert it into another affine interpolation $$X'_t = \alpha'_t X_1 + \beta'_t X_0$$ gives:
+> Converting the straight interpolation $$X_t=tX_1 + (1-t)X_0$$ with $$\alpha_t=t$$ and $$\beta_t=1-t$$ into another affine interpolation $$X'_t = \alpha'_t X_1 + \beta'_t X_0$$ gives:
 >
 > $$
 > \tau_t = \frac{\alpha'_t}{\alpha'_t + \beta_t'}, \quad \omega_t = \frac{1}{\alpha_t' + \beta_t'}.
