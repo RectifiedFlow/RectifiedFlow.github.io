@@ -53,18 +53,16 @@ $$
 \hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t),  \tag{1}
 $$
 
-where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
+where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ that DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
 
-What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?
+*What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?*
 
 In this blog, we show that the DDIM inference is an instance of *natural Euler samplers*, which locally approximate ODEs using curved segments derived from the interpolation schemes employed during training. We also present a discrete-time extension of the equivariance result between pointwise transformable interpolations from [blog](https://rectifiedflow.github.io/blog/2024/interpolation/), showing that the natural Euler samplers of all affine interpolations are equivariant and produce (numerically) identical final outputs. Consequently, DDIM is, in fact, equivalent to the vanilla Euler method applied to a straight-line rectified flow.
-
-We now introduce a discrete sampling method that is aligned with the interpolation’s scheme, referred to as the natural Euler sampler.
 
 
 ## Natural Euler Samplers 
 
-Rectified flow learns an ordinary differential equation (ODE) of the form $$\mathrm{d} Z_t = v_t(Z_t; \theta) \,\mathrm{d} t$$ by matching its velocity field $$v_t(x)$$ to the expected slope $$\mathbb{E}[\dot X_t  \mid X_t=x]$$ of an interpolation process $$\{X_t\}$$ that connects the noise $$X_0$$ and data $$X_1$$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ are pointwise transformable to one another and induce equivalent rectified flows with the same noise-data coupling.
+Rectified flow learns an ordinary differential equation (ODE) of the form $$\mathrm{d} Z_t = v_t(Z_t; \theta) \,\mathrm{d} t$$ by matching its velocity field $$v_t(x)$$ to the expected slope $$\mathbb{E}[\dot X_t  \mid X_t=x]$$ of an interpolation process $$\{X_t\}$$ that connects the noise $$X_0$$ and data $$X_1$$. As discussed in a [previous blog](../interpolation/#affine-interpolations-are-pointwise-transformable), different affine interpolations $$X_t = \alpha_t X_1 + \beta_t X_0$$ are pointwise transformable to one another and induce equivariant rectified flows with the same noise-data coupling.
 
 In practice, continuous-time ODEs must be solved numerically, with **discrete solvers**. A common approach is the Euler method, which approximates the flow $$\{Z_t\}$$ on a discrete time grid $$\{t_i\}$$ by:
 
@@ -97,15 +95,13 @@ The piecewise straight approximation is natural for rectified flows induced from
   </figure>
 </div>
 
-Specifically, given a general interpolation scheme $$X_t= \mathtt{I}_t(X_0, X_1)$$, we update trajectory along a curve segment defined by $$\mathtt{I}$$:
+Specifically, given a general interpolation scheme $$X_t= \mathtt{I}_t(X_0, X_1)$$, we update the trajectory along a curve segment defined by $$\mathtt{I}$$:
 
 $$
 \hat{Z}_{t_{i+1}} = \mathtt{I}_{t_{i+1}}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i}),
 $$
 
-where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by  identifying the *unique interpolation curve* that passes through $$\hat{Z}_{t_i}$$. This curve has slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{
-Z}_{t_i})$$. In other words, $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are the solutions of the following equation: 
-
+where $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are determined by  identifying the  interpolation curve that passes through $$\hat{Z}_{t_i}$$ with the slope $$\partial_t \mathtt{I}_{t_i}(\hat{X}_{0 \mid t_i}, \hat{X}_{1 \mid t_i})$$ matching $$v_{t_i}(\hat{Z}_{t_i})$$. In other words, $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ are the solutions of the following equation: 
 
 $$
 \begin{cases}
@@ -114,14 +110,14 @@ v_t(\hat{Z}_{t_i}) = \partial_t \mathtt{I}_{t_{i}}(\hat{X}_{0 \mid t_i}, \hat{X}
 \end{cases}
 $$
 
+<!--We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ to find the interpolation curve, then *advance* one step along this curve to compute $$\hat{Z}_{t_{i+1}}$$. --> 
 
-We first solve for $$\hat{X}_{0 \mid t_i}$$ and $$\hat{X}_{1 \mid t_i}$$ to find the interpolation curve $$\texttt {I}$$, then *advance* one step along this curve to compute $$\hat{Z}_{t_{i+1}}$$.
+We refer to this method as the **natural Euler sampler**.
 
 <div class="l-gutter">
   <img src="/assets/img/natural_euler.svg" style="max-width:200%" />
 </div>
 
-We refer to this method as the **natural Euler sampler**.
 
 ### Natural Euler Samplers for Affine Interpolations
 
@@ -139,31 +135,40 @@ $$
  \hat X_{1|t} =  \frac{\beta_t v_t(\hat Z_t) - \dot \beta_t  \hat Z_t}{\dot \alpha_t \beta_t - \alpha_t \dot \beta_t }.
 $$
 
-Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields Equation (1). 
+Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields the update rule in Equation (1).  
 
-In our code base, equations invovled in affine interpolations are automatically solved with a [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which allows us to implement methods like natural Euler samplers without hand derivation using a few lines of [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
+It might be tedious to mannually derive and handle equations like Equation (1) in practice. 
+In our code base, we automatize the related derivations with [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which greatly simplifies the implementation process [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
 
-Here, we show the DDIM inference rule (1) can be viewed as a natural Euler method under spherical interpolations.
-
-> **Example 1. Natural Euler Sampler for DDIM**
+> **Example 1. Natural Euler Sampler for Spherical Interpolation**
+> 
+> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} t\right) X_0$$, the natural Euler update rule in Equation (1) reduces to 
+> 
+>$$
+>\hat Z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \epsilon\right)  \hat Z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \epsilon\right)  v_t(\hat Z_t).
+>$$
 >
-> DDIM’s discretized inference scheme can be seen as a natural Euler sampler for spherical interpolations where $$\alpha_t^2 + \beta_t^2 = 1$$. Note that the inference update of DDIM is written in terms of the expected noise $$\hat{x}_{0\mid t}(x) = \mathbb{E}[X_0 \mid X_t = x]$$, we rewrite the update step using $$\hat{x}_{0 \mid t}$$: 
+{: .example}
+
+> **Example 2. Natural Euler Sampler for DDIM**
+>
+> We verify that the update rule in Equation (1) coincides with the DDIM inference rule in <d-cite key="song2020denoising"></d-cite> when $$\alpha_t^2 + \beta_t^2 = 1$$. Note that the inference update of DDIM in <d-cite key="song2020denoising"></d-cite> is written in terms of the expected noise $$\hat{x}_{0\mid t}(x) = \mathbb{E}[X_0 \mid X_t = x]$$. Hence, we derive the update step using $$\hat{x}_{0 \mid t}$$: 
 >
 > $$
 > \begin{aligned}
-> \hat{z}_{t+\epsilon} &= \alpha_{t+\epsilon} \cdot\hat{x}_{1\vert t}(\hat{z}_t) + \beta_{t+\epsilon} \cdot \hat{x}_{0\vert t}(\hat{z}_t) \\
-> &\overset{*}{=} \alpha_{t+\epsilon} \left( \frac{\hat{z}_t - \beta_t \cdot\hat{x}_{0\vert t}(\hat{z}_t)}{\alpha_t} \right) + \beta_{t+\epsilon} \cdot \hat{x}_{0\vert t}(\hat{z}_t) \\
-> &= \frac{\alpha_{t+\epsilon}}{\alpha_t} \hat{z}_t + \left( \beta_{t+\epsilon} - \frac{\alpha_{t+\epsilon} \beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{z}_t)
+> \hat{Z}_{t+\epsilon} &= \alpha_{t+\epsilon} \cdot\hat{x}_{1\vert t}(\hat{Z}_t) + \beta_{t+\epsilon} \cdot \hat{x}_{0\vert t}(\hat{Z}_t) \\
+> &\overset{*}{=} \alpha_{t+\epsilon} \left( \frac{\hat{Z}_t - \beta_t \cdot\hat{x}_{0\vert t}(\hat{Z}_t)}{\alpha_t} \right) + \beta_{t+\epsilon} \cdot \hat{x}_{0\vert t}(\hat{Z}_t) \\
+> &= \frac{\alpha_{t+\epsilon}}{\alpha_t} \hat{Z}_t + \left( \beta_{t+\epsilon} - \frac{\alpha_{t+\epsilon} \beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{Z}_t)
 > \end{aligned}
 > $$
 >
-> where in $$\overset{*}{=}$$ we used $$\alpha_t \cdot \hat{x}_{1\vert t}(\hat{z}_t) + \beta_t\cdot \hat{x}_{0\vert t}(\hat{z}_t) = \hat{z}_t$$. 
+> where in $$\overset{*}{=}$$ we used $$\alpha_t \cdot \hat{x}_{1\vert t}(\hat{Z}_t) + \beta_t\cdot \hat{x}_{0\vert t}(\hat{Z}_t) = \hat{Z}_t$$. 
 >
 > We can slightly rewrite the update as:
 > 
 > $$
-> \frac{\hat{z}_{t+\epsilon}}{\alpha_{t+\epsilon}} = \frac{\hat{z}_t}{\alpha_t} + \left( \frac{\beta_{t+\epsilon}}{\alpha_{t+\epsilon}} - \frac{\beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{z}_t),
+> \frac{\hat{Z}_{t+\epsilon}}{\alpha_{t+\epsilon}} = \frac{\hat{Z}_t}{\alpha_t} + \left( \frac{\beta_{t+\epsilon}}{\alpha_{t+\epsilon}} - \frac{\beta_t}{\alpha_t} \right) \hat{x}_{0\vert t}(\hat{Z}_t),
 > $$
 >
 > which precisely matches Equation (13) of <d-cite key="song2020denoising"></d-cite>.
@@ -172,15 +177,7 @@ Here, we show the DDIM inference rule (1) can be viewed as a natural Euler metho
 {: .example}
 
 
-> **Example 2. Natural Euler Sampler for Spherical Interpolation**
-> 
-> For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} t\right) X_0$$, the natural Euler update rule reduces to 
-> 
->$$
->\hat z_{t + \epsilon} =\cos\left(\frac{\pi}{2} \epsilon\right) \cdot \hat z_{t} + \frac{2}{\pi} \sin \left(\frac{\pi}{2} \epsilon\right) \cdot v_t(\hat z_t)
->$$
->
-{: .example}
+
 
 We next demonstrate that the discrete natural Euler sampler preserves the pointwise transforms that relate different interpolations.
 
@@ -190,15 +187,15 @@ A key feature of natural Euler sampling is that it *preserves* pointwise equival
 
 > **Theorem 1. Equivalence of Natural Euler Trajectories**
 >
-> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes contructed from the same couping, related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Let $$\{\hat{z}_{t_i}\}_i$$ and $$\{\hat{z}_{t_i'}'\}_i$$ be the discrete trajectories produced by the natural Euler samplers of the rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$ on time grids $$\{t_i\}$$ and $$\{t_i'\}$$, respectively.
+> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes contructed from the same couping, related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Let $$\{\hat{Z}_{t_i}\}_i$$ and $$\{\hat{Z}_{t_i'}'\}_i$$ be the discrete trajectories produced by the natural Euler samplers of the rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$ on time grids $$\{t_i\}$$ and $$\{t_i'\}$$, respectively.
 >
-> If $$\tau(t_i') = t_i$$ for all $$i$$, and the initial conditions align via $$\hat{z}_{t_0'}' = \phi_{t_0'}(\hat{z}_{\tau(t_0')})$$, then the discrete trajectories are also related by the same transform:
+> If $$\tau(t_i') = t_i$$ for all $$i$$, and the initial conditions align via $$\hat{Z}_{t_0'}' = \phi_{t_0'}(\hat{Z}_{\tau(t_0')})$$, then the discrete trajectories are also related by the same transform:
 > 
 > $$
-> \hat{z}_{t_i'}' = \phi_{t_i'}(\hat{z}_{t_i}) \quad \text{for all } i = 0,1,\ldots
+> \hat{Z}_{t_i'}' = \phi_{t_i'}(\hat{Z}_{t_i}) \quad \text{for all } i = 0,1,\ldots
 > $$
 > 
-> In particular, for affine interpolations, if $$\hat{z}_0 = \hat{z}_0'$$, then $$\hat{z}_1 = \hat{z}_1'$$ *even if* the intermediate trajectories differ step by step.
+> In particular, for affine interpolations, if $$\hat{Z}_0 = \hat{Z}_0'$$, then $$\hat{Z}_1 = \hat{Z}_1'$$ *even if* the intermediate trajectories differ step by step.
 >
 {: .theorem}
 
