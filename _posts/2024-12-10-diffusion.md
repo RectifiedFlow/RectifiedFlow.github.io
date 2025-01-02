@@ -69,20 +69,24 @@ However, one challenge is that errors can accumulate over time in practice as we
 
 To address this problem, we may introduce a **feedback mechanism** to correct the error. One such approach is to use Langevin dynamics. 
 
-> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (overdamped) [Langevin dynamics](https://friedmanroy.github.io/blog/2022/Langevin/) is
+> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (discrete-time) Langevin dyamics is
+> 
+> $$ \hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat{Z}_t) + \sqrt{2\epsilon}\sigma_t \xi_t, \quad \xi_i \sim \mathtt{Normal}(0, I), $$
+> 
+> where $$\sigma_t$$ is a diffusion coefficient, and $$\epsilon>0$$ is a step size. It is the gradient descent trajectory perturbed by Gaussian noise of variance $$\epsilon$$ at each step. Langevin dynamics is useful as an approximate method to draw samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ and $$\epsilon\to 0$$ under regularity conditions. 
+>
+> When the step size $$\epsilon$$ approaches to zero, its continous-time limit is written as stochastic differential equation (SDE): 
 > 
 > $$
 > \mathrm{d} Z_t = \sigma_t^2 \nabla \log \rho^*(Z_t) \mathrm{d} t + \sqrt{2}\sigma_t \mathrm{d} W_t,
 > $$
-> 
->This is an SDE driven by a noise source $$\{W_t\}$$, which is assumed to be a Brownian motion. Simulating Langevin dynamics allows us to draw approximate samples from $$\rho^*$$, because the distribution of $$Z_t$$ guarantees to converge to $$\rho^*$$ as $$t \to +\infty$$ under mild conditions. 
-> 
->We do not need to delve deep into SDE theory here. The only thing to note that the SDE is the continuous-time limit of the Euler-Maruyama discretization:
-> 
->$$ \hat Z_{t+\epsilon} = Z_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat Z_t) + \sqrt{2\epsilon}\sigma_t \xi_t, \quad \xi_i \sim \mathtt{Normal}(0, I), $$
-> 
-> as the step size $$\epsilon$$ goes to zero. This is how we typically solve SDEs in practice. 
+>
+> where $$\{W_t\}$$ is a Brownian motion which satisfies $$W_{t+\epsilon}-W_t|W_t\sim\mathtt{Normal}(0, \epsilon)$$ for $\epsilon\geq 0$.
+>
+> We do not need to delve deeply into the theory of SDE here. It suffices to substitute the SDE with the discrete-time update, understanding that the SDE represents the continuous-time limit of the discrete-time update in a suitable sense, which mathematicians have already clarified. 
 {: .definition}
+
+<!-- > its (overdamped) [Langevin dynamics](https://friedmanroy.github.io/blog/2022/Langevin/) is --> 
 
 Let $$\rho_t$$ be the density function of $$X_t$$, representing the true distribution that we aim to follow at time $$t$$. At each time step $$t$$, we can in principle apply a short segment of Langevin dynamics to adjust the trajectory's distribution toward $$\rho_t$$:
 
