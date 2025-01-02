@@ -262,6 +262,25 @@ Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score funct
 > **Role of Noise.** In summary, the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
 {: .theorem}
 
+
+<div class="l-body">
+  <figure id="figure-1" style="margin: 1em auto;">
+  <div style="display: flex; justify-content: center;">
+    <iframe src="{{ '/assets/img/sde_turn_off_noise.png' | relative_url }}" 
+            frameborder="0" 
+            scrolling="no" 
+            height="450px" 
+            width="80%">
+    </iframe>
+      </div>
+    <figcaption>
+      <a href="#figure-1">Figure 1</a>.
+      If we remove the Langevin noise but keeps the score function, i.e., simulating the ODE $$\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t + \sigma_t^2 \nabla \log \rho_t(Z_t) \mathrm{d} t$$, the dynamics would collapse to local modes of the distribution. 
+    </figcaption>
+  </figure>
+</div>
+
+
 <div class="l-gutter">
   <img src="/assets/img/sde_turn_off_noise.png" style="max-width:150%" />
 </div>
