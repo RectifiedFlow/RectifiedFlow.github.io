@@ -94,10 +94,7 @@ $$
 \mathrm{d} Z_{t, \tau} = \sigma_t^2 \nabla \log \rho_t(Z_{t, \tau}) \, \mathrm{d} \tau + \sqrt{2} \, \sigma_t \, \mathrm{d} W_\tau, \quad \tau \geq 0,
 $$
 
-where $$\tau$$ is a new time scale introduced for the Langevin dynamics. 
-
-
-Fully simulating Langevin dynamics would require a double-loop algorithm, where the system must be simulated to equilibrium ($$\tau\to\infty$$) at each time $$t$$ before moving to the next time point.  
+where $$\tau$$ is a new time scale introduced for the Langevin dynamics. This is yields a double-loop algorithm, where the system must be simulated to equilibrium ($$\tau\to\infty$$) at each time $$t$$ before moving to the next time point.  
 
 In rectified flow, however, the trajectory is already close to $$\rho_t$$ at each time step $$t$$. Therefore, a single step of Langevin dynamics can be sufficient to reduce the drift. This allows us to directly integrate Langevin corrections into the rectified flow updates, yielding a combined stochastic differential equation (SDE):
 
@@ -233,7 +230,7 @@ $$
 
 ## Diffusion May Cause Over-Concentration 
 
-Although things work out nicely in theory, we need to be careful that the introduced score function $$\nabla \log \rho_t(x)$$ itself has errors, and it may introduce undesirable effects if we rely on it too much (with a large $$\sigma_t$$). 
+Although things work out nicely in theory, we need to be careful that the introduced score function $$\nabla \log \rho_t(x)$$ itself has errors, and it may introduce undesirable effects if we rely on it too much (by using a large $$\sigma_t$$). 
 This is indeed the case in practice. As shown in the figure below, when we increase the noise magnitude $$\sigma_t$$,  the generated samples tend to cluster closer to the centers of the Gaussian modes.
 
 <div class="l-body">
@@ -262,11 +259,11 @@ $$
 
 Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, and hence is significantly overestimated when $$t$$ is close to 1. Given that the directions of $$\nabla \log \rho_t(x)$$ point toward the centers of mass of clusters, an overestimated $$\nabla \log \rho_t(x)$$ magnitude would lead to results that are overly concentrated around these centers.
 
-> **Role of Noise.** the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
+> **Role of Noise.** In summary, the Langevin guardrail may become too *excessive*, causing over-concentration. The deciding factor here is the score function $$\nabla \log \rho_t(x)$$, not the introduction of noise, as one might initially assume from the ODE vs. SDE dichotomy. The noise component, as part of Langevin dynamics, merely compensates for the concentration effects induced by $$\nabla \log \rho_t(x)$$, rather than being the primary driver of those effects.
 {: .theorem}
 
 <div class="l-gutter">
-  <img src="/assets/img/sde_turn_off_noise.png" style="max-width:100%" />
+  <img src="/assets/img/sde_turn_off_noise.png" style="max-width:150%" />
 </div>
 
 In the context of text-to-image generation, this over-concentration effect often produces overly smoothed images, which may appear cartoonish. Such over-smoothing eliminates fine details and high-frequency variations, resulting in outputs with a blurred appearance. The figure below illustrates these differences: samples generated using the Euler sampler exhibit more high-frequency details, as seen in the texture of the parrot's feathers and the structure of the smoke.
