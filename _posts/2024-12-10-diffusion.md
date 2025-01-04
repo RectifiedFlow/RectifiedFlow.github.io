@@ -76,11 +76,12 @@ To address this problem, we may introduce a **feedback mechanism** to correct th
 > where $$\sigma_t$$ is the diffusion coefficient, and $$\epsilon>0$$ is the step size. Intuitively, this update is gradient ascent on log probability $$\log \rho^*$$ with Gaussian noise perturbations of variance $$\epsilon$$ at each step. Langevin dynamics provides an approximate method to draw samples from $$\rho^*$$ because, under regularity conditions, the distribution of $$Z_t$$ converges to $$\rho^*$$ as $$t \to +\infty$$ and $$\epsilon \to 0$$.
 >
 > When the step size $$\epsilon$$ approaches to zero, the continuous-time limit of this update is written as a stochastic differential equation (SDE):
+> 
 > $$
 > \mathrm{d} Z_t = \sigma_t^2 \nabla \log \rho^*(Z_t) \mathrm{d} t + \sqrt{2}\sigma_t \mathrm{d} W_t,
 > $$
 >
-> where $$\{W_t\}$$ is a Brownian motion, which has independent increments (for every $$t > 0$$, the future increments $$\{W_{t+u} - W_t,\, u \ge 0\}$$ are independent of the past trajectory $$\{W_s,\, s < t\}$$ and Gaussian increments $$\bigl(W_{t+u} - W_t \sim \mathcal{N}(0, u)\bigr)$$.
+> where $$\{W_t\}$$ is a Brownian motion, which has independent increments (for every $$t > 0$$, the future increments $$\{W_{t+u} - W_t,\, u \ge 0\}$$ are independent of the past trajectory $$\{W_s,\, s < t\}$$) and Gaussian increments $$\bigl(W_{t+u} - W_t \sim \mathcal{N}(0, u)\bigr)$$.
 >
 > We do not need to delve deeply into SDE theory here. It suffices to substitute the SDE with the discrete-time update, understanding that the SDE represents the continuous-time limit of the discrete-time update in a suitable sense, which mathematicians have already clarified. 
 {: .definition}
@@ -169,7 +170,7 @@ When the simulation is accurate, Langevin dynamics naturally remain in equilibri
     </div>
     <figcaption>
       <a href="#figure-2">Figure 2</a>.
-      Comparing two sampling methods. On the left, we apply Euler discretization to the deterministic ODE using an insufficiently trained \(v_t\) (due to early stopping), resulting in many outliers. On the right, the Euler–Maruyama method simulates the SDE, effectively suppressing outliers through the feedback of the score function.
+      Comparing two sampling methods. On the left, we apply Euler discretization to the deterministic ODE using a "poor" \(v_t\) (due to early stopping), resulting in many outliers. On the right, the Euler–Maruyama method simulates the SDE, effectively suppressing outliers through the feedback of the score function.
     </figcaption>
   </figure>
 </div>
