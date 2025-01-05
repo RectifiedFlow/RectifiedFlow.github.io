@@ -18,7 +18,7 @@ chart:
 tikzjax: true
 typograms: true
  
-thumbnail: /assets/img/thumbnail/natural_euler_thumbnail.png
+thumbnail: /assets/img/thumbnail/natural_euler.gif
 thumbnail_alt: "Thumbnail of Natural Euler"
 
 authors:
