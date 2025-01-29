@@ -51,7 +51,7 @@ pagination:
         for practical exploration.
       </li>
       <li>
-        <a href="#" target="_blank">Lecture notes</a> containing detailed theoretical derivations.
+        <a href="https://www.cs.utexas.edu/~lqiang/PDF/flow_book.pdf" target="_blank">Lecture notes</a> containing detailed theoretical derivations.
       </li>
     </ul>
   </p>
