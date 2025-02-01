@@ -34,7 +34,8 @@ pagination:
 
   <!-- Text -->
   <p>
-    <strong>Rectified flow</strong> offers a simplified yet unified perspective on flow- and diffusion-based generative modeling and has been widely applied to state-of-the-art image, audio, and video generation. It was derived by simplifying diffusion models to the extreme both conceptually and algorithmically, thereby uncovering a principled framework for rectifying transport maps to learn straightened ODE dynamics for fast discretized inference. 
+    <strong>Rectified flow</strong> offers a straightforward yet unified perspective on flow- and diffusion-based generative modeling. It has been increasingly used for state-of-the-art image, audio, and video generation, thanks to its simplicity and efficiency.
+. 
   </p>
 
   <p>
