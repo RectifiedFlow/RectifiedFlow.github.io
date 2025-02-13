@@ -18,7 +18,7 @@ chart:
 tikzjax: true
 typograms: true
 
-thumbnail: /assets/img/thumbnail/stochastic_sampler_thumbnail.png
+thumbnail: /assets/img/thumbnail/langevin_plot.gif
 thumbnail_alt: "Thumbnail of Stochastic Samplers"
 
 bibliography: reference.bib
