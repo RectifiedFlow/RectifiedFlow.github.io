@@ -215,7 +215,7 @@ $$
 As a result, the SDE takes the form 
 
 $$
-\mathrm d Z_t = v_t(Z_t)\mathrm d t +  \gamma (\alpha_t v_t (x) - \dot \alpha_t x) \mathrm{d} t +  \sqrt{2 \lambda_t \beta_t \gamma_t} \mathrm{d} W_t,
+\mathrm d Z_t = v_t(Z_t)\mathrm d t +  \gamma (\alpha_t v_t (Z_t) - \dot \alpha_t Z_t) \mathrm{d} t +  \sqrt{2 \lambda_t \beta_t \gamma_t} \mathrm{d} W_t,
 $$
 
 where we set $$\sigma_t^2 = \lambda_t \beta_t \gamma_t$$. 
