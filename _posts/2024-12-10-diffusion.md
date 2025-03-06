@@ -28,7 +28,6 @@ authors:
     url: "mailto:rectifiedflow@gmail.com"
     affiliations:
       name: UT Austin
-  - name: Runlong Liao
   - name: Bo Liu
   - name: Qiang Liu
 

@@ -22,7 +22,7 @@ thumbnail: /assets/img/interpolation_conversion.gif
 thumbnail_alt: "Thumbnail of Interpolation"
 
 authors:
-  - name: Runlong Liao
+  - name: Rectified Flow Group
   - name: Xixi Hu
   - name: Bo Liu
   - name: Qiang Liu

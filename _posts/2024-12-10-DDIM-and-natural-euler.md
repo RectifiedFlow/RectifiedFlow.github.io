@@ -22,7 +22,7 @@ thumbnail: /assets/img/thumbnail/natural_euler.gif
 thumbnail_alt: "Thumbnail of Natural Euler"
 
 authors:
-  - name: Runlong Liao
+  - name: Rectified Flow Group
     url: "mailto:rectifiedflow@gmail.com"
     affiliations:
       name: UT Austin
