@@ -139,7 +139,7 @@ If two interpolations are contructed from the same coupling $$(X_0, X_1)$$ and a
 > Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be their rectified flows:
 > 
 > $$
-> \{Z_t\} = \mathtt{Rectify}(\{X_t\}),~~~~~~ \{Z_t\} = \mathtt{Rectify}(\{X_t\}). 
+> \{Z_t\} = \mathtt{Rectify}(\{X_t\}),~~~~~~ \{Z'_t\} = \mathtt{Rectify}(\{X'_t\}). 
 > $$
 > 
 > 1. $$\{Z_t\},\{Z'_t\}$$ can be transformed with the same pointwise maps:

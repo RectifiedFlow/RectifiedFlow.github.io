@@ -188,12 +188,77 @@ This correction mechanism also has an effect on state-of-the-art text-to-image g
 
 Solving the SDEs requires estimating the score function $$\nabla \log \rho_t$$ in addition to the RF velocity $$v_t$$. However, in certain special cases, the score function can be estimated from $$v_t$$, thus avoiding the need to retrain an additional model. This enables a training-free conversion between ODEs and SDEs.
 
-Specifically, if the rectified flow is induced by an affine interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$, where $$X_0$$ and $$X_1$$ are independent (i.e., $$X_0 \perp\!\!\!\perp X_1$$) and $$X_0$$ follows a standard Gaussian distribution, then by Tweedie's formula, we have 
+Specifically, if the rectified flow is induced by an affine interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$, where $$X_0$$ and $$X_1$$ are independent (i.e., $$X_0 \perp\!\!\!\perp X_1$$) and $$X_0$$ follows a standard Gaussian distribution, then by [Tweedie's formula](https://en.wikipedia.org/wiki/Maurice_Tweedie#Tweedie's_formula), we have 
 
 $$
 \nabla \log \rho_t(x) = -\frac{1}{\beta_t} \mathbb{E}[X_0 \mid X_t = x].
 $$
 
+You don't need to know the exact proof for Tweedie's formula to apply it; focusing on its application is sufficient. However, for those interested in the mathematics, please refer to the following proof:
+
+<details>
+<summary>Proof of Tweedie's fomular (Click to expand)</summary>
+
+Theorem 1: For any pair of random variables (X, Z), we have
+\begin{equation}
+    \nabla_{x}logP_{X}(x) = E[\nabla_{x} logP_{X, Z}(x,z) | X]
+\end{equation}
+Proof:
+\begin{align}
+    LHS &=
+    \nabla_{x}logP_{X}(x) \nonumber\\
+    &= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
+    &= \frac{\nabla_{x}\int P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
+    &= \frac{\int \nabla_{x}P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
+    &= \int \frac{\nabla_{x}P_{X, Z}(x,z)}{P_{X,Z}(x,z)} \cdot \frac{P_{X,Z}(x, z)}{P_{X}(x)}dz \nonumber \\
+    &= \int \nabla_{x}logP_{X,Z}(x,z)\cdot \frac{P_{X,Z}(x, z)}{P_{X}(x)}dz \nonumber \\
+    &=E[\nabla_{x} logP_{X,Z}(x,z) | X] = RHS \nonumber
+\end{align}
+
+Theorem 2: If X = Y + Z, Y $\perp$ Z (Y and Z are independent), then
+\begin{equation}
+    \nabla_{x}logP_{X}(x) = E[\nabla_{z} logP_{Z}(z) | X] = E[\nabla_{y} logP_{Y}(y) | X]
+\end{equation}
+Proof:
+\begin{align}
+    LHS &= \nabla_{x}logP_{X}(x) \nonumber \\
+    &= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
+    &=\frac{\nabla_{x}\int P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
+    &= \frac{\nabla_{x}\int P_{Z}(z)P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
+    & (\text{Since } P_{X,Z}(x,z) = P_{Z}(z)P_{X}(x|Z=z) = P_{Z}(z)P_{Y}(x-z))  \nonumber\\
+    &= \frac{\int \nabla_{x}P_{Z}(z)P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
+    &= \frac{\int P_{Z}(z) \nabla_{x}P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
+    &(\text{This is because } P_{Z}(z) \text{is independent of } x)  \nonumber\\ 
+    &= \int \frac{\nabla_{x}P_{Y}(x-z)}{P_{Y}(x-z)} \cdot \frac{P_{Z}(z)P_{Y}(x-z)}{P_{X}(x)} dz \nonumber \\
+    &= \int \nabla_{x}logP_{Y}(x-z) \cdot \frac{P_{Z}(z)P_{Y}(x-z)}{P_{X}(x)} dz \nonumber \\
+    &= E[\nabla_{x}logP_{Y}(x-z)|X] \nonumber \\
+    &= E[\nabla_{y}logP_{Y}(y)|X] = RHS \nonumber
+\end{align}
+Theorem 3: If X = Y + Z, Y $\perp$ Z, and Z $\sim N(0, \sigma^{2}I)$, then 
+\begin{equation}
+    \nabla_{x}logP_{X}(x) = -\frac{1}{\sigma^{2}}E[Z|X] = \frac{1}{\sigma^{2}}(E[Y|X] - X)
+\end{equation}
+Proof:
+\begin{align}
+    Z \sim N(0, \sigma^{2}I) &\implies P_{Z}(z) \propto exp(-\frac{z^{2}}{2\sigma^{2}}) \implies \nabla_{z}logP_{Z}(z) = -\frac{z}{\sigma^{2}} \nonumber \\
+    \nabla_{x}logP_{X}(x) &=  E[\nabla_{z} logP_{Z}(z) | X] \nonumber \\
+    & \text{(Applying Theorem 2)} \nonumber\\
+    &= -\frac{1}{\sigma^{2}} E[Z|X] \nonumber \\
+     &= -\frac{1}{\sigma^{2}} E[X-Y|X] \nonumber \\
+     &= \frac{1}{\sigma^{2}}(E[Y|X] - X) \nonumber
+\end{align}
+
+In fact, we could let $X = X_t$, $Y = \alpha_t X_1$ and $Z = \beta_t X_0$. We know that $Z \sim N(0, \beta^{2}I)$. Using Theorem 3, we get
+
+\begin{align}
+\nabla \log \rho_t(x) &= \frac{1}{\beta^2}(E[\alpha_t X_1 | X_t=x] - x) \nonumber \\
+&= \frac{1}{\beta^2}(E[\alpha_t X_1 - x | X_t=x]) \nonumber \\
+&= \frac{1}{\beta^2}(E[\beta_t X_0 | X_t=x]) \nonumber \\
+&= \frac{1}{\beta}(E[X_0 | X_t=x]) \nonumber \\
+
+\end{align}
+
+</details>
 On the other hand, the RF velocity is given by 
 
 $$

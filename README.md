@@ -1,5 +1,9 @@
 # RectifiedFlow Blog Page
 
+## Source
+
+This is adapted from [al-folio](https://github.com/alshedivat/al-folio)
+
 ## Installtion
 
 Here is a summary of the steps to install and preview a Jekyll project locally (using macOS as an example):
@@ -53,6 +57,8 @@ pip install jupyter
 
 
 ```shell
+eval "$(rbenv init -)"
+rbenv rehash
 bundle exec jekyll serve
 ```
 
