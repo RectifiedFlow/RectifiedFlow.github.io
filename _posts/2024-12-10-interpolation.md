@@ -49,7 +49,7 @@ toc:
 </div>
 --> 
 
-Most diffusion and flow models can be analyzed through the rectified flow lens, but they employ different interpolation methods, typically affine interpolations such as straight-line or spherical interpolations. A critical question is to understand the impact of using different interpolation processes. This blog introduces the equivalent relationships between rectified flows induced by these different interpolation processes, as discussed in Chapter 3 of these [lecture notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related observations and discussions can also be found in <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>.
+Most diffusion and flow models can be analyzed through the rectified flow lens, but they employ different interpolation methods, typically affine interpolations such as straight-line or spherical interpolations. A critical question is to understand the impact of using different interpolation processes. This blog introduces the equivalent relationships between rectified flows induced by these different interpolation processes, as discussed in Chapter 3 of these [lecture notes](https://www.cs.utexas.edu/~lqiang/PDF/flow_book.pdf). Related observations and discussions can also be found in <d-cite key="karras2022elucidating,kingma2024understanding,shaulbespoke,gao2025diffusionmeetsflow"></d-cite>.
 
 
 ## Overview 

@@ -54,7 +54,7 @@ Nonetheless, since the work of DDIM<d-cite key="song2020denoising"></d-cite> and
 
 2. *Why would we bother to add diffusion noise given that ODEs are simpler and faster? What are the pros and cons of diffusion vs. flow?*
 
-This blog post explores these questions. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://github.com/lqiang67/rectified-flow/tree/main/pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
+This blog post explores these questions. For a more detailed discussion, see Chapter 5 of the [Rectified Flow Lecture Notes](https://www.cs.utexas.edu/~lqiang/PDF/flow_book.pdf). Related works include DDIM<d-cite key="song2020denoising"></d-cite>, score-based SDEs<d-cite key="song2020score"></d-cite>, EDM<d-cite key="karras2022elucidating"></d-cite>. 
 
 
 ## Stochastic Samplers = RF + Langevin
