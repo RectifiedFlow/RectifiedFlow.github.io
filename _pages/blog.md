@@ -53,6 +53,24 @@ pagination:
       <li>
         <a href="https://www.cs.utexas.edu/~lqiang/PDF/flow_book.pdf" target="_blank">Lecture notes</a> containing detailed theoretical derivations.
       </li>
+      <li>
+        <details>
+          <summary style="cursor: pointer;">Slides for our ICML 2025 tutorial</summary>
+          <ul style="margin-top: 10px;">
+              <li><a href="assets/slides/icml_01_flowintro.pdf" target="_blank" rel="noopener noreferrer">Introduction</a></li>
+              <li><a href="assets/slides/icml_02_marginal_preservation.pdf" target="_blank" rel="noopener noreferrer">Marginal Preservation</a></li>
+              <li><a href="assets/slides/icml_03_transport_cost.pdf" target="_blank" rel="noopener noreferrer">Transport Cost</a></li>
+              <li><a href="assets/slides/icml_04_interpolation.pdf" target="_blank" rel="noopener noreferrer">Interpolation</a></li>
+              <li><a href="assets/slides/icml_05_gaussian_noise.pdf" target="_blank" rel="noopener noreferrer">Bless of Gaussian Noise</a></li>
+              <li><a href="assets/slides/icml_06_diffusion.pdf" target="_blank" rel="noopener noreferrer">Diffusion = ODE + Langevin</a></li>
+              <li><a href="assets/slides/icml_07_distillation.pdf" target="_blank" rel="noopener noreferrer">Distillation</a></li>
+              <li><a href="assets/slides/icml_08_reward_alignment.pdf" target="_blank" rel="noopener noreferrer">Reward Alignment</a></li>
+              <li><a href="assets/slides/icml_09_constraints.pdf" target="_blank" rel="noopener noreferrer">Constraints</a></li>
+              <li><a href="assets/slides/icml_10_reference.pdf" target="_blank" rel="noopener noreferrer">References</a></li>
+          </ul>
+        </details>
+      </li>
+      
     </ul>
   </p>
 
