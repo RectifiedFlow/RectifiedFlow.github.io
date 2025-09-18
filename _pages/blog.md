@@ -58,7 +58,7 @@ pagination:
           <summary style="cursor: pointer;"><a href="assets/slides" target="_blank" rel="noopener noreferrer">Slides</a> (from ICML 2025 tutorial)</summary>
           <ul style="margin-top: 10px;">
               <li><a href="assets/slides/icml_01_flowintro.pdf" target="_blank" rel="noopener noreferrer">Introduction</a></li>
-              <li><a href="assets/slides/icml_02_marginal_preservation.pdf" target="_blank" rel="noopener noreferrer">The Rewiring Demon: Rectified Flow</a></li>            
+              <li><a href="assets/slides/icml_01_02_flowintro.pdf" target="_blank" rel="noopener noreferrer">The Rewiring Demon: Rectified Flow</a></li>            
               <li><a href="assets/slides/icml_02_marginal_preservation.pdf" target="_blank" rel="noopener noreferrer">Blessing of Continuity: Marginal Preservation</a></li>
               <li><a href="assets/slides/icml_03_transport_cost.pdf" target="_blank" rel="noopener noreferrer">Blessing of Straightness: Transport Cost</a></li>
               <li><a href="assets/slides/icml_04_interpolation.pdf" target="_blank" rel="noopener noreferrer">Blessing of Symmetry: Equivariance</a></li>
