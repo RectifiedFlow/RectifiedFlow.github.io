@@ -1,6 +1,23 @@
 <!-- Metadata, OpenGraph and Schema.org -->
 {% include metadata.liquid %}
 
+{%- if page.citation_meta %}
+  <meta name="citation_title" content="{{ page.title | escape }}">
+
+  {%- if page.authors %}
+    {%- for author in page.authors %}
+      <meta name="citation_author" content="{{ author.name | default: author | escape }}">
+    {%- endfor %}
+  {%- endif %}
+
+  <meta name="citation_publication_date" content="{{ page.date | date: "%Y/%m/%d" }}">
+  <meta name="citation_fulltext_html_url" content="{{ page.url | replace:'index.html','' | absolute_url }}">
+
+  {%- if page.pdf %}
+    <meta name="citation_pdf_url" content="{{ page.pdf | absolute_url }}">
+  {%- endif %}
+{%- endif %}
+
 <!-- Google site verification meta -->
 <meta name="google-site-verification" content="KKaX71EAE0ifiiV9DsD71zS2GiZkhVg75NWufHOxvC8" />
 
