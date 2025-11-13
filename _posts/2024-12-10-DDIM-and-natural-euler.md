@@ -30,7 +30,8 @@ authors:
   - name: Bo Liu
   - name: Qiang Liu
 
-# 如果有文献，请指定bibliography文件
+citation_meta: true
+
 bibliography: reference.bib
 
 # 可选的目录配置
