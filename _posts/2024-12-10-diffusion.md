@@ -32,6 +32,8 @@ authors:
   - name: Bo Liu
   - name: Qiang Liu
 
+citation_meta: true
+
 # 可选的目录配置
 toc:
   - name: Overview
