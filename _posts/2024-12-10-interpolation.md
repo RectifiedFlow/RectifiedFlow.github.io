@@ -30,6 +30,8 @@ authors:
     affiliations:
       name: UT Austin
 
+citation_meta: true
+
 bibliography: reference.bib
 
 
