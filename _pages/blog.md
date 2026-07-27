@@ -76,7 +76,7 @@ pagination:
   </p>
 
   <p>
-    <span style="color: #cc2244; font-weight: 700;">[New]</span> Check out <b>Signed Rectified Flow</b> —
+    <span style="color: #cc2244; font-weight: 700;">[New]</span> Check out <b><a href="https://arxiv.org/abs/2607.18516">Signed Rectified Flow</a></b> —
     extending rectified flow to signed targets that tell the model <i>what to avoid</i>.
     Explore the <a href="https://rectifiedflow.github.io/Signed-RF/">interactive slides</a>.
   </p>
