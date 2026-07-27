@@ -71,13 +71,13 @@ However, one challenge is that errors can accumulate over time as we solve the O
 
 To address this problem, we may introduce a **feedback mechanism** to correct the errors. One such approach is to use Langevin dynamics. 
 
-> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (discrete-time) Langevin dyamics is
+> **Langevin Dynamics.** For a density function $$\rho^*(x)$$, its (discrete-time) Langevin dynamics is
 >
 > $$\hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon \sigma_t^2 \nabla \log \rho^*(\hat{Z}_t) + \sqrt{2\epsilon}\,\sigma_t\,\xi_t,\quad \xi_t \sim \mathtt{Normal}(0, I),$$
 >
 > where $$\sigma_t$$ is the diffusion coefficient, and $$\epsilon>0$$ is the step size. Intuitively, this update is gradient ascent on log probability $$\log \rho^*$$ with Gaussian noise perturbations of variance $$\epsilon$$ at each step. Langevin dynamics provides an approximate method to draw samples from $$\rho^*$$ because, under regularity conditions, the distribution of $$Z_t$$ converges to $$\rho^*$$ as $$t \to +\infty$$ and $$\epsilon \to 0$$.
 >
-> When the step size $$\epsilon$$ approaches to zero, the continuous-time limit of this update is written as a stochastic differential equation (SDE):
+> When the step size $$\epsilon$$ approaches zero, the continuous-time limit of this update is written as a stochastic differential equation (SDE):
 > 
 > $$
 > \mathrm{d} Z_t = \sigma_t^2 \nabla \log \rho^*(Z_t) \mathrm{d} t + \sqrt{2}\sigma_t \mathrm{d} W_t,
@@ -121,7 +121,7 @@ This combined SDE achieves two primary objectives:
       />
       <img
         src="{{ 'assets/img/sde_score.png' | relative_url }}"
-        alt="score funtion"
+        alt="score function"
         style="width: 25%; height: auto;"
       />
     </div>
@@ -200,65 +200,73 @@ $$
 You don't need to know the exact proof for Tweedie's formula to apply it; focusing on its application is sufficient. However, for those interested in the mathematics, please refer to the following proof:
 
 <details>
-<summary>Proof of Tweedie's fomular (Click to expand)</summary>
+<summary>Proof of Tweedie's formula (Click to expand)</summary>
 
-Theorem 1: For any pair of random variables (X, Z), we have
+<p><b>Theorem 1.</b> For any pair of random variables \((X, Z)\), we have</p>
+
 \begin{equation}
-    \nabla_{x}logP_{X}(x) = \mathbb{E}[\nabla_{x} logP_{X, Z}(x,z) | X]
+\nabla_{x}\log P_{X}(x) = \mathbb{E}\left[\nabla_{x} \log P_{X, Z}(x, Z) \mid X = x\right].
 \end{equation}
-Proof:
+
+<p>Proof:</p>
+
 \begin{align}
-    LHS &=
-    \nabla_{x}logP_{X}(x) \nonumber\\
-    &= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
-    &= \frac{\nabla_{x}\int P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
-    &= \frac{\int \nabla_{x}P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
-    &= \int \frac{\nabla_{x}P_{X, Z}(x,z)}{P_{X,Z}(x,z)} \cdot \frac{P_{X,Z}(x, z)}{P_{X}(x)}dz \nonumber \\
-    &= \int \nabla_{x}logP_{X,Z}(x,z)\cdot \frac{P_{X,Z}(x, z)}{P_{X}(x)}dz \nonumber \\
-    &=\mathbb{E}[\nabla_{x} logP_{X,Z}(x,z) | X] = RHS \nonumber
+\nabla_{x}\log P_{X}(x)
+&= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
+&= \frac{\nabla_{x}\int P_{X, Z}(x,z)\,\mathrm{d}z}{P_{X}(x)} \nonumber \\
+&= \frac{\int \nabla_{x}P_{X, Z}(x,z)\,\mathrm{d}z}{P_{X}(x)} \nonumber \\
+&= \int \frac{\nabla_{x}P_{X, Z}(x,z)}{P_{X,Z}(x,z)} \cdot \frac{P_{X,Z}(x, z)}{P_{X}(x)}\,\mathrm{d}z \nonumber \\
+&= \int \nabla_{x}\log P_{X,Z}(x,z)\cdot P_{Z \mid X}(z \mid x)\,\mathrm{d}z \nonumber \\
+&= \mathbb{E}\left[\nabla_{x} \log P_{X,Z}(x, Z) \mid X = x\right]. \nonumber
 \end{align}
 
-Theorem 2: If X = Y + Z, Y $\perp$ Z (Y and Z are independent), then
+<p><b>Theorem 2.</b> If \(X = Y + Z\), where \(Y \perp\!\!\!\perp Z\) (\(Y\) and \(Z\) are independent), then</p>
+
 \begin{equation}
-    \nabla_{x}logP_{X}(x) = \mathbb{E}[\nabla_{z} logP_{Z}(z) | X] = \mathbb{E}[\nabla_{y} logP_{Y}(y) | X]
+\nabla_{x}\log P_{X}(x) = \mathbb{E}\left[\nabla_{z} \log P_{Z}(Z) \mid X = x\right] = \mathbb{E}\left[\nabla_{y} \log P_{Y}(Y) \mid X = x\right].
 \end{equation}
-Proof:
+
+<p>Proof:</p>
+
 \begin{align}
-    LHS &= \nabla_{x}logP_{X}(x) \nonumber \\
-    &= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
-    &=\frac{\nabla_{x}\int P_{X, Z}(x,z)dz}{P_{X}(x)} \nonumber \\
-    &= \frac{\nabla_{x}\int P_{Z}(z)P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
-    & (\text{Since } P_{X,Z}(x,z) = P_{Z}(z)P_{X}(x|Z=z) = P_{Z}(z)P_{Y}(x-z))  \nonumber\\
-    &= \frac{\int \nabla_{x}P_{Z}(z)P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
-    &= \frac{\int P_{Z}(z) \nabla_{x}P_{Y}(x-z)dz}{P_{X}(x)} \nonumber \\
-    &(\text{This is because } P_{Z}(z) \text{is independent of } x)  \nonumber\\ 
-    &= \int \frac{\nabla_{x}P_{Y}(x-z)}{P_{Y}(x-z)} \cdot \frac{P_{Z}(z)P_{Y}(x-z)}{P_{X}(x)} dz \nonumber \\
-    &= \int \nabla_{x}logP_{Y}(x-z) \cdot \frac{P_{Z}(z)P_{Y}(x-z)}{P_{X}(x)} dz \nonumber \\
-    &= \mathbb{E}[\nabla_{x}logP_{Y}(x-z)|X] \nonumber \\
-    &= \mathbb{E}[\nabla_{y}logP_{Y}(y)|X] = RHS \nonumber
-\end{align}
-Theorem 3: If X = Y + Z, Y $\perp$ Z, and Z $\sim \mathcal{N}(0, \sigma^{2}I)$, then 
-\begin{equation}
-    \nabla_{x}logP_{X}(x) = -\frac{1}{\sigma^{2}}\mathbb{E}[Z|X] = \frac{1}{\sigma^{2}}(\mathbb{E}[Y|X] - X)
-\end{equation}
-Proof:
-\begin{align}
-    Z \sim N(0, \sigma^{2}I) &\implies P_{Z}(z) \propto exp(-\frac{z^{2}}{2\sigma^{2}}) \implies \nabla_{z}logP_{Z}(z) = -\frac{z}{\sigma^{2}} \nonumber \\
-    \nabla_{x}logP_{X}(x) &=  \mathbb{E}[\nabla_{z} logP_{Z}(z) | X] \nonumber \\
-    & \text{(Applying Theorem 2)} \nonumber\\
-    &= -\frac{1}{\sigma^{2}} \mathbb{E}[Z|X] \nonumber \\
-     &= -\frac{1}{\sigma^{2}} \mathbb{E}[X-Y|X] \nonumber \\
-     &= \frac{1}{\sigma^{2}}(\mathbb{E}[Y|X] - X) \nonumber
+\nabla_{x}\log P_{X}(x)
+&= \frac{\nabla_{x}P_{X}(x)}{P_{X}(x)} \nonumber \\
+&= \frac{\nabla_{x}\int P_{X, Z}(x,z)\,\mathrm{d}z}{P_{X}(x)} \nonumber \\
+&= \frac{\nabla_{x}\int P_{Z}(z)\,P_{Y}(x-z)\,\mathrm{d}z}{P_{X}(x)}
+\quad (\text{since } P_{X,Z}(x,z) = P_{Z}(z)\,P_{X \mid Z}(x \mid z) = P_{Z}(z)\,P_{Y}(x-z)) \nonumber \\
+&= \frac{\int P_{Z}(z)\, \nabla_{x}P_{Y}(x-z)\,\mathrm{d}z}{P_{X}(x)}
+\quad (\text{since } P_{Z}(z) \text{ does not depend on } x) \nonumber \\
+&= \int \nabla_{x}\log P_{Y}(x-z) \cdot \frac{P_{Z}(z)\,P_{Y}(x-z)}{P_{X}(x)}\,\mathrm{d}z \nonumber \\
+&= \mathbb{E}\left[\nabla_{x}\log P_{Y}(x-Z) \mid X = x\right] \nonumber \\
+&= \mathbb{E}\left[\nabla_{y}\log P_{Y}(Y) \mid X = x\right]. \nonumber
 \end{align}
 
-In fact, we could let $X = X_t$, $Y = \alpha_t X_1$ and $Z = \beta_t X_0$. We know that $Z \sim \mathcal{N}(0, \beta_t^{2}I)$. Using Theorem 3, we get
+<p>The identity for \(Z\) follows by the same argument with the roles of \(Y\) and \(Z\) exchanged.</p>
+
+<p><b>Theorem 3.</b> If \(X = Y + Z\), where \(Y \perp\!\!\!\perp Z\) and \(Z \sim \mathcal{N}(0, \sigma^{2}I)\), then</p>
+
+\begin{equation}
+\nabla_{x}\log P_{X}(x) = -\frac{1}{\sigma^{2}}\,\mathbb{E}[Z \mid X = x] = \frac{1}{\sigma^{2}}\left(\mathbb{E}[Y \mid X = x] - x\right).
+\end{equation}
+
+<p>Proof: Since \(Z \sim \mathcal{N}(0, \sigma^{2}I)\), we have \(P_{Z}(z) \propto \exp\left(-\frac{\lVert z\rVert^{2}}{2\sigma^{2}}\right)\), and hence \(\nabla_{z}\log P_{Z}(z) = -\frac{z}{\sigma^{2}}\). Applying Theorem 2,</p>
 
 \begin{align}
-\nabla \log \rho_t(x) &= \frac{1}{\beta_t^2}(\mathbb{E}[\alpha_t X_1 | X_t=x] - x) \nonumber \\
-&= \frac{1}{\beta_t^2}(\mathbb{E}[\alpha_t X_1 - x | X_t=x]) \nonumber \\
-&= \frac{1}{\beta_t^2}(\mathbb{E}[\beta_t X_0 | X_t=x]) \nonumber \\
-&= \frac{1}{\beta_t}(\mathbb{E}[X_0 | X_t=x]) \nonumber \\
+\nabla_{x}\log P_{X}(x)
+&= \mathbb{E}\left[\nabla_{z} \log P_{Z}(Z) \mid X = x\right] \nonumber \\
+&= -\frac{1}{\sigma^{2}}\, \mathbb{E}[Z \mid X = x] \nonumber \\
+&= -\frac{1}{\sigma^{2}}\, \mathbb{E}[X - Y \mid X = x] \nonumber \\
+&= \frac{1}{\sigma^{2}}\left(\mathbb{E}[Y \mid X = x] - x\right). \nonumber
+\end{align}
 
+<p>Now let \(X = X_t\), \(Y = \alpha_t X_1\), and \(Z = \beta_t X_0\), so that \(Z \sim \mathcal{N}(0, \beta_t^{2}I)\). Applying Theorem 3,</p>
+
+\begin{align}
+\nabla \log \rho_t(x)
+&= \frac{1}{\beta_t^2}\left(\mathbb{E}[\alpha_t X_1 \mid X_t=x] - x\right) \nonumber \\
+&= \frac{1}{\beta_t^2}\,\mathbb{E}[\alpha_t X_1 - x \mid X_t=x] \nonumber \\
+&= \frac{1}{\beta_t^2}\,\mathbb{E}[-\beta_t X_0 \mid X_t=x] \nonumber \\
+&= -\frac{1}{\beta_t}\,\mathbb{E}[X_0 \mid X_t=x]. \nonumber
 \end{align}
 
 </details>
@@ -332,7 +340,7 @@ $$
 \nabla \log \hat \rho_t(x) = \frac{1}{\lambda_t \beta_t} \left( \alpha_t \hat v_t(x) - \dot{\alpha}_t x \right). 
 $$
 
-Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, thus being significantly overestimated when $$t$$ is close to 1. Since $$\nabla \log \rho_t(x)$$ point toward the centers of mass of clusters, its overestimation leads to an overly concentrated distribution around these centers.
+Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score function $$\nabla \log \hat{\rho}_t(x)$$ would diverge to infinity in this limit. On the other hand, the true magnitude of $$\nabla \log \rho_t(x)$$ may be finite, thus being significantly overestimated when $$t$$ is close to 1. Since $$\nabla \log \rho_t(x)$$ points toward the centers of mass of clusters, its overestimation leads to an overly concentrated distribution around these centers.
 
 > **Role of Noise.** In summary, the Langevin guardrail can become too *excessive*, causing over-concentration. It is the score function $$\nabla \log \rho_t(x)$$ that drives this concentration, rather than the noise itself, as one might initially assume from the ODE vs. SDE dichotomy. The noise component in Langevin dynamics compensates for the concentration induced by the score function, but it does not necessarily prevent it when the score is overestimated.
 {: .theorem}
@@ -348,7 +356,7 @@ Because $$\beta_t$$ must converge to 0 as $$t \to 1$$, the estimated score funct
     </div>
 	<figcaption>
     <a href="#figure-3">Figure 3</a>.
-      If we remove the Langevin noise but keeps the score function, i.e., simulating the ODE \(\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t + \sigma_t^2 \nabla \log \rho_t(Z_t) \mathrm{d} t\), the dynamics would collapse to local modes of the distribution. 
+      If we remove the Langevin noise but keep the score function, i.e., simulating the ODE \(\mathrm{d} Z_t = v_t(Z_t) \mathrm{d} t + \sigma_t^2 \nabla \log \rho_t(Z_t) \mathrm{d} t\), the dynamics would collapse to local modes of the distribution. 
     </figcaption>
   </figure>
 </div>

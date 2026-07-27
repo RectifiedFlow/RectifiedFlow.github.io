@@ -54,7 +54,7 @@ $$
 \hat{Z}_{t+\epsilon} = \frac{\dot{\alpha}_t \beta_{t+\epsilon} - \alpha_{t+\epsilon} \dot{\beta}_t}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} \hat{Z}_t + \frac{\alpha_{t+\epsilon} \beta_t - \alpha_t \beta_{t+\epsilon}}{\dot{\alpha}_t \beta_t - \alpha_t \dot{\beta}_t} v_t(\hat{Z}_t),  \tag{1}
 $$
 
-where $\alpha_t, \beta_t$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ that DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
+where $$\alpha_t, \beta_t$$ are the coefficients of the interpolation $$X_t = \alpha_t X_1 + \beta_t X_0$$ that DDIM employs, which satisfy $$\alpha_t^2 + \beta_t^2 = 1$$.
 
 **Question**: *What is the nature of Equation (1) as a discretization technique for ODEs? How is it related to the vanilla Euler method?*
 
@@ -138,13 +138,13 @@ $$
 
 Plugging it into $$\hat Z_{t+\epsilon} = \alpha_{t+\epsilon} \hat X_{1\mid t} + \beta_{t+\epsilon} \hat X_{0\mid t}$$ yields the update rule in Equation (1).  
 
-It might be tedious to mannually derive and handle equations like Equation (1) in practice. 
+It might be tedious to manually derive and handle equations like Equation (1) in practice. 
 In our code base, we automatize the related derivations with [affine interpolation solver](https://github.com/lqiang67/rectified-flow/blob/main/rectified_flow/flow_components/interpolation_solver.py), which greatly simplifies the implementation process [code](https://github.com/lqiang67/rectified-flow?tab=readme-ov-file#customized-samplers). 
 
 
 > **Example 1. Natural Euler Sampler for Straight and Spherical Interpolation**
 >
-> For the straight intepolation $$X_t = t X_1 + (1-t) X_0$$, it is easy to verify that it reduces the vanilla Euler sampler $$\hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon v_t(\hat{Z}_t)$$. 
+> For the straight interpolation $$X_t = t X_1 + (1-t) X_0$$, it is easy to verify that it reduces to the vanilla Euler sampler $$\hat{Z}_{t+\epsilon} = \hat{Z}_t + \epsilon v_t(\hat{Z}_t)$$. 
 > 
 > For the time-uniform spherical interpolation $$X_t = \sin\left(\frac{\pi}{2}t\right) X_1 + \cos\left(\frac{\pi}{2} t\right) X_0$$, the natural Euler update rule in Equation (1) reduces to 
 > 
@@ -188,7 +188,7 @@ A key feature of natural Euler sampling is that it *preserves* pointwise equival
 
 > **Theorem 1. Equivalence of Natural Euler Trajectories**
 >
-> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes contructed from the same couping, related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Let $$\{\hat{Z}_{t_i}\}_i$$ and $$\{\hat{Z}_{t_i'}'\}_i$$ be  discrete-time trajectories produced by the natural Euler samplers of the rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$ on time grids $$\{t_i\}$$ and $$\{t_i'\}$$, respectively.
+> Suppose $$\{X_t\}$$ and $$\{X_t'\}$$ are two interpolation processes constructed from the same coupling, related by a pointwise transform $$X_t' = \phi_t(X_{\tau_t})$$. Let $$\{\hat{Z}_{t_i}\}_i$$ and $$\{\hat{Z}_{t_i'}'\}_i$$ be  discrete-time trajectories produced by the natural Euler samplers of the rectified flows induced by $$\{X_t\}$$ and $$\{X_t'\}$$ on time grids $$\{t_i\}$$ and $$\{t_i'\}$$, respectively.
 >
 > If $$\tau(t_i') = t_i$$ for all $$i$$, and the initial conditions align via $$\hat{Z}_{t_0'}' = \phi_{t_0'}(\hat{Z}_{\tau(t_0')})$$, then the discrete trajectories are also related by the same transform:
 > 
@@ -218,7 +218,7 @@ $$
 
 where $$\tau_t$$ and $$\omega_t$$ solve $$\frac{\alpha_{\tau_t}}{\beta_{\tau_t}} = \frac{\alpha'_t}{\beta'_t},$$ and $$\omega_t = \frac{\alpha_{\tau_t}}{\alpha'_t} = \frac{\beta_{\tau_t}}{\beta'_t}.$$ 
 
-Therefore, the natural Euler samplers (including DDIM) on the RF of affine interpolations are equivalent to one another upto the transform and time scaling. In particular, they are equivalent to the **vanilla (straight) Euler sampler on the RF of the straight interpolation**. 
+Therefore, the natural Euler samplers (including DDIM) on the RF of affine interpolations are equivalent to one another up to the transform and time scaling. In particular, they are equivalent to the **vanilla (straight) Euler sampler on the RF of the straight interpolation**. 
 
 > **Example 3. Equivalence of Straight Euler and DDIM sampler**
 >

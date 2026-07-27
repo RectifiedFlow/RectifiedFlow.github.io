@@ -89,7 +89,7 @@ At first glance, it may appear that the interpolation process must be chosen dur
 
 As it turns out, if two interpolation processes can be **deformed** into each other with a differentiable pointwise transform (i.e., they are diffeomorphic in mathy terms), then the trajectories of their rectified flows can also be deformed into each other using **the very same transform**. In addition, if the two processes are constructed from the same couplings, then their rectified flows lead to the same rectified coupling $$(Z_0, Z_1).$$
 
-*Why is this true?* The intuition is illustrated in Figure 1. The trajectories of the rectified flow (RF) are simply a "rewiring" of the interpolation trajectories at their intersection points to avoid crossings. As a result, they occupy the same "trace" as the interpolation process, even though they switch between different trajectories at intersection points. Consequently, any deformation applied to the interpolation trajectories is inherited by the rectified flow trajectories. The deformation must be **point-to-point** here to make it insenstive to the rewiring of the trajectories. 
+*Why is this true?* The intuition is illustrated in Figure 1. The trajectories of the rectified flow (RF) are simply a "rewiring" of the interpolation trajectories at their intersection points to avoid crossings. As a result, they occupy the same "trace" as the interpolation process, even though they switch between different trajectories at intersection points. Consequently, any deformation applied to the interpolation trajectories is inherited by the rectified flow trajectories. The deformation must be **point-to-point** here to make it insensitive to the rewiring of the trajectories. 
 
 This is a general and fundamental property of the rectification process and is not restricted to specific distributions, couplings, or interpolations.
 
@@ -103,7 +103,7 @@ This is a general and fundamental property of the rectification process and is n
   </div>
   <figcaption>
     <a href="#figure-1">Figure 1</a>.
-    Rectified flow (right) rewires the interpolation trajectories (left) to avoid crossing. When a deformation is applied on the interpolation trajectories, the trajectories of the corresponding rectified flow is deformed in the same way. 
+    Rectified flow (right) rewires the interpolation trajectories (left) to avoid crossing. When a deformation is applied on the interpolation trajectories, the trajectories of the corresponding rectified flow are deformed in the same way. 
   </figcaption>
 </figure>
 
@@ -133,10 +133,10 @@ We first formalize *pointwise transformability* between two interpolation proces
   <img src="/assets/img/interpolation/interpolation.svg" style="max-width:100%;" />
 </div>
 
-If two interpolations are contructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
+If two interpolations are constructed from the same coupling $$(X_0, X_1)$$ and are pointwise transformable, then their rectified flows are also related by the **same** transform, and also lead to the same rectified coupling.
 
 
-> **Theorem 1.** Suppose $$\{X_t\}$$ and $$\{X'_t\}$$ constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and are pointwise transformable. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
+> **Theorem 1.** Suppose $$\{X_t\}$$ and $$\{X'_t\}$$ are constructed from the same coupling $$(X_0, X_1) = (X'_0, X'_1)$$ and are pointwise transformable. Assume $$\tau_0=0$$ and $$\tau_1=1$$. 
 >
 > Let $$\{Z_t\}$$ and $$\{Z'_t\}$$ be their rectified flows:
 > 
@@ -159,7 +159,7 @@ If two interpolations are contructed from the same coupling $$(X_0, X_1)$$ and a
 >    $$
 {: .theorem}
 
-This is equivalent to saying that the $$\{Z_t\} = \texttt{Rectify}(\{X_t\})$$ map is **equivariant** under the pointwise transforms $$\{X_t'\}=\texttt{Transform}(\{X_t\})$$, while the the rectified coupling map $$(Z_0,Z_1) = \mathtt{RectifyCoupling}(\{X_t\})$$ is **equivalent**:  
+This is equivalent to saying that the $$\{Z_t\} = \texttt{Rectify}(\{X_t\})$$ map is **equivariant** under the pointwise transforms $$\{X_t'\}=\texttt{Transform}(\{X_t\})$$, while the rectified coupling map $$(Z_0,Z_1) = \mathtt{RectifyCoupling}(\{X_t\})$$ is **equivalent**:  
 
 $$
 \texttt{Rectify}(\texttt{Transform}(\{X_t\})) = \texttt{Transform}(\texttt{Rectify}(\{X_t\})), 
@@ -181,7 +181,7 @@ $$
 
 ###  Affine Interpolations are Pointwise Transformable
 
-Many commonly used interpolation schemes are affine $X_t = \alpha_t X_1 + \beta_t X_0,$ with $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$ Examples include:
+Many commonly used interpolation schemes are affine $$X_t = \alpha_t X_1 + \beta_t X_0,$$ where $$\alpha_t$$ and $$\beta_t$$ are monotone, $$\alpha_0=\beta_1=0,$$ and $$\alpha_1 = \beta_0 = 1.$$ Examples include:
 
 1. ***Straight interpolation*** <d-cite key="liu2022flow,lipman2022flow,albergo2023stochastic"></d-cite>:
 
@@ -199,7 +199,7 @@ Many commonly used interpolation schemes are affine $X_t = \alpha_t X_1 + \beta_
    
    which traces a shortest great-circle arc on a sphere at constant speed.
    
-3. ***DDPM/DDIM interpolation*** <d-cite key="song2020denoising"></d-cite> A spherical interpolation satisfying $$\alpha_t^2 + \beta_t^2 = 1$$ but with a non-uniform speed defined by $\alpha_t$:
+3. ***DDPM/DDIM interpolation*** <d-cite key="song2020denoising"></d-cite> A spherical interpolation satisfying $$\alpha_t^2 + \beta_t^2 = 1$$ but with a non-uniform speed defined by $$\alpha_t$$:
 
    $$
    X_t = \alpha_t X_1 + \sqrt{1-\alpha_t^2} X_0,
@@ -344,13 +344,13 @@ The trajectories of the RF derived from different affine interpolations can be v
     </div>
     <figcaption>
       <a href="#figure-5">Figure 5</a>.
-      The mean square error (MSE) between the estimtion of \(Z_1\) from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
+      The mean square error (MSE) between the estimation of \(Z_1\) from rectified flows induced from straight versus spherical interpolation decreases as the number of inference steps increases, reflecting their shared continuous-time limit. Nevertheless, different discretization schemes produce varying performance when the step count is small. 
     </figcaption>
   </figure>
 </div>
 In general, we may want to reduce these errors by seeking "straighter" trajectories when the Euler method is used for discretization. Note, however, if "curved" variants of the Euler method are employed, the notion of straightness must be adapted to account for the curvature inherent in the curved Euler method. For further discussion, refer to [this blog](https://rectifiedflow.github.io/blog/2024/discretization/).
 
-Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion above allows us to choose whichever scheme that yields best sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, *without worrying about which interpolation scheme it corresponds to*. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
+Although it is challenging to predict the best inference interpolation scheme *a priori*, the post-training conversion above allows us to choose whichever scheme yields the best sampling results in practice. Moreover, one can go a step further by directly optimizing the pointwise transform to minimize discretization error, *without worrying about which interpolation scheme it corresponds to*. Specifically, this involves directly finding the pair $$ (\phi_t, \tau_t)$$ such that the Euler method applied to the transformed ODE, $$Z_t' = \phi_t(Z_{\tau_t})$$, is as accurate as possible.
 
 
 ## Implications on Loss Functions
@@ -383,7 +383,7 @@ $$
 \mathcal L'(\theta) = \int_0^1 \mathbb{E} \left[ \eta'_t \left\| \dot{X}'_t - v'_t(X'_t; \theta) \right\|^2 \right] \mathrm dt \tag{5}
 $$
 
-Matching the loss $$(4)$$ and $$(5)$$, shows that the two training schemes differ only in time-weighting and parameterization. Specifically,
+Matching the loss $$(4)$$ and $$(5)$$ shows that the two training schemes differ only in time-weighting and parameterization. Specifically,
 
 $$
 \eta'_t = \frac{\omega_t^2}{\dot{\tau}_t} \eta_{\tau_t},
@@ -397,7 +397,7 @@ In other words, **training under different affine interpolation schemes is equiv
 >
 > Consider the straight interpolation $$X_t = t X_1 + (1 - t) X_0$$ and another affine interpolation $$X_t' = \alpha_t' X_1 + \beta_t' X_0.$$
 >
-> Suppose we have trained a model $$v_t(x, \theta)$$ for the straight interpolation with time weights $$\eta_t.$$ Then converted $$v_t'(x, \theta)$$ corresponds to the RF trained with the parametrization in $$(6)$$, and a different time-weighting:
+> Suppose we have trained a model $$v_t(x, \theta)$$ for the straight interpolation with time weights $$\eta_t.$$ Then the converted $$v_t'(x, \theta)$$ corresponds to the RF trained with the parametrization in $$(6)$$, and a different time-weighting:
 >
 > $$
 > \eta_t' = \frac{\omega_t^2}{\tau_t'} \eta_{\tau_t} = \frac{1}{\dot{\alpha}_t' \beta_t' - \alpha_t' \dot{\beta}_t'} \eta_{\tau_t}.
@@ -432,7 +432,7 @@ Following Example 2, an interesting case arises when $$\dot{\alpha}'_t \beta'_t 
 >
 > where $$\omega_t = (\sin(\frac{\pi t}{2}) + \cos(\frac{\pi t}{2}))^{-1}$$ is bounded within $$[1/\sqrt{2}, 1]$$.
 > 
-> This reparameterization is quite "minor" and does not seem to impact model quality significantly. As shown [Figure 5](#figure-5) below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
+> This reparameterization is quite "minor" and does not seem to impact model quality significantly. As shown in [Figure 6](#figure-6) below, training with straight or spherical interpolation and uniform loss weighting produces nearly identical results.
 {: .example}
 
 <div class="l-body">
