@@ -34,7 +34,7 @@ pagination:
 
   <!-- Text -->
   <p>
-    <strong>Rectified flow</strong> offers an intuitive and unified perspective on flow- and diffusion-based generative modeling. Also known as flow matching and stochastic interpolants, it has been increasingly used for state-of-the-art image, audio, and video generation, thanks to its simplicity and efficiency.
+    <strong><a href="https://arxiv.org/abs/2209.03003">Rectified flow</a></strong> offers an intuitive and unified perspective on flow- and diffusion-based generative modeling. Also known as flow matching and stochastic interpolants, it has been increasingly used for state-of-the-art image, audio, and video generation, thanks to its simplicity and efficiency.
   </p>
 
   <p>
